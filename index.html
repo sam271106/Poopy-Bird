@@ -1608,7 +1608,7 @@
         /* =========================================================
            PERSISTENCE
            ========================================================= */
-        let STATS = { totalHits: 0, bestCombo: 0, highScore: 0, totalRuns: 0, totalScore: 0 };
+        let STATS = { totalHits: 0, bestCombo: 0, highScore: 0, totalRuns: 0, totalScore: 0, totalPlaySec: 0, sessions: 0, daysActive: 0, firstSeen: "", lastDay: "" };
         let PROGRESSION = {
             playerId: "",
             unlockedBirds: ["rocpig"],
@@ -1623,6 +1623,14 @@
             playerHostel: "Nilgiri",
             userComments: {}
         };
+
+        const GAME_VERSION = "v1.0";
+        function getPlatform(){
+          const ua = navigator.userAgent || "";
+          if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return "iOS";
+          if (/Android/.test(ua)) return "Android";
+          return "Desktop";
+        }
 
         function safeGetItem(k) {
             try { const v = localStorage.getItem(k); if (v !== null) return v; } catch (e) { }
@@ -1663,6 +1671,13 @@
                 const p = safeGetItem("pp_iitd_v2_prog");
                 if (p) Object.assign(PROGRESSION, JSON.parse(p));
             } catch (e) { }
+            const today = new Date().toISOString().slice(0, 10);
+            if (!STATS.firstSeen) STATS.firstSeen = today;
+            if (STATS.lastDay !== today) {
+                if (STATS.lastDay) STATS.daysActive++;
+                STATS.lastDay = today;
+            }
+            STATS.sessions++;
             if (!PROGRESSION.playerId) {
                 PROGRESSION.playerId = "p_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
                 safeSetItem("pp_iitd_v2_prog", JSON.stringify(PROGRESSION));
@@ -1680,7 +1695,7 @@
             try {
                 safeSetItem("pp_iitd_v2_run", JSON.stringify({
                     zoneId: activeZone.id, birdId: activeBird.id,
-                    score: S.score, hits: S.hits, time: S.time, ammo: S.ammo,
+                    score: S.score, hits: S.hits, time: S.time, playSec: S.playSec, ammo: S.ammo,
                     shots: S.shots, hitsTot: S.hitsTot,
                     zoneClearedThisRun: S.zoneClearedThisRun, dangerTier: S.dangerTier,
                     combo: S.combo, bx: B.x, by: B.y, rx: B.rx, ry: B.ry,
@@ -1707,6 +1722,7 @@
                 S.score = snap.score || 0;
                 S.hits = snap.hits || 0;
                 S.time = snap.time;
+                S.playSec = snap.playSec || 0;
                 S.max = activeBird.maxAmmo;
                 S.ammo = Math.min(S.max, snap.ammo ?? S.max);
                 S.shots = snap.shots || 0;
@@ -1752,19 +1768,30 @@
 
         function buildSyncPayload(){
           return JSON.stringify({
+            type:"player",
+            version:GAME_VERSION,
+            platform:getPlatform(),
             playerId:PROGRESSION.playerId,
             name:PROGRESSION.playerName||"IITD Flier",
             hostel:PROGRESSION.playerHostel||"Nilgiri",
             highScore:STATS.highScore,
             totalScore:STATS.totalScore,
-            bird:activeBird.n
+            bird:activeBird.n,
+            totalRuns:STATS.totalRuns,
+            totalHits:STATS.totalHits,
+            bestCombo:STATS.bestCombo,
+            totalPlaySec:STATS.totalPlaySec,
+            sessions:STATS.sessions,
+            daysActive:STATS.daysActive,
+            birdsUnlocked:PROGRESSION.unlockedBirds.length,
+            zonesCleared:PROGRESSION.zonesCleared.length
           });
         }
 
         function syncScoreToSheet(useBeacon=false){
           if(!hasLiveApi()) return Promise.resolve();
           const payload=buildSyncPayload();
-          if(useBeacon && navigator.sendBeacon){
+          if(useBeacon === true && navigator.sendBeacon){
             try{
               const ok=navigator.sendBeacon(LB_API_URL, new Blob([payload], {type:"text/plain;charset=utf-8"}));
               if(ok){ LIVE_LB.lastFetch=0; return Promise.resolve(); }
@@ -1775,14 +1802,12 @@
               await fetch(LB_API_URL, {
                 method:"POST",
                 mode:"no-cors",
-                keepalive:true,
+                credentials:"omit",
                 headers:{"Content-Type":"text/plain;charset=utf-8"},
                 body:payload
               });
               LIVE_LB.lastFetch=0;
-            }catch(e){
-              LIVE_LB.offline=true;
-            }
+            }catch(e){}
           })();
           LIVE_LB.syncPromise=p;
           return p;
@@ -1801,7 +1826,7 @@
           const ctrl=new AbortController();
           const timer=setTimeout(()=>ctrl.abort(), 7000);
           try{
-            const res=await fetch(LB_API_URL + "?t=" + Date.now(), {signal:ctrl.signal, cache:"no-store"});
+            const res=await fetch(LB_API_URL + "?t=" + Date.now(), {signal:ctrl.signal, credentials:"omit"});
             const json=await res.json();
             if(json && json.ok){
               LIVE_LB.players=json.players||[];
@@ -1815,6 +1840,38 @@
             LIVE_LB.loading=false;
             if(!$("ov").classList.contains("hide") && $("seg-campus")) openLeaderboardSheet(true);
           }
+        }
+
+        function logRunEvent(outcome, accuracy){
+          if(!hasLiveApi()) return;
+          const payload=JSON.stringify({
+            type:"run",
+            version:GAME_VERSION,
+            platform:getPlatform(),
+            playerId:PROGRESSION.playerId,
+            name:PROGRESSION.playerName||"IITD Flier",
+            hostel:PROGRESSION.playerHostel||"Nilgiri",
+            zone:activeZone.id,
+            bird:activeBird.id,
+            score:S.score,
+            hits:S.hits,
+            shots:S.shots,
+            accuracy:accuracy,
+            runSec:Math.round(S.playSec),
+            outcome:outcome,
+            dangerTier:S.dangerTier,
+            totalRuns:STATS.totalRuns,
+            daysActive:STATS.daysActive
+          });
+          try{
+            fetch(LB_API_URL, {
+              method:"POST",
+              mode:"no-cors",
+              credentials:"omit",
+              headers:{"Content-Type":"text/plain;charset=utf-8"},
+              body:payload
+            });
+          }catch(e){}
         }
 
         function getBirderRank(score) {
@@ -1871,7 +1928,8 @@
             ammo: 5, max: 5, regen: 0, combo: 0, comboT: 0, shake: 0, freeze: 0, cd: 0, shots: 0, hitsTot: 0,
             zoneClearedThisRun: false, dangerTier: 0,
             endingT: 0, bustReason: false,
-            hasSteered: false, hasDropped: false
+            hasSteered: false, hasDropped: false,
+            playSec: 0
         };
 
         function getDangerTier(score) { return Math.floor(score / PENALTY_SCORE_STEP); }
@@ -3259,6 +3317,7 @@
                 }
             }
             clearRunSnapshot();
+            S.playSec = 0;
             S.state = "play"; S.score = 0; S.hits = 0; S.time = activeZone.timeStart;
             S.max = activeBird.maxAmmo; S.ammo = S.max;
             S.shots = 0; S.hitsTot = 0; S.zoneClearedThisRun = false; S.dangerTier = 0;
@@ -3333,12 +3392,15 @@
             clearBanners();
             hideCombo();
             STATS.totalRuns++;
+            STATS.totalPlaySec += Math.round(S.playSec);
             saveAll();
-            if (S.score > 0 || STATS.highScore > 0) syncScoreToSheet();
+            if (S.score > 0 || STATS.highScore > 0) syncScoreToSheet(true);
             snd(220, 0.35, "sawtooth", 0.18, -80);
 
             const accuracy = S.shots > 0 ? Math.round((S.hitsTot / S.shots) * 100) : 0;
             const cleared = S.score >= activeZone.target;
+            const outcome = cleared ? "cleared" : (S.bustReason ? "busted" : "timeout");
+            logRunEvent(outcome, accuracy);
             const nextIdx = ZONES.findIndex(z => z.id === activeZone.id) + 1;
             const nextZone = nextIdx < ZONES.length ? ZONES[nextIdx] : null;
             const rewardBird = BIRDS.find(b => b.id === activeZone.unlockBird);
@@ -3403,7 +3465,10 @@
             T0 = time;
 
             if (S.freeze > 0) S.freeze -= dt;
-            else if (S.state === "play") update(dt);
+            else if (S.state === "play") {
+                S.playSec += dt;
+                update(dt);
+            }
 
             render(dt);
             if (S.state === "play") updateHUD();
