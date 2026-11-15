@@ -1,0 +1,3443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>Poop Patrol — IIT Delhi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #fffef9;
+            --sage: #f1f6ec;
+            --text: #1f2d38;
+            --muted: #647686;
+            --line: #e1eadb;
+            --accent: #ff5b36;
+            --accent-shadow: #cc3412;
+            --green: #58cc02;
+            --green-shadow: #3f9900;
+            --yellow: #ffc800;
+            --yellow-shadow: #cf9c00;
+            --blue: #1cb0f6;
+            --blue-shadow: #1280b5;
+            --danger: #e84118;
+            --danger-shadow: #b32807;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #8fd276;
+            font-family: 'Fredoka', system-ui, -apple-system, sans-serif;
+            color: var(--text);
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        canvas#c {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            touch-action: none;
+        }
+
+        /* =========================================================
+   HOME SCREEN (CALM, AIRY, ZERO-LEAK VISIBILITY)
+   ========================================================= */
+        #home-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 35;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: calc(env(safe-area-inset-top, 0px) + 16px) 18px calc(env(safe-area-inset-bottom, 0px) + 20px);
+            pointer-events: none;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity .2s ease, transform .2s ease, visibility 0s;
+        }
+
+        #home-screen>* {
+            pointer-events: auto
+        }
+
+        #home-screen.hidden {
+            opacity: 0;
+            transform: scale(0.97);
+            visibility: hidden;
+            pointer-events: none !important;
+            transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
+        }
+
+        #home-screen.hidden * {
+            pointer-events: none !important;
+        }
+
+        .home-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 440px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .home-pill {
+            background: rgba(255, 254, 249, 0.94);
+            backdrop-filter: blur(8px);
+            border: 2px solid #fff;
+            border-radius: 99px;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+        }
+
+        .circle-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 254, 249, 0.95);
+            border: 2px solid #fff;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
+            font-size: 17px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08)
+        }
+
+        .home-center {
+            max-width: 400px;
+            width: 100%;
+            margin: auto 0 14px;
+            align-self: center;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .home-center .bird-showcase,
+        .home-center .zone-progress-card {
+            pointer-events: auto;
+        }
+
+        .brand-title {
+            margin: 0;
+            font-size: clamp(36px, 9.5vw, 50px);
+            line-height: 0.95;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 5px 0 #3a7519, 0 12px 24px rgba(0, 0, 0, 0.16);
+        }
+
+        .brand-sub {
+            display: inline-block;
+            margin: 7px 0 14px;
+            background: rgba(31, 45, 56, 0.82);
+            color: #ffe066;
+            padding: 4px 13px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
+
+        .zone-progress-card {
+            background: rgba(255, 254, 249, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2.5px solid #fff;
+            border-radius: 22px;
+            padding: 11px 14px;
+            box-shadow: 0 12px 26px rgba(20, 48, 14, 0.14), 0 5px 0 #d5e2ce;
+            text-align: left;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: transform .12s;
+        }
+
+        .zone-progress-card:active {
+            transform: scale(0.98)
+        }
+
+        .zone-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .zone-stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+            margin-bottom: 7px;
+        }
+
+        .step-node {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11.5px;
+            font-weight: 800;
+            flex: none;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .step-node.done {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .step-node.current {
+            background: var(--blue);
+            color: #fff;
+            transform: scale(1.14);
+            box-shadow: 0 0 0 3px rgba(28, 176, 246, 0.25), 0 3px 0 var(--blue-shadow);
+        }
+
+        .step-node.locked {
+            background: #e4ebf0;
+            color: #7d8d9b;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 4px;
+            border-radius: 99px;
+            background: #e1eadb;
+        }
+
+        .step-line.done {
+            background: var(--green);
+        }
+
+        .card-cta-pill {
+            flex: none;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 99px;
+            white-space: nowrap;
+        }
+
+        .card-cta-pill.blue {
+            background: #e3f5ff;
+            color: #0b6b9c;
+        }
+
+        .card-cta-pill.green {
+            background: #e7fad9;
+            color: #2f7300;
+        }
+
+        .bird-showcase {
+            background: rgba(255, 254, 249, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2.5px solid #fff;
+            border-radius: 24px;
+            padding: 11px 13px;
+            box-shadow: 0 14px 30px rgba(20, 48, 14, 0.15), 0 5px 0 #d5e2ce;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            text-align: left;
+            cursor: pointer;
+            transition: transform .12s;
+        }
+
+        .bird-showcase:active {
+            transform: scale(0.98)
+        }
+
+        .showcase-cv {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: linear-gradient(145deg, #daf3ff, #e9fad8);
+            border: 2px solid #fff;
+            flex: none;
+        }
+
+        .unlock-badge {
+            display: inline-block;
+            font-size: 10.5px;
+            font-weight: 800;
+            color: #8a5a00;
+            background: #fff4cc;
+            padding: 2px 8px;
+            border-radius: 99px;
+            margin-bottom: 3px;
+        }
+
+        .perk-chip {
+            display: inline-block;
+            background: #eefbe5;
+            color: #2f7300;
+            border-radius: 99px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+
+        .home-bottom {
+            max-width: 400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .play-cta {
+            width: 100%;
+            border: 0;
+            border-radius: 24px;
+            padding: 16px 20px;
+            background: linear-gradient(180deg, #6be012, #51bd00);
+            color: #fff;
+            font-family: inherit;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: .02em;
+            box-shadow: 0 8px 0 var(--green-shadow), 0 16px 32px rgba(63, 153, 0, 0.36);
+            cursor: pointer;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: transform .08s, box-shadow .08s;
+        }
+
+        .play-cta small {
+            background: rgba(0, 0, 0, 0.16);
+            padding: 3px 11px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .play-cta:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 var(--green-shadow)
+        }
+
+        .home-dock {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .dock-btn {
+            background: rgba(255, 254, 249, 0.96);
+            border: 2px solid #fff;
+            border-radius: 19px;
+            padding: 11px 12px;
+            box-shadow: 0 5px 0 #d3ded0, 0 8px 16px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            text-align: left;
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 800;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .dock-btn span {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .dock-btn small {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .dock-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #d3ded0
+        }
+
+        /* =========================================================
+   IN-FLIGHT HUD (ULTRA-CLEAN, HIGH CONTRAST)
+   ========================================================= */
+        #hud {
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 12px);
+            left: 12px;
+            right: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+            z-index: 22;
+            transition: opacity .2s;
+        }
+
+        #hud.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none !important
+        }
+
+        #hud.hidden * {
+            pointer-events: none !important
+        }
+
+        .hud-pill {
+            background: rgba(255, 254, 249, 0.95);
+            border-radius: 99px;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 12px;
+        }
+
+        #goal-pill {
+            flex: 1;
+            max-width: 205px;
+            padding: 6px 11px 6px 8px
+        }
+
+        #goal-pill.cleared #track-fill {
+            background: linear-gradient(90deg, #ffc800, #ff9f1a)
+        }
+
+        #zone-tag {
+            background: var(--yellow);
+            color: #5c3d00;
+            border-radius: 99px;
+            padding: 2px 8px;
+            font-size: 11.5px;
+            font-weight: 800;
+        }
+
+        #goal-pill.cleared #zone-tag {
+            background: var(--green);
+            color: #fff
+        }
+
+        #track-bar {
+            flex: 1;
+            height: 9px;
+            background: #e9eef2;
+            border-radius: 99px;
+            overflow: hidden
+        }
+
+        #track-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--green);
+            border-radius: 99px;
+            transition: width .25s cubic-bezier(.34, 1.56, .64, 1)
+        }
+
+        #score-meta {
+            font-size: 12.5px;
+            font-weight: 800;
+            color: #3b4956;
+            white-space: nowrap
+        }
+
+        #center-pills {
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        #time-chip {
+            font-weight: 800;
+            font-size: 15px
+        }
+
+        #time-chip.urgent {
+            background: var(--danger);
+            color: #fff;
+            box-shadow: 0 4px 0 var(--danger-shadow);
+            animation: wobble .55s infinite
+        }
+
+        #danger-chip {
+            display: none;
+            background: var(--danger);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 5px 10px;
+            border-radius: 99px;
+            box-shadow: 0 4px 0 var(--danger-shadow);
+            white-space: nowrap;
+        }
+
+        #danger-chip.visible {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px
+        }
+
+        @keyframes wobble {
+
+            0%,
+            100% {
+                transform: scale(1)
+            }
+
+            50% {
+                transform: scale(1.07)
+            }
+        }
+
+        #btn-pause {
+            pointer-events: auto;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 254, 249, 0.95);
+            border: 0;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 800;
+            color: #556677;
+            flex: none;
+        }
+
+        #btn-pause:active {
+            transform: translateY(3px)
+        }
+
+        #combo-chip {
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 60px);
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: var(--yellow);
+            color: #5d3f00;
+            box-shadow: 0 3px 0 var(--yellow-shadow);
+            padding: 4px 14px;
+            border-radius: 99px;
+            font-size: 13px;
+            font-weight: 800;
+            z-index: 21;
+            pointer-events: none;
+            transition: transform .18s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        #combo-chip.pop {
+            transform: translateX(-50%) scale(1)
+        }
+
+        #banner {
+            position: fixed;
+            left: 50%;
+            top: 31%;
+            transform: translate(-50%, -50%) scale(0);
+            text-align: center;
+            pointer-events: none;
+            font-weight: 800;
+            font-size: clamp(24px, 6vw, 38px);
+            color: #fff;
+            text-shadow: 0 4px 0 rgba(0, 0, 0, 0.28);
+            z-index: 28;
+            width: 90%;
+        }
+
+        #banner small {
+            display: inline-block;
+            font-size: .42em;
+            background: #fff;
+            color: var(--text);
+            box-shadow: 0 4px 0 #dde2e7;
+            border-radius: 99px;
+            padding: 5px 15px;
+            margin-top: 8px;
+            text-shadow: none;
+        }
+
+        #banner.show {
+            animation: bannerPop 2s ease both
+        }
+
+        @keyframes bannerPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0)
+            }
+
+            14% {
+                transform: translate(-50%, -50%) scale(1.07)
+            }
+
+            24%,
+            78% {
+                transform: translate(-50%, -50%) scale(1)
+            }
+
+            100% {
+                transform: translate(-50%, -66%) scale(.88);
+                opacity: 0
+            }
+        }
+
+        #danger-flash {
+            position: fixed;
+            inset: 0;
+            background: rgba(232, 65, 24, 0.36);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .12s ease-out;
+            z-index: 25;
+        }
+
+        /* =========================================================
+   DYNAMIC LEFT-SIDE JOYSTICK & RIGHT-SIDE DROP CONTROLS
+   ========================================================= */
+        #left-touch-zone {
+            position: fixed;
+            left: 0;
+            top: 68px;
+            bottom: 0;
+            width: 56vw;
+            z-index: 15;
+            touch-action: none;
+        }
+
+        #left-touch-zone.hidden {
+            display: none
+        }
+
+        #joystick-container {
+            position: fixed;
+            left: 24px;
+            top: calc(100% - 134px);
+            width: 108px;
+            height: 108px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(6px);
+            border-radius: 50%;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+            z-index: 16;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.55;
+            transition: opacity .12s ease, transform .12s ease;
+        }
+
+        #joystick-container.active {
+            opacity: 1;
+            transform: scale(1.04)
+        }
+
+        #joystick-container.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none
+        }
+
+        #joystick-container::after {
+            content: "";
+            position: absolute;
+            inset: 9px;
+            border-radius: 50%;
+            border: 2px dashed #b4c1ce;
+        }
+
+        #joystick-knob {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 5px 0 var(--accent-shadow);
+            position: absolute;
+            pointer-events: none;
+        }
+
+        #bottom-ui {
+            position: fixed;
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
+            right: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            z-index: 20;
+            touch-action: none;
+            transition: opacity .2s;
+        }
+
+        #bottom-ui.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none !important
+        }
+
+        #bottom-ui.hidden * {
+            pointer-events: none !important
+        }
+
+        #ammo-tray {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(6px);
+            border-radius: 99px;
+            padding: 5px 11px;
+            display: flex;
+            gap: 5px;
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        .ammo-pip {
+            width: 9px;
+            height: 12px;
+            border-radius: 4px;
+            background: #8c5738;
+            border: 2px solid #fff;
+            transition: transform .15s, opacity .15s
+        }
+
+        .ammo-pip.empty {
+            background: transparent;
+            border-color: #b9c2cc;
+            opacity: .4;
+            transform: scale(.75)
+        }
+
+        #drop-btn {
+            width: 90px;
+            height: 90px;
+            border-radius: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.55);
+            background: linear-gradient(180deg, #6be012, #51bd00);
+            box-shadow: 0 7px 0 var(--green-shadow), 0 12px 22px rgba(88, 204, 2, 0.36);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 14px;
+            touch-action: none;
+            transition: transform .06s, box-shadow .06s;
+        }
+
+        #drop-btn.active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 var(--green-shadow)
+        }
+
+        #drop-btn.empty-ammo {
+            background: linear-gradient(180deg, #aab7c4, #8795a3);
+            box-shadow: 0 6px 0 #64717d
+        }
+
+        #drop-btn span {
+            font-size: 25px;
+            line-height: 1;
+            margin-bottom: 2px
+        }
+
+        .micro-hint {
+            position: fixed;
+            background: rgba(31, 45, 56, 0.86);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 700;
+            pointer-events: none;
+            z-index: 19;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity .25s ease, transform .25s ease;
+            white-space: nowrap;
+        }
+
+        .micro-hint.show {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        #hint-steer {
+            left: 22px;
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 144px)
+        }
+
+        #hint-drop {
+            right: 18px;
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 152px)
+        }
+
+        /* =========================================================
+   SHEETS & CARDS
+   ========================================================= */
+        #ov {
+            position: fixed;
+            inset: 0;
+            background: rgba(19, 30, 22, 0.5);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 12px;
+        }
+        #ov.map-ov {
+            padding: 6px;
+        }
+
+        #ov.hide {
+            display: none !important;
+            pointer-events: none !important
+        }
+
+        .sheet {
+            background: var(--cream);
+            border: 2.5px solid #fff;
+            border-radius: 30px;
+            width: min(96vw, 450px);
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 22px 52px rgba(0, 0, 0, 0.28), 0 7px 0 #d4ddd0;
+            animation: sheetIn .2s cubic-bezier(.34, 1.35, .64, 1);
+        }
+        .sheet.map-sheet {
+            width: min(98vw, 500px);
+            height: 95vh;
+            max-height: 95vh;
+            border-radius: 26px;
+        }
+
+        @keyframes sheetIn {
+            from {
+                transform: translateY(18px) scale(.96);
+                opacity: 0
+            }
+
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1
+            }
+        }
+
+        .sheet-head {
+            padding: 14px 16px 12px;
+            background: #fff;
+            border-bottom: 2px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex: none;
+        }
+
+        .sheet-head h1 {
+            margin: 0;
+            font-size: 19px;
+            font-weight: 800;
+            line-height: 1.15
+        }
+
+        .sheet-sub {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+            margin-top: 2px
+        }
+
+        .head-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: none
+        }
+
+        .close-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--line);
+            background: #fff;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 #dce3d7;
+        }
+
+        .close-btn:active {
+            transform: translateY(2px)
+        }
+
+        .pill-action-btn {
+            border: 2px solid var(--line);
+            background: #fff;
+            border-radius: 99px;
+            padding: 6px 11px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--blue);
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 3px 0 #dce3d7;
+        }
+
+        .pill-action-btn:active {
+            transform: translateY(2px)
+        }
+
+        .sheet-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px 16px 18px;
+            text-align: left;
+            touch-action: pan-y;
+        }
+
+        .duo-btn {
+            display: block;
+            width: 100%;
+            border: 0;
+            border-radius: 17px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 15px;
+            padding: 13px 16px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            text-decoration: none;
+            text-align: center;
+            transition: transform .08s, box-shadow .08s;
+        }
+
+        .duo-btn.primary {
+            background: linear-gradient(180deg, #6be012, #51bd00);
+            color: #fff;
+            box-shadow: 0 5px 0 var(--green-shadow);
+        }
+
+        .duo-btn.primary:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 var(--green-shadow)
+        }
+
+        .duo-btn.secondary {
+            background: #fff;
+            color: var(--blue);
+            border: 2px solid var(--line);
+            box-shadow: 0 4px 0 #dce3d7;
+        }
+
+        .duo-btn.secondary:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #dce3d7
+        }
+
+        .duo-btn.alt {
+            background: var(--sage);
+            color: #4d5c69;
+            font-size: 13.5px;
+            padding: 11px 14px;
+            box-shadow: 0 3px 0 #dce3d7;
+        }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px
+        }
+
+        .pill-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 99px;
+            background: #edf2ea;
+            color: #485968;
+        }
+
+        .pill-tag.green {
+            background: #e7fad9;
+            color: #2f7300
+        }
+
+        .pill-tag.blue {
+            background: #e3f5ff;
+            color: #0b6b9c
+        }
+
+        .pill-tag.amber {
+            background: #fff4cc;
+            color: #825a00
+        }
+
+        .pill-tag.red {
+            background: #ffe7e2;
+            color: #b82909
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--muted);
+            margin: 12px 0 6px;
+        }
+
+        /* MAP */
+        .map-scroll {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            touch-action: pan-y;
+            background: #9cd885;
+            position: relative;
+        }
+
+        .map-svg {
+            display: block;
+            width: 100%;
+            height: auto
+        }
+
+        .map-pin, .map-bird-pin {
+            cursor: pointer
+        }
+
+        .map-dock-card {
+            flex: none;
+            background: #fff;
+            border-top: 2px solid var(--line);
+            padding: 11px 14px calc(env(safe-area-inset-bottom, 0px) + 11px);
+            box-shadow: 0 -8px 22px rgba(0, 0, 0, 0.08);
+        }
+
+        .bg-chip-row {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 2px
+        }
+
+        .bg-chip {
+            flex: none;
+            border: 2px solid var(--line);
+            background: #fff;
+            border-radius: 12px;
+            padding: 7px 11px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .bg-chip.active {
+            border-color: var(--green);
+            background: #eefbe5;
+            color: #2f7300
+        }
+
+        .bg-chip.locked {
+            opacity: .48;
+            cursor: not-allowed
+        }
+
+        /* BIRD GALLERY & PROFILE */
+        .bird-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px
+        }
+
+        .bird-tile {
+            background: #fff;
+            border: 2px solid var(--line);
+            border-radius: 20px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #e5ece0;
+            transition: transform .1s;
+        }
+
+        .bird-tile:active {
+            transform: scale(0.97)
+        }
+
+        .bird-tile.active {
+            border-color: var(--green);
+            background: #f6fdf1;
+            box-shadow: 0 4px 0 #cbe9b7
+        }
+
+        .bird-tile.locked {
+            opacity: 0.74
+        }
+
+        .bird-tile-sky {
+            height: 74px;
+            border-radius: 14px;
+            background: linear-gradient(155deg, #dcf4ff, #e8fad9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 7px;
+            position: relative;
+        }
+
+        .bird-tile.locked .bird-tile-sky {
+            background: linear-gradient(155deg, #eceff2, #dfe4ea)
+        }
+
+        .tile-sound-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 0;
+            background: rgba(255, 255, 255, 0.92);
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-hero {
+            background: linear-gradient(145deg, #dff5ff, #e8fad9);
+            border: 2px solid #fff;
+            border-radius: 22px;
+            padding: 13px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .profile-cv {
+            width: 84px;
+            height: 84px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 2px solid #fff;
+            flex: none;
+        }
+
+        .comment-box {
+            background: #fff;
+            border-radius: 14px;
+            padding: 9px 11px;
+            margin-bottom: 6px;
+            border: 1.5px solid var(--line)
+        }
+
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 2px
+        }
+
+        .duo-input {
+            width: 100%;
+            border: 2px solid var(--line);
+            border-radius: 12px;
+            padding: 8px 10px;
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--text);
+            outline: none;
+            background: #fff;
+        }
+
+        .duo-input:focus {
+            border-color: var(--blue)
+        }
+
+        /* PODIUM & RANKS */
+        .seg-bar {
+            display: flex;
+            background: var(--sage);
+            padding: 4px;
+            border-radius: 14px;
+            gap: 4px;
+            margin-bottom: 12px
+        }
+
+        .seg-btn {
+            flex: 1;
+            border: 0;
+            background: transparent;
+            padding: 8px;
+            border-radius: 11px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 12.5px;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .seg-btn.active {
+            background: #fff;
+            color: var(--text);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08)
+        }
+
+        .podium-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.12fr 1fr;
+            gap: 8px;
+            align-items: end;
+            margin-bottom: 12px;
+        }
+
+        .podium-card {
+            background: #fff;
+            border: 2px solid var(--line);
+            border-radius: 18px;
+            padding: 10px 6px;
+            text-align: center;
+            box-shadow: 0 4px 0 #e5ece0;
+        }
+
+        .podium-card.first {
+            background: linear-gradient(180deg, #fffbe6, #fff3bf);
+            border-color: #ffd43b;
+            box-shadow: 0 5px 0 #e6b800;
+            padding: 13px 6px
+        }
+
+        .podium-card.second {
+            background: linear-gradient(180deg, #fff, #f1f4f8);
+            border-color: #cfd8e3
+        }
+
+        .podium-card.third {
+            background: linear-gradient(180deg, #fff9f3, #ffe8d6);
+            border-color: #f0b88d
+        }
+
+        .podium-medal {
+            font-size: 20px;
+            line-height: 1;
+            margin-bottom: 4px
+        }
+
+        .podium-name {
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .podium-pts {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--green-shadow);
+            margin-top: 2px
+        }
+
+        .lb-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+            border: 1.5px solid var(--line);
+            border-radius: 15px;
+            padding: 9px 11px;
+            margin-bottom: 6px;
+        }
+
+        .lb-row.me {
+            background: #eefbe5;
+            border-color: var(--green)
+        }
+
+        .lb-rank {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--sage);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            flex: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="c"></canvas>
+    <div id="danger-flash"></div>
+
+    <!-- HOME SCREEN -->
+    <div id="home-screen">
+        <div class="home-top">
+            <div class="home-pill" id="home-rank-chip">🕊️ Nilgiri · Best 0 · Ranks ›</div>
+            <button class="circle-btn" id="home-mute-btn" aria-label="Toggle Sound">🔊</button>
+        </div>
+
+        <div class="home-center">
+            <h1 class="brand-title">Poop Patrol</h1>
+            <div class="brand-sub">IIT Delhi · eBird L2747804</div>
+
+            <div class="zone-progress-card" id="home-map-card">
+                <div class="zone-card-top">
+                    <div style="font-size:13.5px;font-weight:800;color:var(--text)" id="home-zone-chip">📍 Zone 1 · Main Quad</div>
+                    <span class="card-cta-pill blue">Map ›</span>
+                </div>
+                <div class="zone-stepper" id="home-zone-stepper"></div>
+                <div style="font-size:11.5px;font-weight:700;color:var(--muted)" id="home-zone-next">🎯 Goal 150 pts · Unlocks 🦜 Parakeet</div>
+            </div>
+
+            <div class="bird-showcase" id="home-bird-card">
+                <canvas class="showcase-cv" id="home-bird-cv" width="140" height="140"></canvas>
+                <div style="flex:1;min-width:0">
+                    <span class="unlock-badge" id="home-bird-unlocks">🔓 1/7 Birds · 6 to unlock</span>
+                    <div style="font-size:17px;font-weight:800;line-height:1.1" id="home-bird-name">Rock Pigeon</div>
+                    <div class="perk-chip" id="home-bird-perk">Balanced Flyer</div>
+                </div>
+                <span class="card-cta-pill green">Customize ›</span>
+            </div>
+        </div>
+
+        <div class="home-bottom">
+            <button class="play-cta" id="home-play-btn">
+                <span>▶ PLAY</span>
+                <small id="home-play-meta">Main Quad · Goal 150</small>
+            </button>
+            <div class="home-dock">
+                <button class="dock-btn" id="dock-map">
+                    <span>🗺️</span>
+                    <div>Campus Map<small id="dock-map-sub">Zone 1/5</small></div>
+                </button>
+                <button class="dock-btn" id="dock-birds">
+                    <span>🦜</span>
+                    <div>Choose Birds<small id="dock-birds-sub">1/7 · Customize</small></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLEAN IN-FLIGHT HUD -->
+    <div id="hud" class="hidden">
+        <div class="hud-pill" id="goal-pill">
+            <span id="zone-tag">Z1</span>
+            <div id="track-bar">
+                <div id="track-fill"></div>
+            </div>
+            <span id="score-meta"><span id="sc">0</span>/<span id="tg">150</span></span>
+        </div>
+
+        <div id="center-pills">
+            <div class="hud-pill" id="time-chip">⏱ <span id="tm">40</span></div>
+            <div id="danger-chip">⚠️ -6s</div>
+        </div>
+
+        <button id="btn-pause" aria-label="Pause">❚❚</button>
+    </div>
+
+    <div id="combo-chip">COMBO ×2</div>
+    <div id="banner"></div>
+
+    <div id="left-touch-zone" class="hidden"></div>
+    <div id="joystick-container" class="hidden">
+        <div id="joystick-knob"></div>
+    </div>
+
+    <div id="bottom-ui" class="hidden">
+        <div id="ammo-tray"></div>
+        <button id="drop-btn" aria-label="Drop Poop">
+            <span>💩</span>
+            DROP
+        </button>
+    </div>
+
+    <div id="hint-steer" class="micro-hint">👆 Drag here to steer</div>
+    <div id="hint-drop" class="micro-hint">👇 Tap to drop</div>
+
+    <div id="ov" class="hide">
+        <div class="sheet" id="sheet"></div>
+    </div>
+
+    <script>
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+                const rad = typeof r === "number" ? r : 0;
+                this.beginPath();
+                this.moveTo(x + rad, y);
+                this.lineTo(x + w - rad, y);
+                this.quadraticCurveTo(x + w, y, x + w, y + rad);
+                this.lineTo(x + w, y + h - rad);
+                this.quadraticCurveTo(x + w, y + h, x + w - rad, y + h);
+                this.lineTo(x + rad, y + h);
+                this.quadraticCurveTo(x, y + h, x, y + h - rad);
+                this.lineTo(x, y + rad);
+                this.quadraticCurveTo(x, y, x + rad, y);
+                this.closePath();
+                return this;
+            };
+        }
+
+        const $ = id => document.getElementById(id), R = (a, b) => a + Math.random() * (b - a), pick = a => a[Math.random() * a.length | 0];
+        const escHtml = s => String(s).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+        const cv = $("c"), ctx = cv.getContext("2d");
+
+        let W, H, DPR, UI_SCALE = 1;
+        let poops = [], people = [], decals = [], parts = [], texts = [], deco = { trees: [], clouds: [], flowers: [] };
+        let T0 = 0;
+        let homeBirdSpin = 0;
+
+        const MAX_HUNTERS = 5;
+        const BASE_HUNTER_PENALTY = 6;
+        const PENALTY_SCORE_STEP = 150;
+
+        const EBIRD_HOTSPOT_URL = "https://ebird.org/hotspot/L2747804/bird-list";
+        const EBIRD_MAP_URL = "https://ebird.org/hotspots?hs=L2747804&continue";
+
+        /* =========================================================
+           IIT DELHI CAMPUS ZONES
+           ========================================================= */
+        const ZONES = [
+            {
+                id: "z_inst", num: 1, short: "Main Quad",
+                name: "Zone 1 · Main Quad (G1)",
+                target: 150, timeStart: 40,
+                bgId: "bg_inst", bgName: "Main Lawn",
+                unlockBird: "rorpar",
+                mapX: 246, mapY: 74, color: "#1cb0f6",
+                desc: "Academic blocks & shaded Ashoka lawns near Main Gate G1."
+            },
+            {
+                id: "z_hostel", num: 2, short: "Hostel Lanes",
+                name: "Zone 2 · Hostels (G2)",
+                target: 250, timeStart: 42,
+                bgId: "bg_hostel", bgName: "Hostel Quad",
+                unlockBird: "asikoe2",
+                mapX: 78, mapY: 92, color: "#ff793f",
+                desc: "Hostel courtyards & fruiting avenues near Hostel Gate G2."
+            },
+            {
+                id: "z_maidan", num: 3, short: "Cricket Oval",
+                name: "Zone 3 · Cricket Oval",
+                target: 350, timeStart: 45,
+                bgId: "bg_maidan", bgName: "Cricket Pitch",
+                unlockBird: "rewlap1",
+                mapX: 198, mapY: 158, color: "#58cc02",
+                desc: "Central cricket oval & track patrolled by Lapwings."
+            },
+            {
+                id: "z_nullah", num: 4, short: "Campus Nullah",
+                name: "Zone 4 · Nullah Marsh (G3)",
+                target: 450, timeStart: 45,
+                bgId: "bg_nullah", bgName: "Nullah Marsh",
+                unlockBird: "isbduc1",
+                mapX: 112, mapY: 186, color: "#00b894",
+                desc: "Waterway toward JNU Gate G3 — home to Spot-billed Ducks."
+            },
+            {
+                id: "z_ridge", num: 5, short: "Ridge Woods",
+                name: "Zone 5 · Ridge Woods (G4)",
+                target: 600, timeStart: 48,
+                bgId: "bg_ridge", bgName: "Ridge Woods",
+                unlockBird: "compea",
+                mapX: 338, mapY: 136, color: "#9b59b6",
+                desc: "East faculty woods bordering Mehrauli Gate G4 & Peafowls."
+            }
+        ];
+
+        /* =========================================================
+           IIT DELHI BIRD SPECIES PROFILES
+           ========================================================= */
+        const BIRDS = [
+            {
+                id: "rocpig", n: "Rock Pigeon", sci: "Columba livia",
+                ebirdUrl: "https://ebird.org/species/rocpig/L2747804",
+                icon: "🕊️", col: "#8a99a8", bel: "#b5c2ce", wing: "#657382", beak: "#3d4852",
+                rad: 1.05, rg: 0.82, maxReticleSpeed: 175, maxAmmo: 5, ptMult: 1.0,
+                perk: "Balanced Flyer", callLabel: "Coo-roo-coo!",
+                hotspots: ["Main Building", "Wind T", "All Hostels"],
+                facts: "Slate-grey plumage with two dark wingbars and iridescent green-purple neck sheen.",
+                comments: [
+                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 2 observed near the academic blocks." },
+                    { user: "Meera (BioTech)", spot: "SAC Roof", text: "Metallic green neck shimmer shows clearly in morning sun." }
+                ],
+                unlocked: true, unlockHint: "Starter"
+            },
+            {
+                id: "rorpar", n: "Rose-ringed Parakeet", sci: "Psittacula krameri",
+                ebirdUrl: "https://ebird.org/species/rorpar/L2747804",
+                icon: "🦜", col: "#4cd137", bel: "#7bed9f", wing: "#2ecc71", beak: "#e84118",
+                rad: 1.0, rg: 0.68, maxReticleSpeed: 198, maxAmmo: 5, ptMult: 1.0,
+                perk: "+15% Speed · Fast Reload", callLabel: "Kee-ak!",
+                hotspots: ["Main Quad Trees", "Hostel Lanes", "LHC"],
+                facts: "Vibrant emerald-green parakeet with a bright red hooked bill, long tail, and rose-black neck collar.",
+                comments: [
+                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 15 noisy parakeets flying across campus treetops!" },
+                    { user: "Rohan (Nilgiri)", spot: "LHC", text: "A flock shoots past LHC every morning around 7 AM." }
+                ],
+                unlocked: false, unlockHint: "Zone 1 (150)"
+            },
+            {
+                id: "asikoe2", n: "Asian Koel", sci: "Eudynamys scolopaceus",
+                ebirdUrl: "https://ebird.org/species/asikoe2/L2747804",
+                icon: "🐦‍⬛", col: "#252d38", bel: "#344050", wing: "#171d24", beak: "#95a56c",
+                rad: 1.08, rg: 0.62, maxReticleSpeed: 186, maxAmmo: 6, ptMult: 1.05,
+                perk: "6 Ammo · Rapid Reload", callLabel: "Ku-oo!",
+                hotspots: ["Hostel Trees", "Faculty Housing", "Nalanda"],
+                facts: "Glossy blue-black male with ruby-red eye; speckled brown female. Famous for its rising summer duet.",
+                comments: [
+                    { user: "Rajesh Prasad (eBird)", spot: "29 Jul 2026", text: "Observed calling loudly from tall hostel-side trees." },
+                    { user: "Kabir (Aravali)", spot: "Mess Lawn", text: "Their rising 'ku-oo' call is the soundtrack of summer semester." }
+                ],
+                unlocked: false, unlockHint: "Zone 2 (250)"
+            },
+            {
+                id: "rewlap1", n: "Red-wattled Lapwing", sci: "Vanellus indicus",
+                ebirdUrl: "https://ebird.org/species/rewlap1/L2747804",
+                icon: "🦤", col: "#8d6e63", bel: "#ffffff", wing: "#5d4037", beak: "#e84118",
+                rad: 1.18, rg: 0.75, maxReticleSpeed: 192, maxAmmo: 6, ptMult: 1.1,
+                perk: "+18% Splat · Sharp Aim", callLabel: "Did-he-do-it!",
+                hotspots: ["Cricket Oval", "Athletics Track", "Football Field"],
+                facts: "Black-and-white head, brown back, yellow legs, and bright red fleshy wattle in front of each eye.",
+                comments: [
+                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 3 patrolling the open campus greens." },
+                    { user: "Vikram (Vindhyachal)", spot: "Cricket Field", text: "Always calls 'did-he-do-it' near the boundary rope." }
+                ],
+                unlocked: false, unlockHint: "Zone 3 (350)"
+            },
+            {
+                id: "isbduc1", n: "Indian Spot-billed Duck", sci: "Anas poecilorhyncha",
+                ebirdUrl: "https://ebird.org/species/isbduc1/L2747804",
+                icon: "🦆", col: "#8a735c", bel: "#b39b82", wing: "#5c4a38", beak: "#1e272e",
+                rad: 1.36, rg: 0.8, maxReticleSpeed: 166, maxAmmo: 7, ptMult: 1.15,
+                perk: "7 Ammo · +36% Splash", callLabel: "Quack-quack!",
+                hotspots: ["Campus Nullah", "G3 Marsh Edge", "Monsoon Ponds"],
+                facts: "Large dabbling duck ID'd by its black bill with bright yellow tip, twin orange-red base spots, and green speculum.",
+                comments: [
+                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 2 spotted on IIT Delhi's L2747804 checklist!" },
+                    { user: "Tanvi (Design)", spot: "Nullah Bridge", text: "Look for the twin red spots at the base of its yellow-tipped bill." }
+                ],
+                unlocked: false, unlockHint: "Zone 4 (450)"
+            },
+            {
+                id: "compea", n: "Indian Peafowl", sci: "Pavo cristatus",
+                ebirdUrl: "https://ebird.org/species/compea/L2747804",
+                icon: "🦚", col: "#0984e3", bel: "#00cec9", wing: "#20bf6b", beak: "#f39c12",
+                rad: 1.42, rg: 0.78, maxReticleSpeed: 170, maxAmmo: 7, ptMult: 1.25,
+                perk: "+42% Splat · +25% Score", callLabel: "May-awe!",
+                hotspots: ["G4 Mehrauli Edge", "Faculty Housing", "Ridge Trees"],
+                facts: "Iconic resident of IITD's quieter wooded East & South campus. Males carry sapphire necks and eyespot trains.",
+                comments: [
+                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 5 peafowls observed on campus!" },
+                    { user: "Ananya (Himadri)", spot: "East Campus", text: "Best heard calling at sunrise near faculty gardens." }
+                ],
+                unlocked: false, unlockHint: "Zone 5 (600)"
+            },
+            {
+                id: "blakit1", n: "Black Kite", sci: "Milvus migrans",
+                ebirdUrl: "https://ebird.org/species/blakit1/L2747804",
+                icon: "🦅", col: "#5d4037", bel: "#8d6e63", wing: "#3e2723", beak: "#f1c40f",
+                rad: 1.15, rg: 0.6, maxReticleSpeed: 220, maxAmmo: 6, ptMult: 1.2,
+                perk: "Apex Speed · +20% Score", callLabel: "Kwee-eee!",
+                hotspots: ["Dogra Hall Sky", "Wind T", "Cricket Thermals"],
+                facts: "Dark brown raptor instantly identified in flight by its shallowly forked tail and angled soaring wings.",
+                comments: [
+                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 3 soaring smoothly above institutional lawns." },
+                    { user: "Dev (Mech)", spot: "SAC Lawn", text: "Watch them steer with their forked tails—and guard your samosa!" }
+                ],
+                unlocked: false, unlockHint: "500+ Score / All Zones"
+            }
+        ];
+
+        /* =========================================================
+           PERSISTENCE
+           ========================================================= */
+        let STATS = { totalHits: 0, bestCombo: 0, highScore: 0, totalRuns: 0, totalScore: 0 };
+        let PROGRESSION = {
+            playerId: "",
+            unlockedBirds: ["rocpig"],
+            unlockedZones: ["z_inst"],
+            zonesCleared: [],
+            zoneBest: {},
+            unlockedBgs: ["bg_inst"],
+            selectedZone: "z_inst",
+            selectedBird: "rocpig",
+            selectedBg: "auto",
+            playerName: "IITD Flier",
+            playerHostel: "Nilgiri",
+            userComments: {}
+        };
+
+        function safeGetItem(k) {
+            try { const v = localStorage.getItem(k); if (v !== null) return v; } catch (e) { }
+            try {
+                if (window.name && window.name.startsWith("PP_STORE:")) {
+                    const bag = JSON.parse(window.name.slice(9));
+                    if (bag && k in bag) return bag[k];
+                }
+            } catch (e) { }
+            return null;
+        }
+        function safeSetItem(k, v) {
+            try { localStorage.setItem(k, v); } catch (e) { }
+            try {
+                let bag = {};
+                if (window.name && window.name.startsWith("PP_STORE:")) {
+                    bag = JSON.parse(window.name.slice(9)) || {};
+                }
+                bag[k] = v;
+                window.name = "PP_STORE:" + JSON.stringify(bag);
+            } catch (e) { }
+        }
+        function safeRemoveItem(k) {
+            try { localStorage.removeItem(k); } catch (e) { }
+            try {
+                if (window.name && window.name.startsWith("PP_STORE:")) {
+                    const bag = JSON.parse(window.name.slice(9)) || {};
+                    delete bag[k];
+                    window.name = "PP_STORE:" + JSON.stringify(bag);
+                }
+            } catch (e) { }
+        }
+
+        function loadSave() {
+            try {
+                const s = safeGetItem("pp_iitd_v2_stats");
+                if (s) Object.assign(STATS, JSON.parse(s));
+                const p = safeGetItem("pp_iitd_v2_prog");
+                if (p) Object.assign(PROGRESSION, JSON.parse(p));
+            } catch (e) { }
+            if (!PROGRESSION.playerId) {
+                PROGRESSION.playerId = "p_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+                safeSetItem("pp_iitd_v2_prog", JSON.stringify(PROGRESSION));
+            }
+            BIRDS.forEach(b => { if (PROGRESSION.unlockedBirds.includes(b.id)) b.unlocked = true; });
+        }
+        function saveAll() {
+            try {
+                safeSetItem("pp_iitd_v2_stats", JSON.stringify(STATS));
+                safeSetItem("pp_iitd_v2_prog", JSON.stringify(PROGRESSION));
+            } catch (e) { }
+        }
+        function saveRunSnapshot() {
+            if ((S.state !== "play" && S.state !== "pause") || S.endingT > 0 || S.time <= 0) return;
+            try {
+                safeSetItem("pp_iitd_v2_run", JSON.stringify({
+                    zoneId: activeZone.id, birdId: activeBird.id,
+                    score: S.score, hits: S.hits, time: S.time, ammo: S.ammo,
+                    shots: S.shots, hitsTot: S.hitsTot,
+                    zoneClearedThisRun: S.zoneClearedThisRun, dangerTier: S.dangerTier,
+                    combo: S.combo, bx: B.x, by: B.y, rx: B.rx, ry: B.ry,
+                    ts: Date.now()
+                }));
+            } catch (e) { }
+        }
+        function clearRunSnapshot() {
+            safeRemoveItem("pp_iitd_v2_run");
+        }
+        function restoreRunSnapshot() {
+            try {
+                const raw = safeGetItem("pp_iitd_v2_run");
+                if (!raw) return false;
+                const snap = JSON.parse(raw);
+                if (!snap || !(snap.time > 0) || Date.now() - snap.ts > 30 * 60 * 1000) {
+                    clearRunSnapshot();
+                    return false;
+                }
+                const z = ZONES.find(x => x.id === snap.zoneId && PROGRESSION.unlockedZones.includes(x.id));
+                const b = BIRDS.find(x => x.id === snap.birdId && x.unlocked);
+                if (z) activeZone = z;
+                if (b) activeBird = b;
+                S.score = snap.score || 0;
+                S.hits = snap.hits || 0;
+                S.time = snap.time;
+                S.max = activeBird.maxAmmo;
+                S.ammo = Math.min(S.max, snap.ammo ?? S.max);
+                S.shots = snap.shots || 0;
+                S.hitsTot = snap.hitsTot || 0;
+                S.zoneClearedThisRun = !!snap.zoneClearedThisRun;
+                S.dangerTier = snap.dangerTier || 0;
+                S.combo = snap.combo || 0;
+                S.comboT = S.combo > 0 ? 2.0 : 0;
+                S.endingT = 0; S.bustReason = false;
+                poops = []; people = []; decals = []; parts = []; texts = [];
+                for (let i = 0; i < 4; i++) spawnPerson();
+                const pb = getPlayBounds();
+                B.rx = Math.max(pb.minX, Math.min(pb.maxX, snap.rx ?? W / 2));
+                B.ry = Math.max(pb.minY, Math.min(pb.maxY, snap.ry ?? H / 2));
+                B.x = Math.max(pb.minX, Math.min(pb.maxX, snap.bx ?? B.rx));
+                B.y = Math.max(pb.minY, Math.min(pb.maxY, snap.by ?? B.ry));
+                renderAmmo();
+                updateHUD();
+                showPauseMenu();
+                return true;
+            } catch (e) {
+                clearRunSnapshot();
+                return false;
+            }
+        }
+        loadSave();
+
+        let activeZone = ZONES.find(z => z.id === PROGRESSION.selectedZone) || ZONES[0];
+        let activeBird = BIRDS.find(b => b.id === PROGRESSION.selectedBird && b.unlocked) || BIRDS[0];
+
+        /* =========================================================
+           LEADERBOARD (LIVE GOOGLE SHEETS + OFFLINE FALLBACK)
+           ========================================================= */
+        const LB_API_URL="https://script.google.com/macros/s/AKfycbzHd6BtIuknmG9TXAZBHacRWnF2QQMKLDj8fvLc_exqsktjhUggLoQ94uybeuhUbI4fbA/exec";
+
+        const HOSTELS = ["Nilgiri", "Karakoram", "Aravali", "Jwalamukhi", "Kailash", "Himadri", "Vindhyachal", "Faculty / Day"];
+
+        const LIVE_LB={players:null, hostels:null, loading:false, offline:false, lastFetch:0, syncPromise:null};
+
+        function hasLiveApi(){
+          return LB_API_URL && LB_API_URL.startsWith("https://");
+        }
+
+        function buildSyncPayload(){
+          return JSON.stringify({
+            playerId:PROGRESSION.playerId,
+            name:PROGRESSION.playerName||"IITD Flier",
+            hostel:PROGRESSION.playerHostel||"Nilgiri",
+            highScore:STATS.highScore,
+            totalScore:STATS.totalScore,
+            bird:activeBird.n
+          });
+        }
+
+        function syncScoreToSheet(useBeacon=false){
+          if(!hasLiveApi()) return Promise.resolve();
+          const payload=buildSyncPayload();
+          if(useBeacon && navigator.sendBeacon){
+            try{
+              const ok=navigator.sendBeacon(LB_API_URL, new Blob([payload], {type:"text/plain;charset=utf-8"}));
+              if(ok){ LIVE_LB.lastFetch=0; return Promise.resolve(); }
+            }catch(e){}
+          }
+          const p=(async()=>{
+            try{
+              await fetch(LB_API_URL, {
+                method:"POST",
+                mode:"no-cors",
+                keepalive:true,
+                headers:{"Content-Type":"text/plain;charset=utf-8"},
+                body:payload
+              });
+              LIVE_LB.lastFetch=0;
+            }catch(e){
+              LIVE_LB.offline=true;
+            }
+          })();
+          LIVE_LB.syncPromise=p;
+          return p;
+        }
+
+        async function fetchLiveLeaderboard(force=false){
+          if(!hasLiveApi()) return;
+          if(LIVE_LB.syncPromise){
+            try{ await LIVE_LB.syncPromise; }catch(e){}
+          }
+          const now=Date.now();
+          if(!force && LIVE_LB.players && now-LIVE_LB.lastFetch<3000) return;
+          if(LIVE_LB.loading) return;
+          LIVE_LB.loading=true;
+          LIVE_LB.offline=false;
+          const ctrl=new AbortController();
+          const timer=setTimeout(()=>ctrl.abort(), 7000);
+          try{
+            const res=await fetch(LB_API_URL + "?t=" + Date.now(), {signal:ctrl.signal, cache:"no-store"});
+            const json=await res.json();
+            if(json && json.ok){
+              LIVE_LB.players=json.players||[];
+              LIVE_LB.hostels=json.hostels||[];
+              LIVE_LB.lastFetch=Date.now();
+            }
+          }catch(e){
+            LIVE_LB.offline=true;
+          }finally{
+            clearTimeout(timer);
+            LIVE_LB.loading=false;
+            if(!$("ov").classList.contains("hide") && $("seg-campus")) openLeaderboardSheet(true);
+          }
+        }
+
+        function getBirderRank(score) {
+            if (score >= 700) return "🏆 Legend";
+            if (score >= 500) return "🦅 Warden";
+            if (score >= 350) return "🦉 Lead";
+            if (score >= 200) return "🦜 Spotter";
+            return "🕊️ Rookie";
+        }
+
+        function getCombinedLeaderboard() {
+            const myId = PROGRESSION.playerId;
+            const myName = PROGRESSION.playerName || "IITD Flier";
+            const myHostel = PROGRESSION.playerHostel || "Nilgiri";
+            const list = (LIVE_LB.players || []).map(p => {
+                if (p.playerId === myId) {
+                    return {
+                        ...p,
+                        name: myName,
+                        hostel: myHostel,
+                        score: Math.max(Number(p.score) || 0, STATS.highScore),
+                        bird: activeBird.n,
+                        isMe: true
+                    };
+                }
+                return { ...p, isMe: false };
+            });
+            if (!list.some(p => p.isMe)) {
+                list.push({
+                    playerId: myId,
+                    name: myName,
+                    hostel: myHostel,
+                    score: STATS.highScore,
+                    bird: activeBird.n,
+                    isMe: true
+                });
+            }
+            return list.sort((a, b) => b.score - a.score);
+        }
+
+        function getHostelStandings() {
+            const myH = PROGRESSION.playerHostel || "Nilgiri";
+            if (LIVE_LB.hostels && LIVE_LB.hostels.length) {
+                return LIVE_LB.hostels.map(h => ({ hostel: h.hostel, pts: h.pts, isMe: h.hostel === myH })).sort((a, b) => b.pts - a.pts);
+            }
+            return [{ hostel: myH, pts: STATS.totalScore, isMe: true }];
+        }
+
+        /* =========================================================
+           GAME STATE
+           ========================================================= */
+        const S = {
+            state: "home", score: 0, hits: 0, time: 40,
+            ammo: 5, max: 5, regen: 0, combo: 0, comboT: 0, shake: 0, freeze: 0, cd: 0, shots: 0, hitsTot: 0,
+            zoneClearedThisRun: false, dangerTier: 0,
+            endingT: 0, bustReason: false,
+            hasSteered: false, hasDropped: false
+        };
+
+        function getDangerTier(score) { return Math.floor(score / PENALTY_SCORE_STEP); }
+        function getPenaltyMult(tier) { return 1 + tier * 0.5; }
+        function getHunterPenaltySec(tier) { return Math.round(BASE_HUNTER_PENALTY * getPenaltyMult(tier)); }
+
+        const B = { x: 200, y: 300, face: 1, t: 0, sq: 0, tilt: 0, rx: 200, ry: 300 };
+        const joyEl = $("joystick-container"), knobEl = $("joystick-knob"), leftZone = $("left-touch-zone");
+        const joyState = { active: false, pid: null, cx: 0, cy: 0, dx: 0, dy: 0, maxRadius: 36 };
+
+        /* =========================================================
+           WEB AUDIO & HAPTICS
+           ========================================================= */
+        let AC, muted = false;
+        function ensureAC() {
+            try {
+                AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+                if (AC.state === "suspended") AC.resume();
+                return AC;
+            } catch (e) { return null; }
+        }
+        function haptic(ms = 10) {
+            try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { }
+        }
+        function snd(freq, dur, type = "sine", vol = 0.12, slide = 0) {
+            if (muted) return;
+            const ac = ensureAC(); if (!ac) return;
+            try {
+                const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+                o.type = type; o.frequency.setValueAtTime(freq, t);
+                if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(20, freq + slide), t + dur);
+                g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+                o.connect(g); g.connect(ac.destination); o.start(); o.stop(t + dur);
+            } catch (e) { }
+        }
+
+        function playBirdCall(birdId, floatOnBird = false) {
+            if (floatOnBird && S.state === "play") {
+                const b = BIRDS.find(x => x.id === birdId) || activeBird;
+                addText(B.x, B.y - 76 * UI_SCALE, `🎵 ${b.callLabel}`, "#fff7b2", 14);
+            }
+            if (muted) return;
+            const ac = ensureAC(); if (!ac) return;
+            const t = ac.currentTime;
+            const tone = (f1, f2, start, dur, type = "sine", vol = 0.14) => {
+                const o = ac.createOscillator(), g = ac.createGain();
+                o.type = type; o.frequency.setValueAtTime(f1, t + start);
+                o.frequency.exponentialRampToValueAtTime(Math.max(40, f2), t + start + dur);
+                g.gain.setValueAtTime(0.001, t + start);
+                g.gain.linearRampToValueAtTime(vol, t + start + dur * 0.18);
+                g.gain.exponentialRampToValueAtTime(0.001, t + start + dur);
+                o.connect(g); g.connect(ac.destination); o.start(t + start); o.stop(t + start + dur + 0.02);
+            };
+
+            if (birdId === "rocpig") {
+                tone(290, 340, 0, 0.13, "sine", 0.14); tone(330, 310, 0.14, 0.1, "sine", 0.11); tone(310, 250, 0.25, 0.18, "sine", 0.13);
+            } else if (birdId === "rorpar") {
+                tone(1950, 2800, 0, 0.10, "sawtooth", 0.08); tone(2500, 1450, 0.10, 0.09, "triangle", 0.10); tone(2050, 2900, 0.23, 0.11, "sawtooth", 0.08);
+            } else if (birdId === "asikoe2") {
+                tone(660, 620, 0, 0.12, "sine", 0.15); tone(740, 990, 0.14, 0.22, "sine", 0.16);
+                tone(700, 660, 0.40, 0.11, "sine", 0.13); tone(800, 1120, 0.53, 0.23, "sine", 0.16);
+            } else if (birdId === "rewlap1") {
+                tone(1350, 1550, 0, 0.07, "triangle", 0.13); tone(1400, 1300, 0.09, 0.07, "triangle", 0.11);
+                tone(1600, 1900, 0.18, 0.09, "triangle", 0.14); tone(1450, 1200, 0.29, 0.12, "triangle", 0.12);
+            } else if (birdId === "isbduc1") {
+                const quack = (st, dur, base) => {
+                    const o = ac.createOscillator(), f = ac.createBiquadFilter(), g = ac.createGain();
+                    o.type = "sawtooth"; o.frequency.setValueAtTime(base, t + st);
+                    o.frequency.exponentialRampToValueAtTime(base * 0.72, t + st + dur);
+                    f.type = "bandpass"; f.frequency.setValueAtTime(920, t + st); f.Q.value = 3.2;
+                    g.gain.setValueAtTime(0.001, t + st); g.gain.linearRampToValueAtTime(0.24, t + st + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + st + dur);
+                    o.connect(f); f.connect(g); g.connect(ac.destination); o.start(t + st); o.stop(t + st + dur + 0.02);
+                };
+                quack(0, 0.14, 360); quack(0.17, 0.13, 340); quack(0.33, 0.17, 310);
+            } else if (birdId === "compea") {
+                tone(520, 880, 0, 0.2, "sawtooth", 0.09); tone(880, 560, 0.2, 0.32, "triangle", 0.15);
+            } else if (birdId === "blakit1") {
+                tone(2200, 1950, 0, 0.14, "sine", 0.12); tone(1950, 1450, 0.14, 0.3, "sine", 0.11);
+            }
+        }
+
+        /* =========================================================
+           RESIZE & SCENERY
+           ========================================================= */
+        function resetJoystickAnchor() {
+            const size = 108;
+            joyEl.style.left = "22px";
+            joyEl.style.top = (H - 26 - size) + "px";
+            knobEl.style.transform = "translate(0px,0px)";
+        }
+
+        function getPlayBounds() {
+            const margin = 30 * UI_SCALE;
+            const minY = Math.max(108, H * 0.15);
+            const maxY = Math.max(minY + 80, H - 154);
+            return { minX: margin, maxX: W - margin, minY, maxY };
+        }
+
+        function resize() {
+            DPR = Math.min(window.devicePixelRatio || 1, 2.5);
+            W = window.innerWidth; H = window.innerHeight;
+            cv.width = W * DPR; cv.height = H * DPR;
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            UI_SCALE = Math.max(0.85, Math.min(1.2, W / 400));
+
+            const pb = getPlayBounds();
+            deco.trees = [];
+            for (let i = 0; i < 7; i++) deco.trees.push({ x: R(32, W - 32), y: R(pb.minY, pb.maxY), r: R(17, 25) * UI_SCALE });
+            deco.flowers = [];
+            for (let i = 0; i < 18; i++) deco.flowers.push({ x: R(20, W - 20), y: R(90, H - 80), c: pick(["#fff7b2", "#ffd6e0", "#ffffff", "#d0f0ff"]) });
+            deco.clouds = [];
+            for (let i = 0; i < 5; i++) deco.clouds.push({ x: R(0, W), y: R(40, H * 0.42), s: R(0.7, 1.2), sp: R(8, 16) });
+            if (!joyState.active) resetJoystickAnchor();
+        }
+        window.addEventListener("resize", resize);
+
+        function getCurrentBgId() {
+            if (PROGRESSION.selectedBg && PROGRESSION.selectedBg !== "auto") return PROGRESSION.selectedBg;
+            return activeZone.bgId;
+        }
+
+        function renderZoneBackground(targetCtx, bgId, w, h, trees) {
+            if (bgId === "bg_inst") {
+                targetCtx.fillStyle = "#b8e79f"; targetCtx.fillRect(0, 0, w, h);
+                targetCtx.strokeStyle = "#f0f4e6"; targetCtx.lineWidth = 22; targetCtx.lineCap = "round";
+                targetCtx.beginPath(); targetCtx.moveTo(0, h * 0.48); targetCtx.lineTo(w, h * 0.48); targetCtx.moveTo(w * 0.5, 0); targetCtx.lineTo(w * 0.5, h); targetCtx.stroke();
+                targetCtx.fillStyle = "#dbe8f4"; targetCtx.fillRect(w * 0.18, 52, w * 0.64, 32);
+                targetCtx.fillStyle = "#4589e6"; targetCtx.fillRect(w * 0.2, 58, w * 0.26, 20); targetCtx.fillRect(w * 0.52, 58, w * 0.28, 20);
+            } else if (bgId === "bg_hostel") {
+                targetCtx.fillStyle = "#c5e299"; targetCtx.fillRect(0, 0, w, h);
+                targetCtx.fillStyle = "#f4ecde"; targetCtx.fillRect(w * 0.12, h * 0.24, w * 0.76, h * 0.54);
+                targetCtx.fillStyle = "#eb8a38"; targetCtx.fillRect(14, h * 0.26, 24, h * 0.48); targetCtx.fillRect(w - 38, h * 0.26, 24, h * 0.48);
+            } else if (bgId === "bg_maidan") {
+                targetCtx.fillStyle = "#9adb7b"; targetCtx.fillRect(0, 0, w, h);
+                targetCtx.fillStyle = "#aae78e"; for (let i = 0; i < w; i += 46) targetCtx.fillRect(i, 0, 23, h);
+                const r = Math.min(w, h) * 0.34;
+                targetCtx.strokeStyle = "rgba(255,255,255,0.68)"; targetCtx.lineWidth = 4;
+                targetCtx.beginPath(); targetCtx.arc(w / 2, h / 2, r, 0, Math.PI * 2); targetCtx.stroke();
+                targetCtx.fillStyle = "#e6cf9f"; targetCtx.fillRect(w / 2 - 12, h / 2 - 40, 24, 80);
+            } else if (bgId === "bg_nullah") {
+                targetCtx.fillStyle = "#a3dc8d"; targetCtx.fillRect(0, 0, w, h);
+                targetCtx.strokeStyle = "#6cc7e6"; targetCtx.lineWidth = 52; targetCtx.lineCap = "round";
+                targetCtx.beginPath(); targetCtx.moveTo(-20, h * 0.82); targetCtx.bezierCurveTo(w * 0.35, h * 0.7, w * 0.55, h * 0.32, w + 20, h * 0.2); targetCtx.stroke();
+                targetCtx.strokeStyle = "#94dcf4"; targetCtx.lineWidth = 24; targetCtx.stroke();
+                targetCtx.fillStyle = "#ad8156"; targetCtx.fillRect(w * 0.44, h * 0.44, 44, 22);
+            } else {
+                targetCtx.fillStyle = "#8ccf77"; targetCtx.fillRect(0, 0, w, h);
+                targetCtx.fillStyle = "rgba(46,125,50,0.12)";
+                targetCtx.beginPath(); targetCtx.arc(w * 0.2, h * 0.3, 95, 0, Math.PI * 2); targetCtx.fill();
+                targetCtx.beginPath(); targetCtx.arc(w * 0.8, h * 0.72, 110, 0, Math.PI * 2); targetCtx.fill();
+                targetCtx.fillStyle = "#f6d55c"; targetCtx.fillRect(w - 56, 92, 32, 22); targetCtx.fillRect(24, h - 175, 32, 22);
+            }
+
+            deco.flowers.forEach(fl => {
+                targetCtx.fillStyle = fl.c;
+                targetCtx.beginPath(); targetCtx.arc(fl.x, fl.y, 2.2, 0, Math.PI * 2); targetCtx.fill();
+            });
+
+            const treeCol = bgId === "bg_ridge" ? "#4da84d" : "#78c66d", crownCol = bgId === "bg_ridge" ? "#6ec46e" : "#97df8d";
+            trees.forEach(t => {
+                targetCtx.fillStyle = "rgba(0,0,0,0.07)";
+                targetCtx.beginPath(); targetCtx.ellipse(t.x, t.y + t.r * 0.48, t.r, t.r * 0.4, 0, 0, Math.PI * 2); targetCtx.fill();
+                targetCtx.fillStyle = treeCol; targetCtx.beginPath(); targetCtx.arc(t.x, t.y, t.r, 0, Math.PI * 2); targetCtx.fill();
+                targetCtx.fillStyle = crownCol; targetCtx.beginPath(); targetCtx.arc(t.x - t.r * 0.2, t.y - t.r * 0.2, t.r * 0.64, 0, Math.PI * 2); targetCtx.fill();
+            });
+        }
+
+        function renderHomeBackdrop(dt) {
+            const g = ctx.createLinearGradient(0, 0, 0, H);
+            g.addColorStop(0, "#72c7f1");
+            g.addColorStop(0.55, "#c5ecfc");
+            g.addColorStop(0.56, "#9edc80");
+            g.addColorStop(1, "#7ac35b");
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, W, H);
+
+            // Stylized IITD Main Building & clocktower silhouette on the horizon
+            const hy = H * 0.56;
+            ctx.fillStyle = "rgba(91,158,72,0.45)";
+            ctx.fillRect(W * 0.5 - 72, hy - 34, 144, 34);
+            ctx.fillRect(W * 0.5 - 14, hy - 62, 28, 30);
+            ctx.beginPath(); ctx.arc(W * 0.5, hy - 62, 14, Math.PI, 0); ctx.fill();
+
+            ctx.fillStyle = "#66b44f";
+            for (let x = -20; x < W + 40; x += 48) {
+                ctx.beginPath(); ctx.arc(x, hy, 28, 0, Math.PI * 2); ctx.fill();
+            }
+
+            deco.clouds.forEach(cl => {
+                cl.x += cl.sp * dt;
+                if (cl.x > W + 90) cl.x = -90;
+                ctx.save(); ctx.translate(cl.x, cl.y); ctx.scale(cl.s, cl.s);
+                ctx.fillStyle = "rgba(255,255,255,0.88)";
+                ctx.beginPath();
+                ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.arc(18, -6, 22, 0, Math.PI * 2); ctx.arc(38, 0, 16, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            const t = T0 / 1000;
+            homeBirdSpin = Math.max(0, homeBirdSpin - dt * 2.4);
+            const bx = W * 0.5 + Math.sin(t * 0.8) * Math.min(115, W * 0.26);
+            const by = H * 0.155 + Math.sin(t * 1.9) * 10;
+            const face = Math.cos(t * 0.8) >= 0 ? 1 : -1;
+            const tilt = Math.sin(t * 1.9) * 0.12 + homeBirdSpin * Math.PI * 2;
+            drawBirdSprite(ctx, activeBird, bx, by, 1.32 * UI_SCALE, face, tilt, Math.sin(t * 11) * 0.45, 0);
+        }
+
+        function drawBirdSprite(targetCtx, bird, x, y, scale, face, tilt, flap, sq) {
+            targetCtx.save();
+            targetCtx.translate(x, y);
+            targetCtx.rotate(tilt);
+            targetCtx.scale(face * (1 + sq * 0.22) * scale, (1 - sq * 0.22) * scale);
+
+            if (bird.id === "rorpar") {
+                targetCtx.fillStyle = "#27ae60";
+                targetCtx.beginPath(); targetCtx.moveTo(-14, 2); targetCtx.lineTo(-42, 6); targetCtx.lineTo(-14, -3); targetCtx.fill();
+            } else if (bird.id === "compea") {
+                targetCtx.fillStyle = "#20bf6b";
+                targetCtx.beginPath(); targetCtx.moveTo(-12, 0); targetCtx.lineTo(-42, -11); targetCtx.lineTo(-44, 11); targetCtx.closePath(); targetCtx.fill();
+                targetCtx.fillStyle = "#0984e3"; targetCtx.beginPath(); targetCtx.arc(-34, -4, 3.2, 0, Math.PI * 2); targetCtx.arc(-35, 4, 3.2, 0, Math.PI * 2); targetCtx.fill();
+                targetCtx.fillStyle = "#f1c40f"; targetCtx.beginPath(); targetCtx.arc(-34, -4, 1.4, 0, Math.PI * 2); targetCtx.arc(-35, 4, 1.4, 0, Math.PI * 2); targetCtx.fill();
+            } else if (bird.id === "blakit1") {
+                targetCtx.fillStyle = "#3e2723";
+                targetCtx.beginPath(); targetCtx.moveTo(-12, 0); targetCtx.lineTo(-34, -9); targetCtx.lineTo(-27, 0); targetCtx.lineTo(-34, 9); targetCtx.closePath(); targetCtx.fill();
+            } else {
+                targetCtx.fillStyle = bird.wing;
+                targetCtx.beginPath(); targetCtx.moveTo(-14, -3); targetCtx.lineTo(-27, -6); targetCtx.lineTo(-27, 5); targetCtx.lineTo(-14, 4); targetCtx.fill();
+            }
+
+            targetCtx.fillStyle = bird.col; targetCtx.beginPath(); targetCtx.ellipse(0, 0, 18, 13.5, 0, 0, Math.PI * 2); targetCtx.fill();
+            targetCtx.fillStyle = bird.bel; targetCtx.beginPath(); targetCtx.ellipse(2, 4, 12, 8, 0, 0, Math.PI * 2); targetCtx.fill();
+
+            if (bird.id === "isbduc1") {
+                targetCtx.fillStyle = "#00b894"; targetCtx.beginPath(); targetCtx.ellipse(-5, 2, 6, 3.2, -0.2, 0, Math.PI * 2); targetCtx.fill();
+            }
+            if (bird.id === "rocpig") {
+                targetCtx.strokeStyle = "#2d3436"; targetCtx.lineWidth = 2;
+                targetCtx.beginPath(); targetCtx.moveTo(-8, -3); targetCtx.lineTo(-4, 5); targetCtx.stroke();
+            }
+
+            targetCtx.save();
+            targetCtx.translate(-4, -2); targetCtx.rotate(flap);
+            targetCtx.fillStyle = bird.wing; targetCtx.beginPath(); targetCtx.ellipse(-5, 0, 13, 6.5, 0, 0, Math.PI * 2); targetCtx.fill();
+            targetCtx.restore();
+
+            targetCtx.fillStyle = bird.id === "rewlap1" ? "#2c3e50" : bird.col;
+            targetCtx.beginPath(); targetCtx.arc(14, -8, 9.5, 0, Math.PI * 2); targetCtx.fill();
+
+            if (bird.id === "rorpar") {
+                targetCtx.strokeStyle = "#ff6b81"; targetCtx.lineWidth = 2.5;
+                targetCtx.beginPath(); targetCtx.arc(10, -3, 7, 0.2, 1.7); targetCtx.stroke();
+            } else if (bird.id === "compea") {
+                targetCtx.strokeStyle = "#0984e3"; targetCtx.lineWidth = 1.5;
+                targetCtx.beginPath(); targetCtx.moveTo(13, -17); targetCtx.lineTo(10, -24); targetCtx.moveTo(15, -17); targetCtx.lineTo(15, -25); targetCtx.stroke();
+                targetCtx.fillStyle = "#00cec9"; targetCtx.beginPath(); targetCtx.arc(10, -24, 1.7, 0, Math.PI * 2); targetCtx.arc(15, -25, 1.7, 0, Math.PI * 2); targetCtx.fill();
+            } else if (bird.id === "rewlap1") {
+                targetCtx.fillStyle = "#fff"; targetCtx.beginPath(); targetCtx.ellipse(11, -4, 4, 2.5, 0, 0, Math.PI * 2); targetCtx.fill();
+                targetCtx.fillStyle = "#e84118"; targetCtx.beginPath(); targetCtx.arc(20, -10, 3.2, 0, Math.PI * 2); targetCtx.fill();
+            }
+
+            if (bird.id === "isbduc1") {
+                targetCtx.fillStyle = "#1e272e"; targetCtx.beginPath(); targetCtx.roundRect(20, -10, 14, 5.5, 2.5); targetCtx.fill();
+                targetCtx.fillStyle = "#ffc400"; targetCtx.beginPath(); targetCtx.roundRect(30, -10, 4.5, 5.5, 2); targetCtx.fill();
+                targetCtx.fillStyle = "#ff4757"; targetCtx.beginPath(); targetCtx.arc(21.5, -9, 2, 0, Math.PI * 2); targetCtx.fill();
+            } else if (bird.id === "blakit1" || bird.id === "rorpar") {
+                targetCtx.fillStyle = bird.beak; targetCtx.beginPath(); targetCtx.moveTo(21, -11); targetCtx.quadraticCurveTo(31, -9, 29, -2); targetCtx.lineTo(21, -5); targetCtx.fill();
+            } else {
+                targetCtx.fillStyle = bird.beak; targetCtx.beginPath(); targetCtx.moveTo(21, -10); targetCtx.lineTo(30, -7); targetCtx.lineTo(21, -4); targetCtx.fill();
+            }
+
+            targetCtx.fillStyle = bird.id === "asikoe2" ? "#ff2e2e" : "#2f3542";
+            targetCtx.beginPath(); targetCtx.arc(17, -10, 2.6, 0, Math.PI * 2); targetCtx.fill();
+            targetCtx.fillStyle = "#fff"; targetCtx.beginPath(); targetCtx.arc(17.8, -10.8, 0.9, 0, Math.PI * 2); targetCtx.fill();
+            targetCtx.restore();
+        }
+
+        function drawBirdIconCanvas(canvasEl, bird) {
+            if (!canvasEl) return;
+            const c = canvasEl.getContext("2d"), w = canvasEl.width, h = canvasEl.height;
+            c.clearRect(0, 0, w, h);
+            drawBirdSprite(c, bird, w * 0.48, h * 0.58, w / 78, 1, -0.06, 0.15, 0);
+        }
+
+        /* =========================================================
+           PEDESTRIANS & CAMPUS GUARDS
+           ========================================================= */
+        const SHIRTS = ["#ff5252", "#ff793f", "#34ace0", "#33d9b2", "#ffb142", "#706fd3"];
+        const HAIRS = ["#2c2c54", "#474787", "#84817a", "#d1ccc0"];
+        const SKINS = ["#ffda79", "#f8c291", "#e77f67", "#fad390"];
+
+        function countCurrentHunters() {
+            let c = 0; for (const p of people) if (p.isHunter && p.hit <= 0) c++; return c;
+        }
+
+        function spawnPerson() {
+            const pb = getPlayBounds();
+            const currentHunters = countCurrentHunters();
+            let isHunter = false;
+            if (currentHunters < MAX_HUNTERS) {
+                const hunterChance = Math.min(0.42, 0.16 + activeZone.num * 0.025 + S.dangerTier * 0.045);
+                isHunter = Math.random() < hunterChance;
+            }
+            const speedBoost = S.dangerTier * 3;
+            people.push({
+                isHunter,
+                x: Math.random() < 0.5 ? -30 : W + 30, y: R(pb.minY, pb.maxY),
+                tx: R(pb.minX + 10, pb.maxX - 10), ty: R(pb.minY, pb.maxY),
+                sp: isHunter ? R(18, 28) + speedBoost : R(22, 34) + S.dangerTier * 2,
+                col: isHunter ? "#535c68" : pick(SHIRTS),
+                hair: pick(HAIRS), skin: pick(SKINS),
+                ph: R(0, 6), hit: 0, dead: false, bub: "", bubT: 0
+            });
+        }
+
+        function updPeople(dt) {
+            const pb = getPlayBounds();
+            const targetCount = Math.min(6 + activeZone.num + S.dangerTier, 12);
+            let living = 0; for (const p of people) if (p.hit <= 0) living++;
+            if (living < targetCount && Math.random() < dt * 2.8) spawnPerson();
+
+            for (const p of people) {
+                p.ph += dt * p.sp * 0.1;
+                if (p.bubT > 0) p.bubT -= dt;
+                if (p.hit > 0) { p.hit -= dt; p.x += p.vx * dt; p.y += p.vy * dt; if (p.hit <= 0) p.dead = true; continue; }
+                const dx = p.tx - p.x, dy = p.ty - p.y, d = Math.hypot(dx, dy);
+                if (d < 12) { p.tx = R(pb.minX + 10, pb.maxX - 10); p.ty = R(pb.minY, pb.maxY); }
+                else { p.x += dx / d * p.sp * dt; p.y += dy / d * p.sp * dt; }
+            }
+            people = people.filter(p => !p.dead);
+        }
+
+        function findReticleTarget(rx, ry) {
+            const radius = 26 * activeBird.rad * UI_SCALE;
+            let bestWalker = null, bestWalkerD = Infinity;
+            let bestHunter = null, bestHunterD = Infinity;
+            for (const p of people) {
+                if (p.hit > 0) continue;
+                const d = Math.hypot(p.x - rx, (p.y - 12) - ry);
+                if (d < radius) {
+                    if (p.isHunter) { if (d < bestHunterD) { bestHunter = p; bestHunterD = d; } }
+                    else { if (d < bestWalkerD) { bestWalker = p; bestWalkerD = d; } }
+                }
+            }
+            return bestWalker || bestHunter;
+        }
+
+        /* =========================================================
+           POOP BALLISTICS, BANNER QUEUE & SCORING
+           ========================================================= */
+        let bannerQueue = [], bannerTimer = null;
+        function banner(main, sub) {
+            bannerQueue.push({ main, sub });
+            if (!bannerTimer) flushBanner();
+        }
+        function flushBanner() {
+            if (!bannerQueue.length) { bannerTimer = null; return; }
+            const { main, sub } = bannerQueue.shift();
+            const b = $("banner");
+            b.innerHTML = `${main}<small>${sub}</small>`;
+            b.classList.remove("show"); void b.offsetWidth; b.classList.add("show");
+            bannerTimer = setTimeout(() => flushBanner(), 1950);
+        }
+        function clearBanners() {
+            bannerQueue = [];
+            if (bannerTimer) { clearTimeout(bannerTimer); bannerTimer = null; }
+            $("banner").classList.remove("show");
+        }
+
+        function dropPoop() {
+            if (S.state !== "play" || S.endingT > 0 || S.cd > 0) return;
+            if (!S.hasDropped) {
+                S.hasDropped = true;
+                $("hint-drop").classList.remove("show");
+            }
+            if (S.ammo < 1) {
+                S.cd = 0.2; snd(220, 0.08, "sawtooth", 0.1);
+                addText(B.rx, B.ry - 38, "Reloading!", "#fff", 15);
+                return;
+            }
+            S.ammo--; S.cd = 0.14; B.sq = 1; S.shots++;
+            haptic(10);
+            poops.push({ sx: B.x, sy: B.y, tx: B.rx, ty: B.ry, x: B.x, y: B.y, t: 0, dur: 0.32 });
+            snd(720, 0.26, "sine", 0.09, -400);
+            burst(B.x, B.y - 20, 4, ["#8c5738", "#a26945"], 60);
+            renderAmmo();
+        }
+
+        function unlockBird(birdId) {
+            const b = BIRDS.find(x => x.id === birdId);
+            if (b && !b.unlocked) {
+                b.unlocked = true;
+                if (!PROGRESSION.unlockedBirds.includes(birdId)) PROGRESSION.unlockedBirds.push(birdId);
+                saveAll();
+                return b;
+            }
+            return null;
+        }
+
+        function checkZoneClear() {
+            if (!S.zoneClearedThisRun && S.score >= activeZone.target) {
+                S.zoneClearedThisRun = true;
+                if (!PROGRESSION.zonesCleared.includes(activeZone.id)) PROGRESSION.zonesCleared.push(activeZone.id);
+                if (!PROGRESSION.unlockedBgs.includes(activeZone.bgId)) PROGRESSION.unlockedBgs.push(activeZone.bgId);
+                const nextIdx = ZONES.findIndex(z => z.id === activeZone.id) + 1;
+                if (nextIdx < ZONES.length) {
+                    const nz = ZONES[nextIdx];
+                    if (!PROGRESSION.unlockedZones.includes(nz.id)) PROGRESSION.unlockedZones.push(nz.id);
+                }
+                const newBird = unlockBird(activeZone.unlockBird);
+                S.time = Math.min(S.time + 12, 55);
+                saveAll();
+                const sub = newBird ? `Unlocked ${newBird.icon} ${newBird.n}! (+12s)` : `Next Zone Ready! (+12s)`;
+                banner(`${activeZone.short.toUpperCase()} CLEARED!`, sub);
+                setTimeout(() => playBirdCall(activeBird.id, false), 220);
+            }
+        }
+
+        function checkDangerEscalation() {
+            const newTier = getDangerTier(S.score);
+            if (newTier > S.dangerTier) {
+                S.dangerTier = newTier;
+                const mult = getPenaltyMult(newTier).toFixed(1);
+                const pen = getHunterPenaltySec(newTier);
+                snd(330, 0.12, "sawtooth", 0.15, 220);
+                banner(`⚠️ DANGER ×${mult}!`, `Guards now steal -${pen}s!`);
+            }
+        }
+
+        function landPoop(po) {
+            const hitPerson = findReticleTarget(po.tx, po.ty);
+
+            if (hitPerson) {
+                const p = hitPerson;
+                if (p.isHunter) {
+                    const pen = getHunterPenaltySec(S.dangerTier);
+                    const mult = getPenaltyMult(S.dangerTier);
+                    S.time = Math.max(0, S.time - pen);
+                    S.combo = 0; hideCombo(); S.shake = 18;
+                    haptic(45);
+                    const flash = $("danger-flash");
+                    flash.style.opacity = "1"; setTimeout(() => flash.style.opacity = "0", 260);
+                    p.bub = "BUSTED!"; p.bubT = 1.4;
+                    snd(120, 0.45, "sawtooth", 0.35, -70);
+                    burst(po.tx, po.ty - 20, 24, ["#e84118", "#ffc400", "#2f3542"], 260);
+                    addText(po.tx, po.ty - 44, `-${pen}s${mult > 1 ? ` (×${mult})` : ""}`, "#ff4757", 24);
+                    p.hit = 1.0; p.vx = 0; p.vy = 0;
+                    if (S.time <= 0) {
+                        S.bustReason = true;
+                        S.endingT = 0.55;
+                    }
+                    return;
+                }
+
+                S.combo++; S.comboT = 2.8;
+                if (S.combo > STATS.bestCombo) STATS.bestCombo = S.combo;
+
+                const mult = Math.min(1 + (S.combo - 1) * 0.5, 4) * (activeBird.ptMult || 1);
+                const pts = Math.round(25 * mult);
+                S.score += pts; S.hits++; S.hitsTot++;
+                STATS.totalHits++; STATS.totalScore += pts;
+                if (S.score > STATS.highScore) STATS.highScore = S.score;
+                PROGRESSION.zoneBest[activeZone.id] = Math.max(PROGRESSION.zoneBest[activeZone.id] || 0, S.score);
+                saveAll();
+                saveRunSnapshot();
+
+                S.time = Math.min(S.time + 1.5, 55);
+                S.ammo = Math.min(S.max, S.ammo + 1);
+                S.shake = 7; S.freeze = 0.025;
+
+                p.hit = 1.3;
+                const ang = R(0, Math.PI * 2);
+                p.vx = Math.cos(ang) * 150; p.vy = Math.sin(ang) * 150;
+                p.bub = pick(["WHO?!", "MY NOTES!", "SPLATTED!", "DIRECT HIT!"]);
+                p.bubT = 1.2;
+
+                decals.push({ x: po.tx, y: po.ty, r: R(16, 24) * activeBird.rad * UI_SCALE, a: 1 });
+                burst(po.tx, po.ty, 16, ["#784421", "#8c5738", "#ffc400"], 200);
+                addText(po.tx, po.ty - 40, `+${pts}`, "#fff", 22);
+                addText(po.tx, po.ty - 64, "+1.5s", "#7bed9f", 18);
+
+                playBirdCall(activeBird.id, true);
+                popCombo(S.combo);
+                checkZoneClear();
+                checkDangerEscalation();
+                if (STATS.highScore >= 500 || PROGRESSION.zonesCleared.length >= 5) {
+                    const kite = unlockBird("blakit1");
+                    if (kite) banner("APEX BIRDER!", "🦅 Black Kite Unlocked!");
+                }
+                renderAmmo();
+                return;
+            }
+
+            S.combo = 0; hideCombo();
+            decals.push({ x: po.tx, y: po.ty, r: R(8, 12) * UI_SCALE, a: 0.9 });
+            burst(po.tx, po.ty, 6, ["#8c5738", "#63391d"], 80);
+            snd(120, 0.1, "triangle", 0.1);
+        }
+
+        function popCombo(c) {
+            const el = $("combo-chip");
+            if (c >= 2) { el.textContent = `COMBO ×${c}`; el.classList.add("pop"); }
+            else hideCombo();
+        }
+        function hideCombo() { $("combo-chip").classList.remove("pop"); }
+        function burst(x, y, n, cols, sp) {
+            for (let i = 0; i < n; i++) {
+                const a = R(0, Math.PI * 2), s = R(0.4, 1) * sp;
+                parts.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - sp * 0.3, l: R(0.3, 0.7), c: pick(cols), r: R(2.5, 4.5) * UI_SCALE });
+            }
+        }
+        function addText(x, y, s, c, size = 20) { texts.push({ x, y, s, c, size: size * UI_SCALE, l: 0.95 }); }
+
+        function renderAmmo() {
+            const box = $("ammo-tray"); box.innerHTML = "";
+            for (let i = 0; i < S.max; i++) {
+                const pip = document.createElement("div");
+                pip.className = `ammo-pip ${i >= Math.floor(S.ammo) ? "empty" : ""}`;
+                box.appendChild(pip);
+            }
+            $("drop-btn").classList.toggle("empty-ammo", S.ammo < 1);
+        }
+
+        function updateHUD() {
+            $("sc").textContent = S.score;
+            $("tg").textContent = activeZone.target;
+            $("zone-tag").textContent = S.zoneClearedThisRun ? `Z${activeZone.num} ✓` : `Z${activeZone.num}`;
+            $("goal-pill").classList.toggle("cleared", S.zoneClearedThisRun);
+            $("tm").textContent = Math.ceil(S.time);
+            $("track-fill").style.width = `${Math.min(100, (S.score / activeZone.target) * 100)}%`;
+
+            const pen = getHunterPenaltySec(S.dangerTier);
+            const dc = $("danger-chip");
+            dc.textContent = `⚠️ -${pen}s`;
+            dc.classList.toggle("visible", S.dangerTier >= 1);
+            $("time-chip").classList.toggle("urgent", S.time <= 7 && S.state === "play");
+        }
+
+        function setFlightUI(visible) {
+            $("hud").classList.toggle("hidden", !visible);
+            $("left-touch-zone").classList.toggle("hidden", !visible);
+            joyEl.classList.toggle("hidden", !visible);
+            $("bottom-ui").classList.toggle("hidden", !visible);
+            if (!visible) {
+                $("hint-steer").classList.remove("show");
+                $("hint-drop").classList.remove("show");
+            }
+        }
+
+        /* =========================================================
+           PHYSICS & RENDER
+           ========================================================= */
+        function update(dt) {
+            if (S.endingT > 0) {
+                S.endingT -= dt;
+                parts.forEach(p => { p.l -= dt; p.vy += 450 * dt; p.x += p.vx * dt; p.y += p.vy * dt; });
+                parts = parts.filter(p => p.l > 0);
+                texts.forEach(t => { t.l -= dt; t.y -= 30 * dt; });
+                texts = texts.filter(t => t.l > 0);
+                S.shake = Math.max(0, S.shake - dt * 30);
+                if (S.endingT <= 0) gameOver();
+                return;
+            }
+
+            updPeople(dt);
+
+            let ix = 0, iy = 0;
+            if (keys.a || keys.arrowleft) ix--;
+            if (keys.d || keys.arrowright) ix++;
+            if (keys.w || keys.arrowup) iy--;
+            if (keys.s || keys.arrowdown) iy++;
+            if (ix !== 0 || iy !== 0) {
+                const l = Math.hypot(ix, iy); joyState.dx = ix / l; joyState.dy = iy / l;
+                if (!S.hasSteered) { S.hasSteered = true; $("hint-steer").classList.remove("show"); }
+            } else if (!joyState.active) { joyState.dx = 0; joyState.dy = 0; }
+
+            const pb = getPlayBounds();
+            const maxSpeed = activeBird.maxReticleSpeed * UI_SCALE;
+            B.rx += joyState.dx * maxSpeed * dt;
+            B.ry += joyState.dy * maxSpeed * dt;
+            B.rx = Math.max(pb.minX, Math.min(pb.maxX, B.rx));
+            B.ry = Math.max(pb.minY - 8, Math.min(pb.maxY + 8, B.ry));
+
+            const prevBx = B.x;
+            B.x += (B.rx - B.x) * dt * 9;
+            B.y += ((B.ry - 16 * UI_SCALE) - B.y) * dt * 9;
+            const vx = B.x - prevBx;
+            if (Math.abs(vx) > 0.3) B.face = vx > 0 ? 1 : -1;
+            B.tilt += ((joyState.dx * 0.25) - B.tilt) * dt * 6;
+            B.t += dt; B.sq = Math.max(0, B.sq - dt * 4); S.cd -= dt;
+
+            for (const po of poops) {
+                po.t += dt; const p = Math.min(1, po.t / po.dur);
+                po.x = po.sx + (po.tx - po.sx) * p; po.y = po.sy + (po.ty - po.sy) * p;
+            }
+            const landed = poops.filter(p => p.t >= p.dur);
+            poops = poops.filter(p => p.t < p.dur);
+            landed.forEach(landPoop);
+
+            if (S.ammo < S.max) {
+                S.regen += dt;
+                if (S.regen >= activeBird.rg) { S.regen = 0; S.ammo = Math.min(S.max, S.ammo + 1); renderAmmo(); }
+            }
+
+            parts.forEach(p => { p.l -= dt; p.vy += 450 * dt; p.x += p.vx * dt; p.y += p.vy * dt; });
+            parts = parts.filter(p => p.l > 0);
+            texts.forEach(t => { t.l -= dt; t.y -= 30 * dt; });
+            texts = texts.filter(t => t.l > 0);
+            decals.forEach(d => d.a -= dt * 0.05);
+            decals = decals.filter(d => d.a > 0);
+
+            S.shake = Math.max(0, S.shake - dt * 30);
+            if (S.comboT > 0) { S.comboT -= dt; if (S.comboT <= 0) { S.combo = 0; hideCombo(); } }
+
+            if (S.endingT <= 0) {
+                S.time -= dt;
+                if (S.time <= 0) { S.time = 0; gameOver(); }
+            }
+        }
+
+        function render(dt) {
+            if (S.state === "home") {
+                renderHomeBackdrop(dt);
+                return;
+            }
+            ctx.save();
+            if (S.shake > 0) ctx.translate(R(-S.shake, S.shake), R(-S.shake, S.shake));
+
+            renderZoneBackground(ctx, getCurrentBgId(), W, H, deco.trees);
+
+            decals.forEach(d => {
+                ctx.save(); ctx.globalAlpha = d.a * 0.7; ctx.fillStyle = "#744423";
+                ctx.beginPath(); ctx.ellipse(d.x, d.y, d.r, d.r * 0.6, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+            });
+
+            if (S.state === "play" && S.endingT <= 0) drawSplatReticle();
+
+            people.slice().sort((a, b) => a.y - b.y).forEach(drawPedestrian);
+            poops.forEach(drawPoop);
+
+            ctx.fillStyle = "rgba(0,0,0,0.14)";
+            ctx.beginPath(); ctx.ellipse(B.x, B.y, 16 * UI_SCALE, 6 * UI_SCALE, 0, 0, Math.PI * 2); ctx.fill();
+            drawBirdSprite(ctx, activeBird, B.x, B.y - 48 * UI_SCALE, UI_SCALE, B.face, B.tilt, Math.sin(B.t * 12) * 0.4, B.sq);
+
+            parts.forEach(p => {
+                ctx.save(); ctx.globalAlpha = p.l / 0.7; ctx.fillStyle = p.c;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+            });
+            texts.forEach(t => {
+                ctx.save(); ctx.globalAlpha = Math.min(1, t.l * 2);
+                ctx.font = `800 ${t.size}px 'Fredoka',sans-serif`; ctx.textAlign = "center";
+                ctx.fillStyle = "#22303c"; ctx.fillText(t.s, t.x + 1.5, t.y + 1.5);
+                ctx.fillStyle = t.c; ctx.fillText(t.s, t.x, t.y); ctx.restore();
+            });
+
+            ctx.restore();
+        }
+
+        function drawPedestrian(p) {
+            const scale = UI_SCALE;
+            ctx.save(); ctx.translate(p.x, p.y);
+            const bob = p.hit <= 0 ? Math.abs(Math.sin(p.ph * 2)) * 1.8 * scale : 0;
+
+            if (p.isHunter) {
+                const pulse = 1 + Math.sin(p.ph * 2.4) * 0.1;
+                ctx.strokeStyle = "rgba(232,65,24,0.9)";
+                ctx.lineWidth = 2.5 * scale;
+                ctx.beginPath(); ctx.ellipse(0, 0, 18 * scale * pulse, 8.5 * scale * pulse, 0, 0, Math.PI * 2); ctx.stroke();
+                ctx.fillStyle = "rgba(232,65,24,0.18)"; ctx.fill();
+
+                ctx.translate(0, -bob);
+                ctx.fillStyle = "#57606f"; ctx.beginPath(); ctx.roundRect(-9 * scale, -22 * scale, 18 * scale, 18 * scale, 5 * scale); ctx.fill();
+                ctx.strokeStyle = "#2c3e50"; ctx.lineWidth = 3 * scale;
+                ctx.beginPath(); ctx.moveTo(-6 * scale, -15 * scale); ctx.lineTo(-14 * scale, -34 * scale); ctx.stroke();
+                ctx.fillStyle = p.skin; ctx.beginPath(); ctx.arc(0, -26 * scale, 7 * scale, 0, Math.PI * 2); ctx.fill();
+                // Guard visor cap
+                ctx.fillStyle = "#2f3542"; ctx.beginPath(); ctx.ellipse(0, -29 * scale, 12 * scale, 3.8 * scale, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(0, -31.5 * scale, 6.5 * scale, Math.PI, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = "#e84118"; ctx.beginPath(); ctx.arc(0, -33 * scale, 2 * scale, 0, Math.PI * 2); ctx.fill();
+            } else {
+                ctx.fillStyle = "rgba(0,0,0,0.12)"; ctx.beginPath(); ctx.ellipse(0, 0, 12 * scale, 5 * scale, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.translate(0, -bob);
+                ctx.fillStyle = p.col; ctx.beginPath(); ctx.roundRect(-8 * scale, -22 * scale, 16 * scale, 18 * scale, 6 * scale); ctx.fill();
+                ctx.fillStyle = p.skin; ctx.beginPath(); ctx.arc(0, -26 * scale, 7 * scale, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = p.hair; ctx.beginPath(); ctx.arc(0, -28 * scale, 7.5 * scale, Math.PI, Math.PI * 2); ctx.fill();
+            }
+
+            if (p.hit > 0) { ctx.fillStyle = "#784421"; ctx.beginPath(); ctx.arc(0, -32 * scale, 6 * scale, 0, Math.PI * 2); ctx.fill(); }
+            if (p.bubT > 0) {
+                ctx.font = `800 ${11 * scale}px 'Fredoka',sans-serif`;
+                const w = ctx.measureText(p.bub).width + 14;
+                ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(-w / 2, -53 * scale, w, 19 * scale, 8 * scale); ctx.fill();
+                ctx.fillStyle = p.isHunter ? "#e84118" : "#22303c"; ctx.textAlign = "center"; ctx.fillText(p.bub, 0, -39.5 * scale);
+            }
+            ctx.restore();
+        }
+
+        function drawSplatReticle() {
+            const rad = 26 * activeBird.rad * UI_SCALE;
+            const target = findReticleTarget(B.rx, B.ry);
+            ctx.save(); ctx.translate(B.rx, B.ry);
+
+            if (target && target.isHunter) {
+                ctx.strokeStyle = "rgba(232,65,24,0.95)";
+                ctx.fillStyle = "rgba(232,65,24,0.18)";
+                ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(0, 0, rad, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                ctx.font = `800 ${13 * UI_SCALE}px 'Fredoka',sans-serif`;
+                ctx.fillStyle = "#e84118"; ctx.textAlign = "center";
+                ctx.fillText("⚠️", 0, 4 * UI_SCALE);
+            } else if (target && S.ammo >= 1) {
+                const pulse = 1 + Math.sin(B.t * 14) * 0.06;
+                ctx.strokeStyle = "#58cc02";
+                ctx.fillStyle = "rgba(88,204,2,0.2)";
+                ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(0, 0, rad * pulse, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(-7, 0); ctx.lineTo(7, 0); ctx.moveTo(0, -7); ctx.lineTo(0, 7); ctx.stroke();
+            } else {
+                ctx.strokeStyle = S.ammo >= 1 ? "rgba(255,255,255,0.88)" : "rgba(140,150,165,0.5)";
+                ctx.lineWidth = 2.5; ctx.setLineDash([5, 5]);
+                ctx.beginPath(); ctx.arc(0, 0, rad, 0, Math.PI * 2); ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(6, 0); ctx.moveTo(0, -6); ctx.lineTo(0, 6); ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawPoop(po) {
+            const p = po.t / po.dur, arc = Math.sin(p * Math.PI) * 28 * UI_SCALE, cy = po.y - (48 * UI_SCALE * (1 - p)) - arc;
+            ctx.save();
+            ctx.fillStyle = "rgba(0,0,0,0.16)";
+            ctx.beginPath(); ctx.ellipse(po.tx, po.ty, (10 - p * 4) * UI_SCALE, (4.5 - p * 1.8) * UI_SCALE, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+
+            ctx.save(); ctx.translate(po.x, cy); ctx.rotate(po.t * 12);
+            ctx.fillStyle = "#784421"; ctx.beginPath(); ctx.arc(0, 0, 6 * UI_SCALE, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#915228"; ctx.beginPath(); ctx.arc(-1.5 * UI_SCALE, -1.5 * UI_SCALE, 2 * UI_SCALE, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+        }
+
+        /* =========================================================
+           DYNAMIC LEFT-SIDE FLOATING JOYSTICK & MULTI-TOUCH DROP
+           ========================================================= */
+        function handleLeftTouchStart(e) {
+            if (S.state !== "play" || S.endingT > 0) return;
+            if (joyState.active && e.pointerId !== joyState.pid) return;
+            e.preventDefault();
+            ensureAC();
+
+            if (!S.hasSteered) {
+                S.hasSteered = true;
+                $("hint-steer").classList.remove("show");
+            }
+
+            const halfSize = 54;
+            const minX = halfSize + 8;
+            const maxX = Math.max(minX + 10, W * 0.56 - halfSize);
+            const minY = 72 + halfSize;
+            const maxY = H - halfSize - 10;
+
+            const cx = Math.max(minX, Math.min(maxX, e.clientX));
+            const cy = Math.max(minY, Math.min(maxY, e.clientY));
+
+            joyState.active = true;
+            joyState.pid = e.pointerId;
+            joyState.cx = cx;
+            joyState.cy = cy;
+
+            joyEl.style.left = (cx - halfSize) + "px";
+            joyEl.style.top = (cy - halfSize) + "px";
+            joyEl.classList.add("active");
+            handleJoyMove(e);
+        }
+
+        function handleJoyMove(e) {
+            if (!joyState.active || e.pointerId !== joyState.pid) return;
+            const rdx = e.clientX - joyState.cx, rdy = e.clientY - joyState.cy, d = Math.hypot(rdx, rdy);
+            if (d === 0) { joyState.dx = 0; joyState.dy = 0; knobEl.style.transform = "translate(0px,0px)"; return; }
+            const cd = Math.min(d, joyState.maxRadius), nx = rdx / d, ny = rdy / d;
+            knobEl.style.transform = `translate(${nx * cd}px,${ny * cd}px)`;
+            const pwr = cd / joyState.maxRadius;
+            joyState.dx = nx * pwr; joyState.dy = ny * pwr;
+        }
+
+        function handleJoyEnd(e) {
+            if (joyState.active && e.pointerId === joyState.pid) {
+                joyState.active = false; joyState.pid = null;
+                joyState.dx = 0; joyState.dy = 0;
+                joyEl.classList.remove("active");
+                resetJoystickAnchor();
+            }
+        }
+
+        leftZone.addEventListener("pointerdown", handleLeftTouchStart, { passive: false });
+        window.addEventListener("pointermove", handleJoyMove, { passive: true });
+        window.addEventListener("pointerup", handleJoyEnd);
+        window.addEventListener("pointercancel", handleJoyEnd);
+
+        const dropBtn = $("drop-btn");
+        let dropPid = null;
+        dropBtn.addEventListener("pointerdown", e => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropPid = e.pointerId;
+            dropBtn.classList.add("active");
+            dropPoop();
+        }, { passive: false });
+        dropBtn.addEventListener("click", e => e.preventDefault());
+        window.addEventListener("pointerup", e => {
+            if (e.pointerId === dropPid) { dropPid = null; dropBtn.classList.remove("active"); }
+        });
+        window.addEventListener("pointercancel", e => {
+            if (e.pointerId === dropPid) { dropPid = null; dropBtn.classList.remove("active"); }
+        });
+
+        // Tap home sky bird for fun chirp & barrel roll
+        cv.addEventListener("pointerdown", () => {
+            if (S.state === "home") {
+                homeBirdSpin = 1;
+                playBirdCall(activeBird.id, false);
+            }
+        });
+
+        const keys = {};
+        window.addEventListener("keydown", e => {
+            if (document.activeElement && (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "SELECT")) return;
+            const k = e.key.toLowerCase();
+            if (S.state === "play" && (k === " " || k === "enter" || k.startsWith("arrow"))) {
+                e.preventDefault();
+            }
+            if ((k === "p" || k === "escape") && S.state === "play" && !e.repeat) {
+                showPauseMenu();
+                return;
+            }
+            keys[k] = true;
+            if ((k === " " || k === "enter") && S.state === "play" && !e.repeat) {
+                dropPoop();
+            }
+        });
+        window.addEventListener("keyup", e => { keys[e.key.toLowerCase()] = false; });
+
+        /* =========================================================
+           HOME SCREEN & SHEET NAVIGATION
+           ========================================================= */
+        let mapPreviewZoneId = activeZone.id;
+        let rankSeg = "campus";
+        let editingIdentity = false;
+
+        function showHome() {
+            S.state = "home";
+            clearBanners();
+            $("ov").classList.add("hide");
+            setFlightUI(false);
+            $("home-screen").classList.remove("hidden");
+
+            const unlockedCount = BIRDS.filter(b => b.unlocked).length;
+            const birdsLeft = BIRDS.length - unlockedCount;
+            const rewardBird = BIRDS.find(b => b.id === activeZone.unlockBird);
+            const zoneCleared = PROGRESSION.zonesCleared.includes(activeZone.id);
+
+            $("home-rank-chip").textContent = `${getBirderRank(STATS.highScore)} · Best ${STATS.highScore} · Ranks ›`;
+            $("home-mute-btn").textContent = muted ? "🔇" : "🔊";
+            $("home-zone-chip").textContent = `📍 ${activeZone.name}`;
+            $("home-zone-stepper").innerHTML = ZONES.map((z, i) => {
+                const isDone = PROGRESSION.zonesCleared.includes(z.id);
+                const isCur = z.id === activeZone.id;
+                const isOpen = PROGRESSION.unlockedZones.includes(z.id);
+                const cls = isCur ? "current" : (isDone ? "done" : (isOpen ? "done" : "locked"));
+                const lbl = isCur ? z.num : (isDone ? "✓" : (isOpen ? z.num : "🔒"));
+                const line = i < ZONES.length - 1 ? `<div class="step-line ${isDone ? 'done' : ''}"></div>` : "";
+                return `<div class="step-node ${cls}" title="${escHtml(z.short)}">${lbl}</div>${line}`;
+            }).join("");
+            $("home-zone-next").textContent = zoneCleared
+                ? `✓ Cleared (Best ${PROGRESSION.zoneBest[activeZone.id] || 0}) · Tap Map to explore next area`
+                : `🎯 Goal ${activeZone.target} pts · Unlocks ${rewardBird.icon} ${rewardBird.n}`;
+
+            $("home-bird-unlocks").textContent = birdsLeft > 0
+                ? `🔓 ${unlockedCount}/${BIRDS.length} Birds · ${birdsLeft} to unlock`
+                : `🏆 All ${BIRDS.length} Birds Unlocked!`;
+            $("home-bird-name").textContent = activeBird.n;
+            $("home-bird-perk").textContent = `${activeBird.perk} · 🔊 "${activeBird.callLabel}"`;
+            $("home-play-meta").textContent = `${activeZone.short} · Goal ${activeZone.target}`;
+            $("dock-map-sub").textContent = `Zone ${activeZone.num}/5 · ${activeZone.short}`;
+            $("dock-birds-sub").textContent = `${unlockedCount}/${BIRDS.length} · Customize`;
+            drawBirdIconCanvas($("home-bird-cv"), activeBird);
+        }
+
+        function openSheet(html, sheetClass = "") {
+            $("home-screen").classList.add("hidden");
+            setFlightUI(false);
+            $("sheet").className = "sheet" + (sheetClass ? " " + sheetClass : "");
+            $("ov").classList.toggle("map-ov", sheetClass === "map-sheet");
+            $("sheet").innerHTML = html;
+            $("ov").classList.remove("hide");
+        }
+
+        function closeToHome() {
+            $("ov").classList.add("hide");
+            showHome();
+        }
+
+        $("home-play-btn").onclick = () => startGame(activeZone.id);
+        $("home-map-card").onclick = () => openMapSheet();
+        $("home-bird-card").onclick = () => { playBirdCall(activeBird.id, false); openBirdAtlas(); };
+        $("home-rank-chip").onclick = () => openLeaderboardSheet();
+        $("home-mute-btn").onclick = () => { muted = !muted; showHome(); };
+        $("dock-map").onclick = () => openMapSheet();
+        $("dock-birds").onclick = () => openBirdAtlas();
+
+        /* =========================================================
+           SHEET 1: VERTICAL IIT DELHI TRAIL (AREAS & BIRDS TO UNLOCK)
+           ========================================================= */
+        function openMapSheet(previewZoneId = mapPreviewZoneId) {
+            mapPreviewZoneId = previewZoneId;
+            const selZone = ZONES.find(z => z.id === previewZoneId) || activeZone;
+            const isUnlocked = PROGRESSION.unlockedZones.includes(selZone.id);
+            const isCleared = PROGRESSION.zonesCleared.includes(selZone.id);
+            const rewardBird = BIRDS.find(b => b.id === selZone.unlockBird);
+
+            const vLayout = {
+                z_inst:  {x:236, y:610, bx:116, by:612, areaIcon:"🏛️", goalTxt:"150 pts"},
+                z_hostel:{x:114, y:494, bx:240, by:496, areaIcon:"🏠", goalTxt:"250 pts"},
+                z_maidan:{x:236, y:378, bx:116, by:380, areaIcon:"🏏", goalTxt:"350 pts"},
+                z_nullah:{x:114, y:260, bx:240, by:262, areaIcon:"🌊", goalTxt:"450 pts"},
+                z_ridge: {x:236, y:148, bx:116, by:150, areaIcon:"🌲", goalTxt:"600 pts"}
+            };
+
+            const areaPinsSvg = ZONES.map(z => {
+                const pos = vLayout[z.id];
+                const u = PROGRESSION.unlockedZones.includes(z.id);
+                const c = PROGRESSION.zonesCleared.includes(z.id);
+                const cur = z.id === selZone.id;
+                const isActiveRun = z.id === activeZone.id;
+                const fill = c ? "#58cc02" : (u ? z.color : "#7f8c8d");
+                const rim = c ? "#3f9900" : (u ? "#22303c" : "#5d686e");
+                const b = BIRDS.find(x => x.id === z.unlockBird);
+
+                return `
+      <line x1="${pos.x}" y1="${pos.y}" x2="${pos.bx}" y2="${pos.by}" stroke="rgba(255,255,255,0.78)" stroke-width="4" stroke-dasharray="5 4" stroke-linecap="round"/>
+
+      <g class="map-pin" id="${cur?'map-focus-pin':''}" data-zid="${z.id}" transform="translate(${pos.x},${pos.y})">
+        ${cur?`<circle r="31" fill="rgba(255,255,255,0.38)" stroke="#fff" stroke-width="3"/>`:""}
+        <ellipse cy="7" rx="23" ry="15" fill="${rim}"/>
+        <circle r="22" fill="${fill}" stroke="#fff" stroke-width="3.5"/>
+        <text y="6" text-anchor="middle" font-size="18">${u?pos.areaIcon:"🔒"}</text>
+        ${c?`<circle cx="17" cy="-16" r="9" fill="#ffc800" stroke="#fff" stroke-width="2"/><text x="17" y="-12.5" text-anchor="middle" fill="#5c3d00" font-size="10" font-weight="800">✓</text>`:""}
+        ${isActiveRun?`
+          <g transform="translate(${pos.x>180?29:-29},-20)">
+            <circle r="13" fill="#fff" stroke="#58cc02" stroke-width="2.5"/>
+            <text y="5" text-anchor="middle" font-size="14">${activeBird.icon}</text>
+          </g>
+        `:""}
+        <rect x="-48" y="25" width="96" height="18" rx="9" fill="#ffffff" stroke="${cur?fill:'#d6e2d0'}" stroke-width="2"/>
+        <text y="37" text-anchor="middle" fill="#1f2d38" font-size="9.5" font-weight="800" font-family="Fredoka,sans-serif">${z.short}</text>
+      </g>
+
+      <g class="map-bird-pin" data-bid="${b.id}" transform="translate(${pos.bx},${pos.by})">
+        <ellipse cy="5" rx="19" ry="13" fill="${b.unlocked?'#cf9c00':'#636e72'}"/>
+        <circle r="18" fill="${b.unlocked?'#fff9db':'#edf2f4'}" stroke="${b.unlocked?'#ffc800':'#b2bec3'}" stroke-width="2.5" ${b.unlocked?'':'stroke-dasharray="4 3"'}/>
+        <text y="5.5" text-anchor="middle" font-size="17" opacity="${b.unlocked?1:0.65}">${b.icon}</text>
+        <circle cx="14" cy="-13" r="8" fill="${b.unlocked?'#58cc02':'#ff5b36'}" stroke="#fff" stroke-width="1.8"/>
+        <text x="14" y="-10" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="800">${b.unlocked?'✓':'🔒'}</text>
+        <rect x="-45" y="20" width="90" height="15" rx="7.5" fill="rgba(31,45,56,0.86)"/>
+        <text y="30" text-anchor="middle" fill="#fff" font-size="8" font-weight="700" font-family="Fredoka,sans-serif">${b.unlocked?b.n.split(" ").slice(-1)[0]:`Unlock · ${pos.goalTxt}`}</text>
+      </g>
+    `;
+            }).join("");
+
+            const starterBird = BIRDS[0];
+            const apexBird = BIRDS.find(b => b.id === "blakit1");
+            const areasLeft = ZONES.length - PROGRESSION.zonesCleared.length;
+            const birdsLeft = BIRDS.length - PROGRESSION.unlockedBirds.length;
+
+            const bgs = [
+                { id: "auto", label: "Auto" },
+                ...ZONES.map(z => ({ id: z.bgId, label: z.bgName }))
+            ];
+
+            openSheet(`
+    <div class="sheet-head" style="padding:11px 14px">
+      <div>
+        <h1 style="font-size:17.5px">IIT Delhi Trail</h1>
+        <div class="sheet-sub">${areasLeft} Areas left · ${birdsLeft} Birds left to unlock</div>
+      </div>
+      <div class="head-actions">
+        <a class="pill-action-btn" href="${EBIRD_MAP_URL}" target="_blank" rel="noopener">eBird ↗</a>
+        <button class="close-btn" id="btn-x" aria-label="Close">✕</button>
+      </div>
+    </div>
+
+    <div class="map-scroll" id="map-scroll">
+      <svg class="map-svg" viewBox="0 0 360 760" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="vertMapGrad" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#b9e694"/>
+            <stop offset="22%" stop-color="#cce39b"/>
+            <stop offset="48%" stop-color="#8cd673"/>
+            <stop offset="72%" stop-color="#7fd4c9"/>
+            <stop offset="90%" stop-color="#6fc278"/>
+            <stop offset="100%" stop-color="#9ad8f5"/>
+          </linearGradient>
+        </defs>
+        <rect width="360" height="760" fill="url(#vertMapGrad)"/>
+
+        <!-- Campus biome landmarks -->
+        <ellipse cx="180" cy="382" rx="130" ry="52" fill="#9de37f" stroke="rgba(255,255,255,0.55)" stroke-width="3"/>
+        <rect x="174" y="362" width="12" height="40" rx="4" fill="#ebd29e"/>
+        <path d="M-10,275 Q180,235 370,295" stroke="#5dc4e6" stroke-width="30" stroke-linecap="round" fill="none" opacity="0.72"/>
+        <path d="M-10,275 Q180,235 370,295" stroke="#9be3f8" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.8"/>
+
+        <g fill="#4f86ed" opacity="0.85" stroke="#fff" stroke-width="1.5">
+          <rect x="275" y="605" width="52" height="32" rx="7"/>
+          <rect x="285" y="575" width="32" height="22" rx="5"/>
+        </g>
+        <g fill="#f59e42" opacity="0.88" stroke="#fff" stroke-width="1.5">
+          <rect x="24" y="485" width="30" height="28" rx="6"/>
+          <rect x="24" y="520" width="30" height="28" rx="6"/>
+        </g>
+        <g fill="#45a153" opacity="0.45">
+          <circle cx="48" cy="140" r="32"/><circle cx="318" cy="142" r="34"/><circle cx="312" cy="212" r="24"/><circle cx="52" cy="650" r="26"/>
+        </g>
+
+        <!-- Biome banners -->
+        <g font-family="Fredoka,sans-serif" font-weight="800" font-size="8.5">
+          <rect x="14" y="655" width="96" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
+          <text x="62" y="667" text-anchor="middle" fill="#2f7300">G1 · MAIN QUAD</text>
+          <rect x="245" y="534" width="102" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
+          <text x="296" y="546" text-anchor="middle" fill="#c05600">G2 · HOSTEL LANES</text>
+          <rect x="14" y="408" width="96" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
+          <text x="62" y="420" text-anchor="middle" fill="#2f7300">CRICKET OVAL</text>
+          <rect x="244" y="218" width="102" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
+          <text x="295" y="230" text-anchor="middle" fill="#006b76">G3 · NULLAH MARSH</text>
+          <rect x="14" y="102" width="104" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
+          <text x="66" y="114" text-anchor="middle" fill="#6b2fa0">G4 · RIDGE WOODS</text>
+        </g>
+
+        <!-- Winding vertical Candy-Crush-style striped trail -->
+        <path d="M180,702 C220,665 246,645 236,610 C222,555 114,545 114,494 C114,440 236,432 236,378 C236,322 114,314 114,260 C114,208 236,200 236,148 C236,105 198,85 180,58"
+              fill="none" stroke="rgba(0,0,0,0.12)" stroke-width="22" stroke-linecap="round"/>
+        <path d="M180,702 C220,665 246,645 236,610 C222,555 114,545 114,494 C114,440 236,432 236,378 C236,322 114,314 114,260 C114,208 236,200 236,148 C236,105 198,85 180,58"
+              fill="none" stroke="#ffffff" stroke-width="17" stroke-linecap="round"/>
+        <path d="M180,702 C220,665 246,645 236,610 C222,555 114,545 114,494 C114,440 236,432 236,378 C236,322 114,314 114,260 C114,208 236,200 236,148 C236,105 198,85 180,58"
+              fill="none" stroke="#ff7aa2" stroke-width="9" stroke-dasharray="10 10" stroke-linecap="round"/>
+
+        <!-- Starter Bird Base -->
+        <g class="map-bird-pin" data-bid="${starterBird.id}" transform="translate(180,702)">
+          <ellipse cy="5" rx="20" ry="13" fill="#3f9900"/>
+          <circle r="18" fill="#fff9db" stroke="#58cc02" stroke-width="3"/>
+          <text y="6" text-anchor="middle" font-size="18">${starterBird.icon}</text>
+          <rect x="-50" y="21" width="100" height="16" rx="8" fill="#1f2d38"/>
+          <text y="32" text-anchor="middle" fill="#ffe066" font-size="8.5" font-weight="800" font-family="Fredoka,sans-serif">START · ${starterBird.n}</text>
+        </g>
+
+        ${areaPinsSvg}
+        <!-- Summit Apex Bird -->
+        <g class="map-bird-pin" data-bid="${apexBird.id}" transform="translate(180,56)">
+          <ellipse cy="6" rx="23" ry="15" fill="${apexBird.unlocked?'#cf9c00':'#5d686e'}"/>
+          <circle r="21" fill="${apexBird.unlocked?'#ffe066':'#dfe6e9'}" stroke="#fff" stroke-width="3"/>
+          <text y="6" text-anchor="middle" font-size="20">${apexBird.icon}</text>
+          <circle cx="16" cy="-15" r="8.5" fill="${apexBird.unlocked?'#58cc02':'#ff5b36'}" stroke="#fff" stroke-width="2"/>
+          <text x="16" y="-11.5" text-anchor="middle" fill="#fff" font-size="9" font-weight="800">${apexBird.unlocked?'✓':'🔒'}</text>
+          <rect x="-64" y="-41" width="128" height="17" rx="8.5" fill="#1f2d38"/>
+          <text y="-29.5" text-anchor="middle" fill="#ffe066" font-size="8.5" font-weight="800" font-family="Fredoka,sans-serif">${apexBird.unlocked?`APEX · ${apexBird.n}`:`500+ PTS · ${apexBird.n}`}</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="map-dock-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+        <b style="font-size:15px">${selZone.name}</b>
+        <span class="pill-tag ${isCleared?'green':isUnlocked?'blue':'red'}">${isCleared?'✓ Cleared':isUnlocked?'Ready':'🔒 Locked'}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
+        <span class="pill-tag amber">🎯 Goal ${selZone.target}</span>
+        <span class="pill-tag green">${rewardBird.unlocked?'✓':'🔓'} ${rewardBird.icon} ${rewardBird.n}</span>
+        <span class="pill-tag blue">Best ${PROGRESSION.zoneBest[selZone.id]||0}</span>
+      </div>
+      ${isUnlocked
+        ? `<button class="duo-btn primary" id="btn-map-fly" style="margin-bottom:8px">FLY IN ${selZone.short.toUpperCase()}</button>`
+        : `<button class="duo-btn alt" style="margin-bottom:8px" disabled>🔒 Clear Zone ${selZone.num-1} (${ZONES[selZone.num-2].target} pts) first</button>`
+      }
+      <div class="bg-chip-row">
+        ${bgs.map(bg=>{
+          const ok=bg.id==="auto"||PROGRESSION.unlockedBgs.includes(bg.id);
+          const act=(PROGRESSION.selectedBg||"auto")===bg.id;
+          return `<button class="bg-chip ${act?'active':''} ${ok?'':'locked'}" data-bg="${bg.id}">${ok?"":"🔒 "}${bg.label}</button>`;
+        }).join("")}
+      </div>
+    </div>
+  `, "map-sheet");
+
+            requestAnimationFrame(()=>{
+                const sc=$("map-scroll"), pin=$("map-focus-pin");
+                if(sc && pin){
+                    const pr=pin.getBoundingClientRect(), sr=sc.getBoundingClientRect();
+                    sc.scrollTop += (pr.top + pr.height/2) - (sr.top + sr.height/2);
+                }
+            });
+
+            $("btn-x").onclick=closeToHome;
+            document.querySelectorAll(".map-pin").forEach(el=>{
+                el.onclick=()=>{ snd(500,0.05,"sine",0.07); openMapSheet(el.dataset.zid); };
+            });
+            document.querySelectorAll(".map-bird-pin").forEach(el=>{
+                el.onclick=()=>{ snd(580,0.06,"triangle",0.08); openBirdProfile(el.dataset.bid); };
+            });
+            const mf=$("btn-map-fly");
+            if(mf) mf.onclick=()=>startGame(selZone.id);
+            document.querySelectorAll("[data-bg]").forEach(el=>{
+                el.onclick=()=>{
+                    const id=el.dataset.bg;
+                    if(id==="auto"||PROGRESSION.unlockedBgs.includes(id)){
+                        PROGRESSION.selectedBg=id; saveAll(); snd(560,0.08,"triangle",0.1);
+                        openMapSheet(selZone.id);
+                    }
+                };
+            });
+        }
+
+        /* =========================================================
+           SHEET 2: BIRD ATLAS & BIRD PROFILE
+           ========================================================= */
+        function openBirdAtlas() {
+            openSheet(`
+    <div class="sheet-head">
+      <div>
+        <h1>IIT Delhi Bird Atlas</h1>
+        <div class="sheet-sub">${PROGRESSION.unlockedBirds.length}/${BIRDS.length} Unlocked · Tap to inspect & equip</div>
+      </div>
+      <div class="head-actions">
+        <a class="pill-action-btn" href="${EBIRD_HOTSPOT_URL}" target="_blank" rel="noopener">All 94 ↗</a>
+        <button class="close-btn" id="btn-x" aria-label="Close">✕</button>
+      </div>
+    </div>
+    <div class="sheet-body">
+      <div class="bird-grid">
+        ${BIRDS.map(b => {
+                const isCur = b.id === activeBird.id;
+                return `
+            <div class="bird-tile ${isCur ? 'active' : ''} ${b.unlocked ? '' : 'locked'}" data-open-bird="${b.id}">
+              <div class="bird-tile-sky">
+                <canvas id="tile-cv-${b.id}" width="110" height="82"></canvas>
+                <button class="tile-sound-btn" data-hear="${b.id}" aria-label="Play Call">🔊</button>
+              </div>
+              <div style="font-size:13.5px;font-weight:800;line-height:1.2">${b.n}</div>
+              <div style="font-size:10.5px;color:var(--muted);margin:2px 0 6px">${b.perk}</div>
+              ${isCur
+                        ? `<span class="pill-tag green">✓ Equipped</span>`
+                        : b.unlocked
+                            ? `<span class="pill-tag blue">Tap to Equip</span>`
+                            : `<span class="pill-tag amber">🔒 ${b.unlockHint}</span>`
+                    }
+            </div>
+          `;
+            }).join("")}
+      </div>
+    </div>
+  `);
+
+            $("btn-x").onclick = closeToHome;
+            BIRDS.forEach(b => drawBirdIconCanvas($("tile-cv-" + b.id), b));
+            document.querySelectorAll("[data-hear]").forEach(btn => {
+                btn.onclick = e => { e.stopPropagation(); playBirdCall(btn.dataset.hear, false); };
+            });
+            document.querySelectorAll("[data-open-bird]").forEach(el => {
+                el.onclick = () => openBirdProfile(el.dataset.openBird);
+            });
+        }
+
+        function openBirdProfile(birdId) {
+            const b = BIRDS.find(x => x.id === birdId) || BIRDS[0];
+            const userList = PROGRESSION.userComments[b.id] || [];
+            const allComments = [...userList, ...b.comments];
+
+            openSheet(`
+    <div class="sheet-head">
+      <button class="pill-action-btn" id="btn-prof-back" style="color:var(--text)">‹ Atlas</button>
+      <div class="head-actions">
+        <a class="pill-action-btn" href="${b.ebirdUrl}" target="_blank" rel="noopener">eBird ↗</a>
+        <button class="close-btn" id="btn-x" aria-label="Close">✕</button>
+      </div>
+    </div>
+    <div class="sheet-body">
+      <div class="profile-hero">
+        <canvas class="profile-cv" id="prof-cv" width="130" height="130"></canvas>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:19px;font-weight:800">${b.n}</div>
+          <div style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:5px">${b.sci}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <button class="pill-action-btn" id="btn-prof-sound" style="background:var(--blue);color:#fff;border-color:var(--blue)">🔊 "${b.callLabel}"</button>
+            <span class="pill-tag green">${b.perk}</span>
+          </div>
+        </div>
+      </div>
+
+      ${b.unlocked
+                    ? (activeBird.id === b.id
+                        ? `<button class="duo-btn primary" id="btn-fly-bird" style="margin-bottom:12px">✓ EQUIPPED · FLY NOW</button>`
+                        : `<div class="btn-row" style="margin-bottom:8px">
+                 <button class="duo-btn secondary" id="btn-equip-bird">EQUIP</button>
+                 <button class="duo-btn primary" id="btn-fly-bird">EQUIP & FLY</button>
+               </div>`)
+                    : `<button class="duo-btn alt" style="margin-bottom:12px" disabled>🔒 Unlock: ${b.unlockHint}</button>`
+                }
+
+      <div style="font-size:13px;color:var(--text);line-height:1.45;margin-bottom:8px">${b.facts}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+        ${b.hotspots.map(h => `<span class="pill-tag blue">📍 ${h}</span>`).join("")}
+      </div>
+
+      <div class="section-label">IIT Delhi eBird Sightings (${allComments.length})</div>
+      ${allComments.map(c => `
+        <div class="comment-box">
+          <div class="comment-meta"><span>${escHtml(c.user)}</span><span style="color:var(--blue)">${escHtml(c.spot)}</span></div>
+          <div style="font-size:12px;color:#4a5568">${escHtml(c.text)}</div>
+        </div>
+      `).join("")}
+
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <input class="duo-input" id="inp-cmt-spot" placeholder="Spot" style="max-width:95px">
+        <input class="duo-input" id="inp-cmt-text" placeholder="Add your sighting note...">
+        <button class="pill-action-btn" id="btn-post-cmt" style="background:var(--green);color:#fff;border-color:var(--green)">Post</button>
+      </div>
+    </div>
+  `);
+
+            $("btn-x").onclick = closeToHome;
+            $("btn-prof-back").onclick = () => openBirdAtlas();
+            drawBirdIconCanvas($("prof-cv"), b);
+            $("btn-prof-sound").onclick = () => playBirdCall(b.id, false);
+            $("btn-post-cmt").onclick = () => {
+                const text = $("inp-cmt-text").value.trim(), spot = $("inp-cmt-spot").value.trim() || activeZone.short;
+                if (!text) return;
+                PROGRESSION.userComments[b.id] = PROGRESSION.userComments[b.id] || [];
+                PROGRESSION.userComments[b.id].unshift({ user: `${PROGRESSION.playerName} (${PROGRESSION.playerHostel})`, spot, text });
+                saveAll(); snd(600, 0.1, "triangle", 0.12);
+                openBirdProfile(b.id);
+            };
+            const eq = $("btn-equip-bird");
+            if (eq) eq.onclick = () => {
+                activeBird = b; PROGRESSION.selectedBird = b.id; saveAll();
+                playBirdCall(b.id, false);
+                openBirdProfile(b.id);
+            };
+            const fly = $("btn-fly-bird");
+            if (fly) fly.onclick = () => {
+                activeBird = b; PROGRESSION.selectedBird = b.id; saveAll();
+                startGame(activeZone.id);
+            };
+        }
+
+        /* =========================================================
+           SHEET 3: PODIUM LEADERBOARD & HOSTEL CUP
+           ========================================================= */
+        function openLeaderboardSheet(skipFetch=false) {
+            if (!skipFetch) fetchLiveLeaderboard();
+            const lb = getCombinedLeaderboard();
+            const hostels = getHostelStandings();
+            const myRank = lb.findIndex(x => x.isMe) + 1;
+            const syncStatus = !hasLiveApi() ? "Local" : (LIVE_LB.loading ? "Syncing…" : (LIVE_LB.offline ? "Offline" : "🟢 Live"));
+
+            const podium = [lb[1], lb[0], lb[2]];
+            const podiumClasses = ["second", "first", "third"];
+            const medals = ["🥈", "👑", "🥉"];
+
+            openSheet(`
+    <div class="sheet-head">
+      <div>
+        <h1>IITD Leaderboard</h1>
+        <div class="sheet-sub">Rank #${myRank} · ${getBirderRank(STATS.highScore)} · ${syncStatus}</div>
+      </div>
+      <div class="head-actions">
+        <button class="pill-action-btn" id="btn-refresh-lb" title="Refresh">↻</button>
+        <button class="pill-action-btn" id="btn-share-lb">📤 Share</button>
+        <button class="close-btn" id="btn-x" aria-label="Close">✕</button>
+      </div>
+    </div>
+    <div class="sheet-body">
+      <div class="lb-row" style="justify-content:space-between;background:var(--sage);margin-bottom:10px">
+        <div style="font-size:13px;font-weight:700">
+          ${escHtml(PROGRESSION.playerName)} · <span style="color:var(--blue)">${escHtml(PROGRESSION.playerHostel)}</span>
+        </div>
+        <button class="pill-action-btn" id="btn-toggle-edit">${editingIdentity ? "Done" : "Edit"}</button>
+      </div>
+
+      ${editingIdentity ? `
+        <div style="display:flex;gap:6px;margin-bottom:12px">
+          <input class="duo-input" id="inp-player-name" value="${escHtml(PROGRESSION.playerName)}" maxlength="16" placeholder="Name">
+          <select class="duo-input" id="inp-player-hostel" style="max-width:132px">
+            ${HOSTELS.map(h => `<option value="${h}" ${PROGRESSION.playerHostel === h ? 'selected' : ''}>${h}</option>`).join("")}
+          </select>
+        </div>
+      ` : ""}
+
+      <div class="seg-bar">
+        <button class="seg-btn ${rankSeg === 'campus' ? 'active' : ''}" id="seg-campus">Campus Top</button>
+        <button class="seg-btn ${rankSeg === 'hostel' ? 'active' : ''}" id="seg-hostel">Hostel Cup</button>
+      </div>
+
+      ${LIVE_LB.loading
+        ? `<div class="sheet-sub" style="text-align:center;margin-bottom:8px">⏳ Loading live campus rankings…</div>`
+        : LIVE_LB.offline
+          ? `<div class="sheet-sub" style="text-align:center;margin-bottom:8px;color:var(--danger)">⚠️ Offline${location.protocol === "file:" ? " — tap Share → Open in Safari if using WhatsApp preview" : ""}</div>`
+          : ""
+      }
+
+      ${rankSeg === "campus" ? `
+        <div class="podium-grid">
+          ${podium.map((r, idx) => r ? `
+            <div class="podium-card ${podiumClasses[idx]}">
+              <div class="podium-medal">${medals[idx]}</div>
+              <div class="podium-name">${escHtml(r.name)}${r.isMe ? ' ★' : ''}</div>
+              <div style="font-size:10px;color:var(--muted)">${escHtml(r.hostel)}</div>
+              <div class="podium-pts">${r.score}</div>
+            </div>
+          ` : `<div></div>`).join("")}
+        </div>
+        ${lb.slice(3).map((r, i) => `
+          <div class="lb-row ${r.isMe ? 'me' : ''}">
+            <div class="lb-rank">${i + 4}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13.5px;font-weight:800">${escHtml(r.name)} ${r.isMe ? '(You)' : ''}</div>
+              <div style="font-size:11px;color:var(--muted)">${escHtml(r.hostel)} · ${r.bird}</div>
+            </div>
+            <div style="font-weight:800;color:var(--green-shadow);font-size:14px">${r.score}</div>
+          </div>
+        `).join("")}
+      ` : hostels.map((h, i) => `
+        <div class="lb-row ${h.isMe ? 'me' : ''}">
+          <div class="lb-rank">${i + 1}</div>
+          <div style="flex:1;font-size:13.5px;font-weight:800">${escHtml(h.hostel)} ${h.isMe ? '(Yours)' : ''}</div>
+          <div style="font-weight:800;color:var(--blue);font-size:14px">${h.pts} pts</div>
+        </div>
+      `).join("")}
+    </div>
+  `);
+
+            $("btn-x").onclick = closeToHome;
+            $("btn-refresh-lb").onclick = () => { snd(540, 0.06, "sine", 0.08); fetchLiveLeaderboard(true); };
+            const commitIdentity = (refreshAfter) => {
+                const nameInp = $("inp-player-name");
+                const hostelInp = $("inp-player-hostel");
+                if (nameInp) PROGRESSION.playerName = nameInp.value.trim() || "IITD Flier";
+                if (hostelInp) PROGRESSION.playerHostel = hostelInp.value;
+                saveAll();
+                const p = syncScoreToSheet();
+                if (refreshAfter) p.then(() => fetchLiveLeaderboard(true));
+            };
+            $("btn-toggle-edit").onclick = () => {
+                if (editingIdentity) commitIdentity(true);
+                editingIdentity = !editingIdentity;
+                openLeaderboardSheet(true);
+            };
+            if (editingIdentity) {
+                $("inp-player-name").oninput = () => {
+                    PROGRESSION.playerName = $("inp-player-name").value.trim() || "IITD Flier";
+                    saveAll();
+                };
+                $("inp-player-name").onchange = () => commitIdentity(true);
+                $("inp-player-hostel").onchange = () => { commitIdentity(true); openLeaderboardSheet(true); };
+            }
+            $("seg-campus").onclick = () => { rankSeg = "campus"; openLeaderboardSheet(true); };
+            $("seg-hostel").onclick = () => { rankSeg = "hostel"; openLeaderboardSheet(true); };
+            $("btn-share-lb").onclick = () => {
+                const txt = `🕊️ Poop Patrol IITD (${PROGRESSION.playerHostel}): Scored ${STATS.highScore} pts as ${activeBird.n}! Unlocked ${PROGRESSION.unlockedBirds.length}/${BIRDS.length} birds (eBird L2747804).`;
+                if (navigator.clipboard) navigator.clipboard.writeText(txt).catch(() => { });
+                $("btn-share-lb").textContent = "✓ Copied";
+                snd(660, 0.1, "triangle", 0.1);
+            };
+        }
+
+        /* =========================================================
+           GAME FLOW: START, PAUSE, GAME OVER
+           ========================================================= */
+        function startGame(zoneId) {
+            if (document.activeElement && typeof document.activeElement.blur === "function") {
+                document.activeElement.blur();
+            }
+            ensureAC();
+            if (zoneId) {
+                const found = ZONES.find(z => z.id === zoneId);
+                if (found && PROGRESSION.unlockedZones.includes(found.id)) {
+                    activeZone = found; PROGRESSION.selectedZone = found.id; saveAll();
+                }
+            }
+            clearRunSnapshot();
+            S.state = "play"; S.score = 0; S.hits = 0; S.time = activeZone.timeStart;
+            S.max = activeBird.maxAmmo; S.ammo = S.max;
+            S.shots = 0; S.hitsTot = 0; S.zoneClearedThisRun = false; S.dangerTier = 0;
+            S.endingT = 0; S.bustReason = false;
+            S.combo = 0; S.comboT = 0;
+            S.hasSteered = false; S.hasDropped = false;
+            joyState.active = false; joyState.pid = null; joyState.dx = 0; joyState.dy = 0;
+            dropPid = null; dropBtn.classList.remove("active");
+
+            poops = []; people = []; decals = []; parts = []; texts = [];
+            for (let i = 0; i < 4; i++) spawnPerson();
+
+            B.rx = W / 2; B.ry = H / 2; B.x = W / 2; B.y = H / 2;
+
+            $("home-screen").classList.add("hidden");
+            $("ov").classList.add("hide");
+            clearBanners();
+            hideCombo();
+            setFlightUI(true);
+            resetJoystickAnchor();
+            renderAmmo();
+            updateHUD();
+            banner(activeZone.short.toUpperCase(), `Hit walkers · Avoid ⚠️ Guards · Goal ${activeZone.target}`);
+            playBirdCall(activeBird.id, true);
+
+            if (STATS.totalRuns < 2) {
+                $("hint-steer").classList.add("show");
+                $("hint-drop").classList.add("show");
+            }
+        }
+
+        function showPauseMenu() {
+            S.state = "pause";
+            joyState.active = false; joyState.pid = null; joyState.dx = 0; joyState.dy = 0;
+            resetJoystickAnchor();
+            const pen = getHunterPenaltySec(S.dangerTier);
+            openSheet(`
+    <div class="sheet-head">
+      <div>
+        <h1>Paused</h1>
+        <div class="sheet-sub">${activeZone.short} · ${S.score}/${activeZone.target} pts</div>
+      </div>
+      <div class="head-actions">
+        <button class="pill-action-btn" id="btn-p-mute">${muted ? "🔇" : "🔊"}</button>
+        <button class="close-btn" id="btn-p-resume-x" aria-label="Resume">✕</button>
+      </div>
+    </div>
+    <div class="sheet-body">
+      <div class="lb-row" style="justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:13.5px;font-weight:700">Time Left: <b>${Math.ceil(S.time)}s</b></span>
+        <span class="pill-tag red">Guard Penalty: -${pen}s</span>
+      </div>
+      <button class="duo-btn primary" id="btn-resume">RESUME</button>
+      <button class="duo-btn secondary" id="btn-p-restart">RESTART ZONE</button>
+      <button class="duo-btn alt" id="btn-p-home">EXIT TO HOME</button>
+    </div>
+  `);
+            const resume = () => {
+                if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+                $("ov").classList.add("hide"); setFlightUI(true); S.state = "play";
+            };
+            $("btn-p-resume-x").onclick = resume;
+            $("btn-resume").onclick = resume;
+            $("btn-p-mute").onclick = () => { muted = !muted; showPauseMenu(); };
+            $("btn-p-restart").onclick = () => startGame(activeZone.id);
+            $("btn-p-home").onclick = () => { clearRunSnapshot(); closeToHome(); };
+        }
+
+        function gameOver() {
+            S.state = "over";
+            clearRunSnapshot();
+            clearBanners();
+            hideCombo();
+            STATS.totalRuns++;
+            saveAll();
+            if (S.score > 0 || STATS.highScore > 0) syncScoreToSheet();
+            snd(220, 0.35, "sawtooth", 0.18, -80);
+
+            const accuracy = S.shots > 0 ? Math.round((S.hitsTot / S.shots) * 100) : 0;
+            const cleared = S.score >= activeZone.target;
+            const nextIdx = ZONES.findIndex(z => z.id === activeZone.id) + 1;
+            const nextZone = nextIdx < ZONES.length ? ZONES[nextIdx] : null;
+            const rewardBird = BIRDS.find(b => b.id === activeZone.unlockBird);
+            const title = cleared ? "Zone Cleared! 🎉" : (S.bustReason ? "Caught by Guard! 🚨" : "Time’s Up!");
+
+            openSheet(`
+    <div class="sheet-head">
+      <div>
+        <h1>${title}</h1>
+        <div class="sheet-sub">${activeZone.short} · Peak Danger ×${getPenaltyMult(S.dangerTier).toFixed(1)}</div>
+      </div>
+      <button class="close-btn" id="btn-o-x" aria-label="Home">✕</button>
+    </div>
+    <div class="sheet-body">
+      <div class="lb-row" style="justify-content:space-between;padding:12px 14px;margin-bottom:10px">
+        <div>
+          <div style="font-size:11px;font-weight:800;color:var(--muted)">RUN SCORE</div>
+          <div style="font-size:26px;font-weight:800;color:var(--green-shadow)">${S.score}</div>
+        </div>
+        <div style="text-align:right;font-size:12.5px;color:var(--muted);font-weight:700">
+          Best: <b>${STATS.highScore}</b><br>Accuracy: <b>${accuracy}%</b> (${S.hits} hits)
+        </div>
+      </div>
+
+      ${cleared
+                    ? `<div style="background:#e7fad9;border:2px solid #b9e89f;border-radius:16px;padding:10px 12px;font-size:12.5px;font-weight:700;margin-bottom:12px">
+             🔓 Unlocked <b>${rewardBird.icon} ${rewardBird.n}</b> & <b>${activeZone.bgName}</b>!
+           </div>`
+                    : `<div style="background:var(--sage);border-radius:16px;padding:10px 12px;font-size:12.5px;color:var(--muted);margin-bottom:12px">
+             Reach <b>${activeZone.target} pts</b> (${Math.max(0, activeZone.target - S.score)} more) to unlock ${rewardBird.icon} ${rewardBird.n}.
+           </div>`
+                }
+
+      ${cleared && nextZone
+                    ? `<button class="duo-btn primary" id="btn-next-zone">NEXT: ${nextZone.short.toUpperCase()} ➔</button>`
+                    : `<button class="duo-btn primary" id="btn-retry">FLY AGAIN</button>`
+                }
+      <div class="btn-row">
+        <button class="duo-btn secondary" id="btn-o-map">🗺️ Map</button>
+        <button class="duo-btn secondary" id="btn-o-ranks">🏆 Ranks</button>
+      </div>
+      <button class="duo-btn alt" id="btn-o-home">HOME</button>
+    </div>
+  `);
+
+            $("btn-o-x").onclick = closeToHome;
+            const nz = $("btn-next-zone"); if (nz) nz.onclick = () => startGame(nextZone.id);
+            const rt = $("btn-retry"); if (rt) rt.onclick = () => startGame(activeZone.id);
+            $("btn-o-map").onclick = () => openMapSheet();
+            $("btn-o-ranks").onclick = () => openLeaderboardSheet();
+            $("btn-o-home").onclick = closeToHome;
+        }
+
+        $("btn-pause").onclick = () => { if (S.state === "play" && S.endingT <= 0) showPauseMenu(); };
+
+        /* =========================================================
+           MAIN ENGINE LOOP
+           ========================================================= */
+        function loop(time) {
+            if (!T0) T0 = time;
+            const dt = Math.min(0.05, Math.max(0, (time - T0) / 1000));
+            T0 = time;
+
+            if (S.freeze > 0) S.freeze -= dt;
+            else if (S.state === "play") update(dt);
+
+            render(dt);
+            if (S.state === "play") updateHUD();
+            requestAnimationFrame(loop);
+        }
+
+        function handleAppInterruption(fromHideOrUnload = false) {
+            saveAll();
+            if (S.state === "play" && S.endingT <= 0) {
+                joyState.active = false; joyState.pid = null; joyState.dx = 0; joyState.dy = 0;
+                dropPid = null; dropBtn.classList.remove("active");
+                saveRunSnapshot();
+                if (STATS.highScore > 0 || S.score > 0) syncScoreToSheet(fromHideOrUnload);
+                showPauseMenu();
+            } else if (S.state === "pause") {
+                saveRunSnapshot();
+                if (fromHideOrUnload && (STATS.highScore > 0 || S.score > 0)) syncScoreToSheet(true);
+            } else if (fromHideOrUnload && STATS.highScore > 0) {
+                syncScoreToSheet(true);
+            }
+        }
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) handleAppInterruption(true);
+        });
+        window.addEventListener("pagehide", () => handleAppInterruption(true));
+        window.addEventListener("blur", () => handleAppInterruption(false));
+
+        resize();
+        if (!restoreRunSnapshot()) {
+            showHome();
+            renderAmmo();
+        }
+        requestAnimationFrame(loop);
+    </script>
+</body>
+
+</html>
