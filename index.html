@@ -56,7 +56,7 @@
         }
 
         /* =========================================================
-   HOME SCREEN (CALM, AIRY, ZERO-LEAK VISIBILITY)
+   HOME SCREEN (CALM, AIRY, 4 BUTTONS ONLY)
    ========================================================= */
         #home-screen {
             position: fixed;
@@ -137,14 +137,9 @@
             pointer-events: none;
         }
 
-        .home-center .bird-showcase,
-        .home-center .zone-progress-card {
-            pointer-events: auto;
-        }
-
         .brand-title {
             margin: 0;
-            font-size: clamp(36px, 9.5vw, 50px);
+            font-size: clamp(38px, 10vw, 54px);
             line-height: 0.95;
             font-weight: 800;
             color: #fff;
@@ -153,159 +148,15 @@
 
         .brand-sub {
             display: inline-block;
-            margin: 7px 0 14px;
+            margin: 9px 0 0;
             background: rgba(31, 45, 56, 0.82);
             color: #ffe066;
-            padding: 4px 13px;
+            padding: 5px 14px;
             border-radius: 99px;
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 700;
             letter-spacing: .06em;
             text-transform: uppercase;
-        }
-
-        .zone-progress-card {
-            background: rgba(255, 254, 249, 0.95);
-            backdrop-filter: blur(10px);
-            border: 2.5px solid #fff;
-            border-radius: 22px;
-            padding: 11px 14px;
-            box-shadow: 0 12px 26px rgba(20, 48, 14, 0.14), 0 5px 0 #d5e2ce;
-            text-align: left;
-            cursor: pointer;
-            margin-bottom: 10px;
-            transition: transform .12s;
-        }
-
-        .zone-progress-card:active {
-            transform: scale(0.98)
-        }
-
-        .zone-card-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .zone-stepper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 4px;
-            margin-bottom: 7px;
-        }
-
-        .step-node {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11.5px;
-            font-weight: 800;
-            flex: none;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
-        }
-
-        .step-node.done {
-            background: var(--green);
-            color: #fff;
-        }
-
-        .step-node.current {
-            background: var(--blue);
-            color: #fff;
-            transform: scale(1.14);
-            box-shadow: 0 0 0 3px rgba(28, 176, 246, 0.25), 0 3px 0 var(--blue-shadow);
-        }
-
-        .step-node.locked {
-            background: #e4ebf0;
-            color: #7d8d9b;
-        }
-
-        .step-line {
-            flex: 1;
-            height: 4px;
-            border-radius: 99px;
-            background: #e1eadb;
-        }
-
-        .step-line.done {
-            background: var(--green);
-        }
-
-        .card-cta-pill {
-            flex: none;
-            font-size: 11px;
-            font-weight: 800;
-            padding: 4px 10px;
-            border-radius: 99px;
-            white-space: nowrap;
-        }
-
-        .card-cta-pill.blue {
-            background: #e3f5ff;
-            color: #0b6b9c;
-        }
-
-        .card-cta-pill.green {
-            background: #e7fad9;
-            color: #2f7300;
-        }
-
-        .bird-showcase {
-            background: rgba(255, 254, 249, 0.95);
-            backdrop-filter: blur(10px);
-            border: 2.5px solid #fff;
-            border-radius: 24px;
-            padding: 11px 13px;
-            box-shadow: 0 14px 30px rgba(20, 48, 14, 0.15), 0 5px 0 #d5e2ce;
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            text-align: left;
-            cursor: pointer;
-            transition: transform .12s;
-        }
-
-        .bird-showcase:active {
-            transform: scale(0.98)
-        }
-
-        .showcase-cv {
-            width: 64px;
-            height: 64px;
-            border-radius: 18px;
-            background: linear-gradient(145deg, #daf3ff, #e9fad8);
-            border: 2px solid #fff;
-            flex: none;
-        }
-
-        .unlock-badge {
-            display: inline-block;
-            font-size: 10.5px;
-            font-weight: 800;
-            color: #8a5a00;
-            background: #fff4cc;
-            padding: 2px 8px;
-            border-radius: 99px;
-            margin-bottom: 3px;
-        }
-
-        .perk-chip {
-            display: inline-block;
-            background: #eefbe5;
-            color: #2f7300;
-            border-radius: 99px;
-            padding: 2px 8px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-top: 3px;
         }
 
         .home-bottom {
@@ -351,7 +202,7 @@
 
         .home-dock {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
             gap: 10px;
         }
 
@@ -359,28 +210,28 @@
             background: rgba(255, 254, 249, 0.96);
             border: 2px solid #fff;
             border-radius: 19px;
-            padding: 11px 12px;
+            padding: 12px 14px;
             box-shadow: 0 5px 0 #d3ded0, 0 8px 16px rgba(0, 0, 0, 0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 9px;
+            gap: 10px;
             text-align: left;
             font-family: inherit;
-            font-size: 13.5px;
+            font-size: 14.5px;
             font-weight: 800;
             color: var(--text);
             cursor: pointer;
         }
 
         .dock-btn span {
-            font-size: 22px;
+            font-size: 23px;
             line-height: 1;
         }
 
         .dock-btn small {
             display: block;
-            font-size: 10.5px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--muted);
         }
@@ -821,6 +672,7 @@
             z-index: 50;
             padding: 12px;
         }
+
         #ov.map-ov {
             padding: 6px;
         }
@@ -842,6 +694,7 @@
             box-shadow: 0 22px 52px rgba(0, 0, 0, 0.28), 0 7px 0 #d4ddd0;
             animation: sheetIn .2s cubic-bezier(.34, 1.35, .64, 1);
         }
+
         .sheet.map-sheet {
             width: min(98vw, 500px);
             height: 95vh;
@@ -1049,7 +902,8 @@
             height: auto
         }
 
-        .map-pin, .map-bird-pin {
+        .map-pin,
+        .map-bird-pin {
             cursor: pointer
         }
 
@@ -1325,7 +1179,7 @@
     <canvas id="c"></canvas>
     <div id="danger-flash"></div>
 
-    <!-- HOME SCREEN -->
+    <!-- HOME SCREEN (4 BUTTONS ONLY) -->
     <div id="home-screen">
         <div class="home-top">
             <div class="home-pill" id="home-rank-chip">🕊️ Nilgiri · Best 0 · Ranks ›</div>
@@ -1335,40 +1189,17 @@
         <div class="home-center">
             <h1 class="brand-title">Poop Patrol</h1>
             <div class="brand-sub">IIT Delhi · eBird L2747804</div>
-
-            <div class="zone-progress-card" id="home-map-card">
-                <div class="zone-card-top">
-                    <div style="font-size:13.5px;font-weight:800;color:var(--text)" id="home-zone-chip">📍 Zone 1 · Main Quad</div>
-                    <span class="card-cta-pill blue">Map ›</span>
-                </div>
-                <div class="zone-stepper" id="home-zone-stepper"></div>
-                <div style="font-size:11.5px;font-weight:700;color:var(--muted)" id="home-zone-next">🎯 Goal 150 pts · Unlocks 🦜 Parakeet</div>
-            </div>
-
-            <div class="bird-showcase" id="home-bird-card">
-                <canvas class="showcase-cv" id="home-bird-cv" width="140" height="140"></canvas>
-                <div style="flex:1;min-width:0">
-                    <span class="unlock-badge" id="home-bird-unlocks">🔓 1/7 Birds · 6 to unlock</span>
-                    <div style="font-size:17px;font-weight:800;line-height:1.1" id="home-bird-name">Rock Pigeon</div>
-                    <div class="perk-chip" id="home-bird-perk">Balanced Flyer</div>
-                </div>
-                <span class="card-cta-pill green">Customize ›</span>
-            </div>
         </div>
 
         <div class="home-bottom">
             <button class="play-cta" id="home-play-btn">
                 <span>▶ PLAY</span>
-                <small id="home-play-meta">Main Quad · Goal 150</small>
+                <small id="home-play-meta">Select Level &amp; Bird</small>
             </button>
             <div class="home-dock">
-                <button class="dock-btn" id="dock-map">
-                    <span>🗺️</span>
-                    <div>Campus Map<small id="dock-map-sub">Zone 1/5</small></div>
-                </button>
                 <button class="dock-btn" id="dock-birds">
                     <span>🦜</span>
-                    <div>Choose Birds<small id="dock-birds-sub">1/7 · Customize</small></div>
+                    <div>Bird Collection<small id="dock-birds-sub">1/7 Unlocked</small></div>
                 </button>
             </div>
         </div>
@@ -1625,11 +1456,11 @@
         };
 
         const GAME_VERSION = "v1.0";
-        function getPlatform(){
-          const ua = navigator.userAgent || "";
-          if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return "iOS";
-          if (/Android/.test(ua)) return "Android";
-          return "Desktop";
+        function getPlatform() {
+            const ua = navigator.userAgent || "";
+            if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return "iOS";
+            if (/Android/.test(ua)) return "Android";
+            return "Desktop";
         }
 
         function safeGetItem(k) {
@@ -1756,122 +1587,122 @@
         /* =========================================================
            LEADERBOARD (LIVE GOOGLE SHEETS + OFFLINE FALLBACK)
            ========================================================= */
-        const LB_API_URL="https://script.google.com/macros/s/AKfycbzHd6BtIuknmG9TXAZBHacRWnF2QQMKLDj8fvLc_exqsktjhUggLoQ94uybeuhUbI4fbA/exec";
+        const LB_API_URL = "https://script.google.com/macros/s/AKfycbzHd6BtIuknmG9TXAZBHacRWnF2QQMKLDj8fvLc_exqsktjhUggLoQ94uybeuhUbI4fbA/exec";
 
         const HOSTELS = ["Nilgiri", "Karakoram", "Aravali", "Jwalamukhi", "Kailash", "Himadri", "Vindhyachal", "Faculty / Day"];
 
-        const LIVE_LB={players:null, hostels:null, loading:false, offline:false, lastFetch:0, syncPromise:null};
+        const LIVE_LB = { players: null, hostels: null, loading: false, offline: false, lastFetch: 0, syncPromise: null };
 
-        function hasLiveApi(){
-          return LB_API_URL && LB_API_URL.startsWith("https://");
+        function hasLiveApi() {
+            return LB_API_URL && LB_API_URL.startsWith("https://");
         }
 
-        function buildSyncPayload(){
-          return JSON.stringify({
-            type:"player",
-            version:GAME_VERSION,
-            platform:getPlatform(),
-            playerId:PROGRESSION.playerId,
-            name:PROGRESSION.playerName||"IITD Flier",
-            hostel:PROGRESSION.playerHostel||"Nilgiri",
-            highScore:STATS.highScore,
-            totalScore:STATS.totalScore,
-            bird:activeBird.n,
-            totalRuns:STATS.totalRuns,
-            totalHits:STATS.totalHits,
-            bestCombo:STATS.bestCombo,
-            totalPlaySec:STATS.totalPlaySec,
-            sessions:STATS.sessions,
-            daysActive:STATS.daysActive,
-            birdsUnlocked:PROGRESSION.unlockedBirds.length,
-            zonesCleared:PROGRESSION.zonesCleared.length
-          });
-        }
-
-        function syncScoreToSheet(useBeacon=false){
-          if(!hasLiveApi()) return Promise.resolve();
-          const payload=buildSyncPayload();
-          if(useBeacon === true && navigator.sendBeacon){
-            try{
-              const ok=navigator.sendBeacon(LB_API_URL, new Blob([payload], {type:"text/plain;charset=utf-8"}));
-              if(ok){ LIVE_LB.lastFetch=0; return Promise.resolve(); }
-            }catch(e){}
-          }
-          const p=(async()=>{
-            try{
-              await fetch(LB_API_URL, {
-                method:"POST",
-                mode:"no-cors",
-                credentials:"omit",
-                headers:{"Content-Type":"text/plain;charset=utf-8"},
-                body:payload
-              });
-              LIVE_LB.lastFetch=0;
-            }catch(e){}
-          })();
-          LIVE_LB.syncPromise=p;
-          return p;
-        }
-
-        async function fetchLiveLeaderboard(force=false){
-          if(!hasLiveApi()) return;
-          if(LIVE_LB.syncPromise){
-            try{ await LIVE_LB.syncPromise; }catch(e){}
-          }
-          const now=Date.now();
-          if(!force && LIVE_LB.players && now-LIVE_LB.lastFetch<3000) return;
-          if(LIVE_LB.loading) return;
-          LIVE_LB.loading=true;
-          LIVE_LB.offline=false;
-          const ctrl=new AbortController();
-          const timer=setTimeout(()=>ctrl.abort(), 7000);
-          try{
-            const res=await fetch(LB_API_URL + "?t=" + Date.now(), {signal:ctrl.signal, credentials:"omit"});
-            const json=await res.json();
-            if(json && json.ok){
-              LIVE_LB.players=json.players||[];
-              LIVE_LB.hostels=json.hostels||[];
-              LIVE_LB.lastFetch=Date.now();
-            }
-          }catch(e){
-            LIVE_LB.offline=true;
-          }finally{
-            clearTimeout(timer);
-            LIVE_LB.loading=false;
-            if(!$("ov").classList.contains("hide") && $("seg-campus")) openLeaderboardSheet(true);
-          }
-        }
-
-        function logRunEvent(outcome, accuracy){
-          if(!hasLiveApi()) return;
-          const payload=JSON.stringify({
-            type:"run",
-            version:GAME_VERSION,
-            platform:getPlatform(),
-            playerId:PROGRESSION.playerId,
-            name:PROGRESSION.playerName||"IITD Flier",
-            hostel:PROGRESSION.playerHostel||"Nilgiri",
-            zone:activeZone.id,
-            bird:activeBird.id,
-            score:S.score,
-            hits:S.hits,
-            shots:S.shots,
-            accuracy:accuracy,
-            runSec:Math.round(S.playSec),
-            outcome:outcome,
-            dangerTier:S.dangerTier,
-            totalRuns:STATS.totalRuns,
-            daysActive:STATS.daysActive
-          });
-          try{
-            fetch(LB_API_URL, {
-              method:"POST",
-              mode:"no-cors",
-              credentials:"omit",
-              headers:{"Content-Type":"text/plain;charset=utf-8"},
-              body:payload
+        function buildSyncPayload() {
+            return JSON.stringify({
+                type: "player",
+                version: GAME_VERSION,
+                platform: getPlatform(),
+                playerId: PROGRESSION.playerId,
+                name: PROGRESSION.playerName || "IITD Flier",
+                hostel: PROGRESSION.playerHostel || "Nilgiri",
+                highScore: STATS.highScore,
+                totalScore: STATS.totalScore,
+                bird: activeBird.n,
+                totalRuns: STATS.totalRuns,
+                totalHits: STATS.totalHits,
+                bestCombo: STATS.bestCombo,
+                totalPlaySec: STATS.totalPlaySec,
+                sessions: STATS.sessions,
+                daysActive: STATS.daysActive,
+                birdsUnlocked: PROGRESSION.unlockedBirds.length,
+                zonesCleared: PROGRESSION.zonesCleared.length
             });
-          }catch(e){}
+        }
+
+        function syncScoreToSheet(useBeacon = false) {
+            if (!hasLiveApi()) return Promise.resolve();
+            const payload = buildSyncPayload();
+            if (useBeacon === true && navigator.sendBeacon) {
+                try {
+                    const ok = navigator.sendBeacon(LB_API_URL, new Blob([payload], { type: "text/plain;charset=utf-8" }));
+                    if (ok) { LIVE_LB.lastFetch = 0; return Promise.resolve(); }
+                } catch (e) { }
+            }
+            const p = (async () => {
+                try {
+                    await fetch(LB_API_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        credentials: "omit",
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: payload
+                    });
+                    LIVE_LB.lastFetch = 0;
+                } catch (e) { }
+            })();
+            LIVE_LB.syncPromise = p;
+            return p;
+        }
+
+        async function fetchLiveLeaderboard(force = false) {
+            if (!hasLiveApi()) return;
+            if (LIVE_LB.syncPromise) {
+                try { await LIVE_LB.syncPromise; } catch (e) { }
+            }
+            const now = Date.now();
+            if (!force && LIVE_LB.players && now - LIVE_LB.lastFetch < 3000) return;
+            if (LIVE_LB.loading) return;
+            LIVE_LB.loading = true;
+            LIVE_LB.offline = false;
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), 7000);
+            try {
+                const res = await fetch(LB_API_URL + "?t=" + Date.now(), { signal: ctrl.signal, credentials: "omit" });
+                const json = await res.json();
+                if (json && json.ok) {
+                    LIVE_LB.players = json.players || [];
+                    LIVE_LB.hostels = json.hostels || [];
+                    LIVE_LB.lastFetch = Date.now();
+                }
+            } catch (e) {
+                LIVE_LB.offline = true;
+            } finally {
+                clearTimeout(timer);
+                LIVE_LB.loading = false;
+                if (!$("ov").classList.contains("hide") && $("seg-campus")) openLeaderboardSheet(true);
+            }
+        }
+
+        function logRunEvent(outcome, accuracy) {
+            if (!hasLiveApi()) return;
+            const payload = JSON.stringify({
+                type: "run",
+                version: GAME_VERSION,
+                platform: getPlatform(),
+                playerId: PROGRESSION.playerId,
+                name: PROGRESSION.playerName || "IITD Flier",
+                hostel: PROGRESSION.playerHostel || "Nilgiri",
+                zone: activeZone.id,
+                bird: activeBird.id,
+                score: S.score,
+                hits: S.hits,
+                shots: S.shots,
+                accuracy: accuracy,
+                runSec: Math.round(S.playSec),
+                outcome: outcome,
+                dangerTier: S.dangerTier,
+                totalRuns: STATS.totalRuns,
+                daysActive: STATS.daysActive
+            });
+            try {
+                fetch(LB_API_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    credentials: "omit",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: payload
+                });
+            } catch (e) { }
         }
 
         function getBirderRank(score) {
@@ -2106,7 +1937,6 @@
             ctx.fillStyle = g;
             ctx.fillRect(0, 0, W, H);
 
-            // Stylized IITD Main Building & clocktower silhouette on the horizon
             const hy = H * 0.56;
             ctx.fillStyle = "rgba(91,158,72,0.45)";
             ctx.fillRect(W * 0.5 - 72, hy - 34, 144, 34);
@@ -2132,10 +1962,10 @@
             const t = T0 / 1000;
             homeBirdSpin = Math.max(0, homeBirdSpin - dt * 2.4);
             const bx = W * 0.5 + Math.sin(t * 0.8) * Math.min(115, W * 0.26);
-            const by = H * 0.155 + Math.sin(t * 1.9) * 10;
+            const by = H * 0.22 + Math.sin(t * 1.9) * 10;
             const face = Math.cos(t * 0.8) >= 0 ? 1 : -1;
             const tilt = Math.sin(t * 1.9) * 0.12 + homeBirdSpin * Math.PI * 2;
-            drawBirdSprite(ctx, activeBird, bx, by, 1.32 * UI_SCALE, face, tilt, Math.sin(t * 11) * 0.45, 0);
+            drawBirdSprite(ctx, activeBird, bx, by, 1.45 * UI_SCALE, face, tilt, Math.sin(t * 11) * 0.45, 0);
         }
 
         function drawBirdSprite(targetCtx, bird, x, y, scale, face, tilt, flap, sq) {
@@ -2213,10 +2043,9 @@
             c.clearRect(0, 0, w, h);
             drawBirdSprite(c, bird, w * 0.48, h * 0.58, w / 78, 1, -0.06, 0.15, 0);
         }
-
         /* =========================================================
-           PEDESTRIANS & CAMPUS GUARDS
-           ========================================================= */
+                   PEDESTRIANS & CAMPUS GUARDS
+                   ========================================================= */
         const SHIRTS = ["#ff5252", "#ff793f", "#34ace0", "#33d9b2", "#ffb142", "#706fd3"];
         const HAIRS = ["#2c2c54", "#474787", "#84817a", "#d1ccc0"];
         const SKINS = ["#ffda79", "#f8c291", "#e77f67", "#fad390"];
@@ -2605,7 +2434,6 @@
                 ctx.strokeStyle = "#2c3e50"; ctx.lineWidth = 3 * scale;
                 ctx.beginPath(); ctx.moveTo(-6 * scale, -15 * scale); ctx.lineTo(-14 * scale, -34 * scale); ctx.stroke();
                 ctx.fillStyle = p.skin; ctx.beginPath(); ctx.arc(0, -26 * scale, 7 * scale, 0, Math.PI * 2); ctx.fill();
-                // Guard visor cap
                 ctx.fillStyle = "#2f3542"; ctx.beginPath(); ctx.ellipse(0, -29 * scale, 12 * scale, 3.8 * scale, 0, 0, Math.PI * 2); ctx.fill();
                 ctx.beginPath(); ctx.arc(0, -31.5 * scale, 6.5 * scale, Math.PI, Math.PI * 2); ctx.fill();
                 ctx.fillStyle = "#e84118"; ctx.beginPath(); ctx.arc(0, -33 * scale, 2 * scale, 0, Math.PI * 2); ctx.fill();
@@ -2746,7 +2574,6 @@
             if (e.pointerId === dropPid) { dropPid = null; dropBtn.classList.remove("active"); }
         });
 
-        // Tap home sky bird for fun chirp & barrel roll
         cv.addEventListener("pointerdown", () => {
             if (S.state === "home") {
                 homeBirdSpin = 1;
@@ -2787,35 +2614,11 @@
             $("home-screen").classList.remove("hidden");
 
             const unlockedCount = BIRDS.filter(b => b.unlocked).length;
-            const birdsLeft = BIRDS.length - unlockedCount;
-            const rewardBird = BIRDS.find(b => b.id === activeZone.unlockBird);
-            const zoneCleared = PROGRESSION.zonesCleared.includes(activeZone.id);
 
             $("home-rank-chip").textContent = `${getBirderRank(STATS.highScore)} · Best ${STATS.highScore} · Ranks ›`;
             $("home-mute-btn").textContent = muted ? "🔇" : "🔊";
-            $("home-zone-chip").textContent = `📍 ${activeZone.name}`;
-            $("home-zone-stepper").innerHTML = ZONES.map((z, i) => {
-                const isDone = PROGRESSION.zonesCleared.includes(z.id);
-                const isCur = z.id === activeZone.id;
-                const isOpen = PROGRESSION.unlockedZones.includes(z.id);
-                const cls = isCur ? "current" : (isDone ? "done" : (isOpen ? "done" : "locked"));
-                const lbl = isCur ? z.num : (isDone ? "✓" : (isOpen ? z.num : "🔒"));
-                const line = i < ZONES.length - 1 ? `<div class="step-line ${isDone ? 'done' : ''}"></div>` : "";
-                return `<div class="step-node ${cls}" title="${escHtml(z.short)}">${lbl}</div>${line}`;
-            }).join("");
-            $("home-zone-next").textContent = zoneCleared
-                ? `✓ Cleared (Best ${PROGRESSION.zoneBest[activeZone.id] || 0}) · Tap Map to explore next area`
-                : `🎯 Goal ${activeZone.target} pts · Unlocks ${rewardBird.icon} ${rewardBird.n}`;
-
-            $("home-bird-unlocks").textContent = birdsLeft > 0
-                ? `🔓 ${unlockedCount}/${BIRDS.length} Birds · ${birdsLeft} to unlock`
-                : `🏆 All ${BIRDS.length} Birds Unlocked!`;
-            $("home-bird-name").textContent = activeBird.n;
-            $("home-bird-perk").textContent = `${activeBird.perk} · 🔊 "${activeBird.callLabel}"`;
-            $("home-play-meta").textContent = `${activeZone.short} · Goal ${activeZone.target}`;
-            $("dock-map-sub").textContent = `Zone ${activeZone.num}/5 · ${activeZone.short}`;
-            $("dock-birds-sub").textContent = `${unlockedCount}/${BIRDS.length} · Customize`;
-            drawBirdIconCanvas($("home-bird-cv"), activeBird);
+            $("home-play-meta").textContent = `Zone ${activeZone.num}/5 · ${activeZone.short}`;
+            $("dock-birds-sub").textContent = `${unlockedCount}/${BIRDS.length} Unlocked · ${activeBird.n}`;
         }
 
         function openSheet(html, sheetClass = "") {
@@ -2832,16 +2635,13 @@
             showHome();
         }
 
-        $("home-play-btn").onclick = () => startGame(activeZone.id);
-        $("home-map-card").onclick = () => openMapSheet();
-        $("home-bird-card").onclick = () => { playBirdCall(activeBird.id, false); openBirdAtlas(); };
+        $("home-play-btn").onclick = () => openMapSheet(activeZone.id);
         $("home-rank-chip").onclick = () => openLeaderboardSheet();
         $("home-mute-btn").onclick = () => { muted = !muted; showHome(); };
-        $("dock-map").onclick = () => openMapSheet();
-        $("dock-birds").onclick = () => openBirdAtlas();
+        $("dock-birds").onclick = () => openBirdAtlas(false);
 
         /* =========================================================
-           SHEET 1: VERTICAL IIT DELHI TRAIL (AREAS & BIRDS TO UNLOCK)
+           SHEET 1: VERTICAL IIT DELHI TRAIL (CHOOSE LEVEL)
            ========================================================= */
         function openMapSheet(previewZoneId = mapPreviewZoneId) {
             mapPreviewZoneId = previewZoneId;
@@ -2851,11 +2651,11 @@
             const rewardBird = BIRDS.find(b => b.id === selZone.unlockBird);
 
             const vLayout = {
-                z_inst:  {x:236, y:610, bx:116, by:612, areaIcon:"🏛️", goalTxt:"150 pts"},
-                z_hostel:{x:114, y:494, bx:240, by:496, areaIcon:"🏠", goalTxt:"250 pts"},
-                z_maidan:{x:236, y:378, bx:116, by:380, areaIcon:"🏏", goalTxt:"350 pts"},
-                z_nullah:{x:114, y:260, bx:240, by:262, areaIcon:"🌊", goalTxt:"450 pts"},
-                z_ridge: {x:236, y:148, bx:116, by:150, areaIcon:"🌲", goalTxt:"600 pts"}
+                z_inst: { x: 236, y: 610, bx: 116, by: 612, areaIcon: "🏛️", goalTxt: "150 pts" },
+                z_hostel: { x: 114, y: 494, bx: 240, by: 496, areaIcon: "🏠", goalTxt: "250 pts" },
+                z_maidan: { x: 236, y: 378, bx: 116, by: 380, areaIcon: "🏏", goalTxt: "350 pts" },
+                z_nullah: { x: 114, y: 260, bx: 240, by: 262, areaIcon: "🌊", goalTxt: "450 pts" },
+                z_ridge: { x: 236, y: 148, bx: 116, by: 150, areaIcon: "🌲", goalTxt: "600 pts" }
             };
 
             const areaPinsSvg = ZONES.map(z => {
@@ -2871,30 +2671,30 @@
                 return `
       <line x1="${pos.x}" y1="${pos.y}" x2="${pos.bx}" y2="${pos.by}" stroke="rgba(255,255,255,0.78)" stroke-width="4" stroke-dasharray="5 4" stroke-linecap="round"/>
 
-      <g class="map-pin" id="${cur?'map-focus-pin':''}" data-zid="${z.id}" transform="translate(${pos.x},${pos.y})">
-        ${cur?`<circle r="31" fill="rgba(255,255,255,0.38)" stroke="#fff" stroke-width="3"/>`:""}
+      <g class="map-pin" id="${cur ? 'map-focus-pin' : ''}" data-zid="${z.id}" transform="translate(${pos.x},${pos.y})">
+        ${cur ? `<circle r="31" fill="rgba(255,255,255,0.38)" stroke="#fff" stroke-width="3"/>` : ""}
         <ellipse cy="7" rx="23" ry="15" fill="${rim}"/>
         <circle r="22" fill="${fill}" stroke="#fff" stroke-width="3.5"/>
-        <text y="6" text-anchor="middle" font-size="18">${u?pos.areaIcon:"🔒"}</text>
-        ${c?`<circle cx="17" cy="-16" r="9" fill="#ffc800" stroke="#fff" stroke-width="2"/><text x="17" y="-12.5" text-anchor="middle" fill="#5c3d00" font-size="10" font-weight="800">✓</text>`:""}
-        ${isActiveRun?`
-          <g transform="translate(${pos.x>180?29:-29},-20)">
+        <text y="6" text-anchor="middle" font-size="18">${u ? pos.areaIcon : "🔒"}</text>
+        ${c ? `<circle cx="17" cy="-16" r="9" fill="#ffc800" stroke="#fff" stroke-width="2"/><text x="17" y="-12.5" text-anchor="middle" fill="#5c3d00" font-size="10" font-weight="800">✓</text>` : ""}
+        ${isActiveRun ? `
+          <g transform="translate(${pos.x > 180 ? 29 : -29},-20)">
             <circle r="13" fill="#fff" stroke="#58cc02" stroke-width="2.5"/>
             <text y="5" text-anchor="middle" font-size="14">${activeBird.icon}</text>
           </g>
-        `:""}
-        <rect x="-48" y="25" width="96" height="18" rx="9" fill="#ffffff" stroke="${cur?fill:'#d6e2d0'}" stroke-width="2"/>
+        `: ""}
+        <rect x="-48" y="25" width="96" height="18" rx="9" fill="#ffffff" stroke="${cur ? fill : '#d6e2d0'}" stroke-width="2"/>
         <text y="37" text-anchor="middle" fill="#1f2d38" font-size="9.5" font-weight="800" font-family="Fredoka,sans-serif">${z.short}</text>
       </g>
 
       <g class="map-bird-pin" data-bid="${b.id}" transform="translate(${pos.bx},${pos.by})">
-        <ellipse cy="5" rx="19" ry="13" fill="${b.unlocked?'#cf9c00':'#636e72'}"/>
-        <circle r="18" fill="${b.unlocked?'#fff9db':'#edf2f4'}" stroke="${b.unlocked?'#ffc800':'#b2bec3'}" stroke-width="2.5" ${b.unlocked?'':'stroke-dasharray="4 3"'}/>
-        <text y="5.5" text-anchor="middle" font-size="17" opacity="${b.unlocked?1:0.65}">${b.icon}</text>
-        <circle cx="14" cy="-13" r="8" fill="${b.unlocked?'#58cc02':'#ff5b36'}" stroke="#fff" stroke-width="1.8"/>
-        <text x="14" y="-10" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="800">${b.unlocked?'✓':'🔒'}</text>
+        <ellipse cy="5" rx="19" ry="13" fill="${b.unlocked ? '#cf9c00' : '#636e72'}"/>
+        <circle r="18" fill="${b.unlocked ? '#fff9db' : '#edf2f4'}" stroke="${b.unlocked ? '#ffc800' : '#b2bec3'}" stroke-width="2.5" ${b.unlocked ? '' : 'stroke-dasharray="4 3"'}/>
+        <text y="5.5" text-anchor="middle" font-size="17" opacity="${b.unlocked ? 1 : 0.65}">${b.icon}</text>
+        <circle cx="14" cy="-13" r="8" fill="${b.unlocked ? '#58cc02' : '#ff5b36'}" stroke="#fff" stroke-width="1.8"/>
+        <text x="14" y="-10" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="800">${b.unlocked ? '✓' : '🔒'}</text>
         <rect x="-45" y="20" width="90" height="15" rx="7.5" fill="rgba(31,45,56,0.86)"/>
-        <text y="30" text-anchor="middle" fill="#fff" font-size="8" font-weight="700" font-family="Fredoka,sans-serif">${b.unlocked?b.n.split(" ").slice(-1)[0]:`Unlock · ${pos.goalTxt}`}</text>
+        <text y="30" text-anchor="middle" fill="#fff" font-size="8" font-weight="700" font-family="Fredoka,sans-serif">${b.unlocked ? b.n.split(" ").slice(-1)[0] : `Unlock · ${pos.goalTxt}`}</text>
       </g>
     `;
             }).join("");
@@ -2912,7 +2712,7 @@
             openSheet(`
     <div class="sheet-head" style="padding:11px 14px">
       <div>
-        <h1 style="font-size:17.5px">IIT Delhi Trail</h1>
+        <h1 style="font-size:17.5px">Choose a Level</h1>
         <div class="sheet-sub">${areasLeft} Areas left · ${birdsLeft} Birds left to unlock</div>
       </div>
       <div class="head-actions">
@@ -2935,7 +2735,6 @@
         </defs>
         <rect width="360" height="760" fill="url(#vertMapGrad)"/>
 
-        <!-- Campus biome landmarks -->
         <ellipse cx="180" cy="382" rx="130" ry="52" fill="#9de37f" stroke="rgba(255,255,255,0.55)" stroke-width="3"/>
         <rect x="174" y="362" width="12" height="40" rx="4" fill="#ebd29e"/>
         <path d="M-10,275 Q180,235 370,295" stroke="#5dc4e6" stroke-width="30" stroke-linecap="round" fill="none" opacity="0.72"/>
@@ -2953,7 +2752,6 @@
           <circle cx="48" cy="140" r="32"/><circle cx="318" cy="142" r="34"/><circle cx="312" cy="212" r="24"/><circle cx="52" cy="650" r="26"/>
         </g>
 
-        <!-- Biome banners -->
         <g font-family="Fredoka,sans-serif" font-weight="800" font-size="8.5">
           <rect x="14" y="655" width="96" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
           <text x="62" y="667" text-anchor="middle" fill="#2f7300">G1 · MAIN QUAD</text>
@@ -2967,7 +2765,6 @@
           <text x="66" y="114" text-anchor="middle" fill="#6b2fa0">G4 · RIDGE WOODS</text>
         </g>
 
-        <!-- Winding vertical Candy-Crush-style striped trail -->
         <path d="M180,702 C220,665 246,645 236,610 C222,555 114,545 114,494 C114,440 236,432 236,378 C236,322 114,314 114,260 C114,208 236,200 236,148 C236,105 198,85 180,58"
               fill="none" stroke="rgba(0,0,0,0.12)" stroke-width="22" stroke-linecap="round"/>
         <path d="M180,702 C220,665 246,645 236,610 C222,555 114,545 114,494 C114,440 236,432 236,378 C236,322 114,314 114,260 C114,208 236,200 236,148 C236,105 198,85 180,58"
@@ -2975,7 +2772,6 @@
         <path d="M180,702 C220,665 246,645 236,610 C222,555 114,545 114,494 C114,440 236,432 236,378 C236,322 114,314 114,260 C114,208 236,200 236,148 C236,105 198,85 180,58"
               fill="none" stroke="#ff7aa2" stroke-width="9" stroke-dasharray="10 10" stroke-linecap="round"/>
 
-        <!-- Starter Bird Base -->
         <g class="map-bird-pin" data-bid="${starterBird.id}" transform="translate(180,702)">
           <ellipse cy="5" rx="20" ry="13" fill="#3f9900"/>
           <circle r="18" fill="#fff9db" stroke="#58cc02" stroke-width="3"/>
@@ -2985,15 +2781,14 @@
         </g>
 
         ${areaPinsSvg}
-        <!-- Summit Apex Bird -->
         <g class="map-bird-pin" data-bid="${apexBird.id}" transform="translate(180,56)">
-          <ellipse cy="6" rx="23" ry="15" fill="${apexBird.unlocked?'#cf9c00':'#5d686e'}"/>
-          <circle r="21" fill="${apexBird.unlocked?'#ffe066':'#dfe6e9'}" stroke="#fff" stroke-width="3"/>
+          <ellipse cy="6" rx="23" ry="15" fill="${apexBird.unlocked ? '#cf9c00' : '#5d686e'}"/>
+          <circle r="21" fill="${apexBird.unlocked ? '#ffe066' : '#dfe6e9'}" stroke="#fff" stroke-width="3"/>
           <text y="6" text-anchor="middle" font-size="20">${apexBird.icon}</text>
-          <circle cx="16" cy="-15" r="8.5" fill="${apexBird.unlocked?'#58cc02':'#ff5b36'}" stroke="#fff" stroke-width="2"/>
-          <text x="16" y="-11.5" text-anchor="middle" fill="#fff" font-size="9" font-weight="800">${apexBird.unlocked?'✓':'🔒'}</text>
+          <circle cx="16" cy="-15" r="8.5" fill="${apexBird.unlocked ? '#58cc02' : '#ff5b36'}" stroke="#fff" stroke-width="2"/>
+          <text x="16" y="-11.5" text-anchor="middle" fill="#fff" font-size="9" font-weight="800">${apexBird.unlocked ? '✓' : '🔒'}</text>
           <rect x="-64" y="-41" width="128" height="17" rx="8.5" fill="#1f2d38"/>
-          <text y="-29.5" text-anchor="middle" fill="#ffe066" font-size="8.5" font-weight="800" font-family="Fredoka,sans-serif">${apexBird.unlocked?`APEX · ${apexBird.n}`:`500+ PTS · ${apexBird.n}`}</text>
+          <text y="-29.5" text-anchor="middle" fill="#ffe066" font-size="8.5" font-weight="800" font-family="Fredoka,sans-serif">${apexBird.unlocked ? `APEX · ${apexBird.n}` : `500+ PTS · ${apexBird.n}`}</text>
         </g>
       </svg>
     </div>
@@ -3001,49 +2796,54 @@
     <div class="map-dock-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
         <b style="font-size:15px">${selZone.name}</b>
-        <span class="pill-tag ${isCleared?'green':isUnlocked?'blue':'red'}">${isCleared?'✓ Cleared':isUnlocked?'Ready':'🔒 Locked'}</span>
+        <span class="pill-tag ${isCleared ? 'green' : isUnlocked ? 'blue' : 'red'}">${isCleared ? '✓ Cleared' : isUnlocked ? 'Ready' : '🔒 Locked'}</span>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
         <span class="pill-tag amber">🎯 Goal ${selZone.target}</span>
-        <span class="pill-tag green">${rewardBird.unlocked?'✓':'🔓'} ${rewardBird.icon} ${rewardBird.n}</span>
-        <span class="pill-tag blue">Best ${PROGRESSION.zoneBest[selZone.id]||0}</span>
+        <span class="pill-tag green">${rewardBird.unlocked ? '✓' : '🔓'} ${rewardBird.icon} ${rewardBird.n}</span>
+        <span class="pill-tag blue">Best ${PROGRESSION.zoneBest[selZone.id] || 0}</span>
       </div>
       ${isUnlocked
-        ? `<button class="duo-btn primary" id="btn-map-fly" style="margin-bottom:8px">FLY IN ${selZone.short.toUpperCase()}</button>`
-        : `<button class="duo-btn alt" style="margin-bottom:8px" disabled>🔒 Clear Zone ${selZone.num-1} (${ZONES[selZone.num-2].target} pts) first</button>`
-      }
+                    ? `<button class="duo-btn primary" id="btn-map-fly" style="margin-bottom:8px">NEXT: CHOOSE BIRD ›</button>`
+                    : `<button class="duo-btn alt" style="margin-bottom:8px" disabled>🔒 Clear Zone ${selZone.num - 1} (${ZONES[selZone.num - 2].target} pts) first</button>`
+                }
       <div class="bg-chip-row">
-        ${bgs.map(bg=>{
-          const ok=bg.id==="auto"||PROGRESSION.unlockedBgs.includes(bg.id);
-          const act=(PROGRESSION.selectedBg||"auto")===bg.id;
-          return `<button class="bg-chip ${act?'active':''} ${ok?'':'locked'}" data-bg="${bg.id}">${ok?"":"🔒 "}${bg.label}</button>`;
-        }).join("")}
+        ${bgs.map(bg => {
+                    const ok = bg.id === "auto" || PROGRESSION.unlockedBgs.includes(bg.id);
+                    const act = (PROGRESSION.selectedBg || "auto") === bg.id;
+                    return `<button class="bg-chip ${act ? 'active' : ''} ${ok ? '' : 'locked'}" data-bg="${bg.id}">${ok ? "" : "🔒 "}${bg.label}</button>`;
+                }).join("")}
       </div>
     </div>
   `, "map-sheet");
 
-            requestAnimationFrame(()=>{
-                const sc=$("map-scroll"), pin=$("map-focus-pin");
-                if(sc && pin){
-                    const pr=pin.getBoundingClientRect(), sr=sc.getBoundingClientRect();
-                    sc.scrollTop += (pr.top + pr.height/2) - (sr.top + sr.height/2);
+            requestAnimationFrame(() => {
+                const sc = $("map-scroll"), pin = $("map-focus-pin");
+                if (sc && pin) {
+                    const pr = pin.getBoundingClientRect(), sr = sc.getBoundingClientRect();
+                    sc.scrollTop += (pr.top + pr.height / 2) - (sr.top + sr.height / 2);
                 }
             });
 
-            $("btn-x").onclick=closeToHome;
-            document.querySelectorAll(".map-pin").forEach(el=>{
-                el.onclick=()=>{ snd(500,0.05,"sine",0.07); openMapSheet(el.dataset.zid); };
+            $("btn-x").onclick = closeToHome;
+            document.querySelectorAll(".map-pin").forEach(el => {
+                el.onclick = () => { snd(500, 0.05, "sine", 0.07); openMapSheet(el.dataset.zid); };
             });
-            document.querySelectorAll(".map-bird-pin").forEach(el=>{
-                el.onclick=()=>{ snd(580,0.06,"triangle",0.08); openBirdProfile(el.dataset.bid); };
+            document.querySelectorAll(".map-bird-pin").forEach(el => {
+                el.onclick = () => { snd(580, 0.06, "triangle", 0.08); openBirdProfile(el.dataset.bid); };
             });
-            const mf=$("btn-map-fly");
-            if(mf) mf.onclick=()=>startGame(selZone.id);
-            document.querySelectorAll("[data-bg]").forEach(el=>{
-                el.onclick=()=>{
-                    const id=el.dataset.bg;
-                    if(id==="auto"||PROGRESSION.unlockedBgs.includes(id)){
-                        PROGRESSION.selectedBg=id; saveAll(); snd(560,0.08,"triangle",0.1);
+            const mf = $("btn-map-fly");
+            if (mf) mf.onclick = () => {
+                activeZone = selZone;
+                PROGRESSION.selectedZone = selZone.id;
+                saveAll();
+                openBirdAtlas(true);
+            };
+            document.querySelectorAll("[data-bg]").forEach(el => {
+                el.onclick = () => {
+                    const id = el.dataset.bg;
+                    if (id === "auto" || PROGRESSION.unlockedBgs.includes(id)) {
+                        PROGRESSION.selectedBg = id; saveAll(); snd(560, 0.08, "triangle", 0.1);
                         openMapSheet(selZone.id);
                     }
                 };
@@ -3051,14 +2851,15 @@
         }
 
         /* =========================================================
-           SHEET 2: BIRD ATLAS & BIRD PROFILE
+           SHEET 2: BIRD COLLECTION & CHOOSE BIRD FOR LEVEL
            ========================================================= */
-        function openBirdAtlas() {
+        function openBirdAtlas(fromLevelSelect = false) {
             openSheet(`
     <div class="sheet-head">
-      <div>
-        <h1>IIT Delhi Bird Atlas</h1>
-        <div class="sheet-sub">${PROGRESSION.unlockedBirds.length}/${BIRDS.length} Unlocked · Tap to inspect & equip</div>
+      ${fromLevelSelect ? `<button class="pill-action-btn" id="btn-atlas-back" style="color:var(--text)">‹ Map</button>` : ""}
+      <div style="flex:1;min-width:0">
+        <h1>${fromLevelSelect ? "Choose Your Bird" : "Bird Collection"}</h1>
+        <div class="sheet-sub">${fromLevelSelect ? `Level: ${activeZone.short} (Goal ${activeZone.target})` : `${PROGRESSION.unlockedBirds.length}/${BIRDS.length} Unlocked · Tap to inspect & equip`}</div>
       </div>
       <div class="head-actions">
         <a class="pill-action-btn" href="${EBIRD_HOTSPOT_URL}" target="_blank" rel="noopener">All 94 ↗</a>
@@ -3066,6 +2867,15 @@
       </div>
     </div>
     <div class="sheet-body">
+      ${fromLevelSelect ? `
+        <div class="lb-row" style="justify-content:space-between;background:#eefbe5;border-color:var(--green);margin-bottom:10px">
+          <div>
+            <div style="font-size:11px;font-weight:800;color:#2f7300">SELECTED BIRD</div>
+            <div style="font-size:14.5px;font-weight:800">${activeBird.icon} ${escHtml(activeBird.n)} · <span style="color:var(--muted);font-size:12px">${escHtml(activeBird.perk)}</span></div>
+          </div>
+        </div>
+        <button class="duo-btn primary" id="btn-atlas-play" style="margin-bottom:12px">▶ PLAY ${escHtml(activeZone.short.toUpperCase())}</button>
+      ` : ""}
       <div class="bird-grid">
         ${BIRDS.map(b => {
                 const isCur = b.id === activeBird.id;
@@ -3091,23 +2901,25 @@
   `);
 
             $("btn-x").onclick = closeToHome;
+            if ($("btn-atlas-back")) $("btn-atlas-back").onclick = () => openMapSheet(activeZone.id);
+            if ($("btn-atlas-play")) $("btn-atlas-play").onclick = () => startGame(activeZone.id);
             BIRDS.forEach(b => drawBirdIconCanvas($("tile-cv-" + b.id), b));
             document.querySelectorAll("[data-hear]").forEach(btn => {
                 btn.onclick = e => { e.stopPropagation(); playBirdCall(btn.dataset.hear, false); };
             });
             document.querySelectorAll("[data-open-bird]").forEach(el => {
-                el.onclick = () => openBirdProfile(el.dataset.openBird);
+                el.onclick = () => openBirdProfile(el.dataset.openBird, fromLevelSelect);
             });
         }
 
-        function openBirdProfile(birdId) {
+        function openBirdProfile(birdId, fromLevelSelect = false) {
             const b = BIRDS.find(x => x.id === birdId) || BIRDS[0];
             const userList = PROGRESSION.userComments[b.id] || [];
             const allComments = [...userList, ...b.comments];
 
             openSheet(`
     <div class="sheet-head">
-      <button class="pill-action-btn" id="btn-prof-back" style="color:var(--text)">‹ Atlas</button>
+      <button class="pill-action-btn" id="btn-prof-back" style="color:var(--text)">‹ Birds</button>
       <div class="head-actions">
         <a class="pill-action-btn" href="${b.ebirdUrl}" target="_blank" rel="noopener">eBird ↗</a>
         <button class="close-btn" id="btn-x" aria-label="Close">✕</button>
@@ -3131,7 +2943,7 @@
                         ? `<button class="duo-btn primary" id="btn-fly-bird" style="margin-bottom:12px">✓ EQUIPPED · FLY NOW</button>`
                         : `<div class="btn-row" style="margin-bottom:8px">
                  <button class="duo-btn secondary" id="btn-equip-bird">EQUIP</button>
-                 <button class="duo-btn primary" id="btn-fly-bird">EQUIP & FLY</button>
+                 <button class="duo-btn primary" id="btn-fly-bird">EQUIP &amp; FLY</button>
                </div>`)
                     : `<button class="duo-btn alt" style="margin-bottom:12px" disabled>🔒 Unlock: ${b.unlockHint}</button>`
                 }
@@ -3158,7 +2970,7 @@
   `);
 
             $("btn-x").onclick = closeToHome;
-            $("btn-prof-back").onclick = () => openBirdAtlas();
+            $("btn-prof-back").onclick = () => openBirdAtlas(fromLevelSelect);
             drawBirdIconCanvas($("prof-cv"), b);
             $("btn-prof-sound").onclick = () => playBirdCall(b.id, false);
             $("btn-post-cmt").onclick = () => {
@@ -3167,13 +2979,13 @@
                 PROGRESSION.userComments[b.id] = PROGRESSION.userComments[b.id] || [];
                 PROGRESSION.userComments[b.id].unshift({ user: `${PROGRESSION.playerName} (${PROGRESSION.playerHostel})`, spot, text });
                 saveAll(); snd(600, 0.1, "triangle", 0.12);
-                openBirdProfile(b.id);
+                openBirdProfile(b.id, fromLevelSelect);
             };
             const eq = $("btn-equip-bird");
             if (eq) eq.onclick = () => {
                 activeBird = b; PROGRESSION.selectedBird = b.id; saveAll();
                 playBirdCall(b.id, false);
-                openBirdProfile(b.id);
+                openBirdProfile(b.id, fromLevelSelect);
             };
             const fly = $("btn-fly-bird");
             if (fly) fly.onclick = () => {
@@ -3185,7 +2997,7 @@
         /* =========================================================
            SHEET 3: PODIUM LEADERBOARD & HOSTEL CUP
            ========================================================= */
-        function openLeaderboardSheet(skipFetch=false) {
+        function openLeaderboardSheet(skipFetch = false) {
             if (!skipFetch) fetchLiveLeaderboard();
             const lb = getCombinedLeaderboard();
             const hostels = getHostelStandings();
@@ -3231,11 +3043,11 @@
       </div>
 
       ${LIVE_LB.loading
-        ? `<div class="sheet-sub" style="text-align:center;margin-bottom:8px">⏳ Loading live campus rankings…</div>`
-        : LIVE_LB.offline
-          ? `<div class="sheet-sub" style="text-align:center;margin-bottom:8px;color:var(--danger)">⚠️ Offline${location.protocol === "file:" ? " — tap Share → Open in Safari if using WhatsApp preview" : ""}</div>`
-          : ""
-      }
+                    ? `<div class="sheet-sub" style="text-align:center;margin-bottom:8px">⏳ Loading live campus rankings…</div>`
+                    : LIVE_LB.offline
+                        ? `<div class="sheet-sub" style="text-align:center;margin-bottom:8px;color:var(--danger)">⚠️ Offline${location.protocol === "file:" ? " — tap Share → Open in Safari if using WhatsApp preview" : ""}</div>`
+                        : ""
+                }
 
       ${rankSeg === "campus" ? `
         <div class="podium-grid">
@@ -3427,7 +3239,7 @@
 
       ${cleared
                     ? `<div style="background:#e7fad9;border:2px solid #b9e89f;border-radius:16px;padding:10px 12px;font-size:12.5px;font-weight:700;margin-bottom:12px">
-             🔓 Unlocked <b>${rewardBird.icon} ${rewardBird.n}</b> & <b>${activeZone.bgName}</b>!
+             🔓 Unlocked <b>${rewardBird.icon} ${rewardBird.n}</b> &amp; <b>${activeZone.bgName}</b>!
            </div>`
                     : `<div style="background:var(--sage);border-radius:16px;padding:10px 12px;font-size:12.5px;color:var(--muted);margin-bottom:12px">
              Reach <b>${activeZone.target} pts</b> (${Math.max(0, activeZone.target - S.score)} more) to unlock ${rewardBird.icon} ${rewardBird.n}.
