@@ -30,15 +30,16 @@
 
         * {
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent
+            -webkit-tap-highlight-color: transparent;
         }
 
         html,
         body {
             height: 100%;
+            height: 100dvh;
             margin: 0;
             overflow: hidden;
-            background: #8fd276;
+            background: #2b4a2b;
             font-family: 'Fredoka', system-ui, -apple-system, sans-serif;
             color: var(--text);
             user-select: none;
@@ -53,19 +54,70 @@
             height: 100%;
             z-index: 1;
             touch-action: none;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* ATMOSPHERIC VIGNETTE & FLASH OVERLAYS */
+        #ambient-vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 3;
+            background:
+                radial-gradient(circle at 20% 12%, rgba(255, 244, 185, 0.20) 0%, transparent 48%),
+                radial-gradient(circle at 50% 48%, transparent 58%, rgba(12, 22, 18, 0.30) 100%);
+        }
+
+        #danger-flash {
+            position: fixed;
+            inset: 0;
+            background: rgba(232, 65, 24, 0.38);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .12s ease-out;
+            z-index: 25;
+        }
+
+        #low-time-vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 24;
+            opacity: 0;
+            background: radial-gradient(circle at center, transparent 46%, rgba(232, 65, 24, 0.56) 100%);
+            transition: opacity .25s ease;
+        }
+
+        #low-time-vignette.active {
+            opacity: 1;
+            animation: vignettePulse 0.75s ease-in-out infinite;
+        }
+
+        @keyframes vignettePulse {
+
+            0%,
+            100% {
+                opacity: 0.45;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
 
         /* =========================================================
-   HOME SCREEN (CALM, AIRY, 4 BUTTONS ONLY)
-   ========================================================= */
+           HOME SCREEN
+           ========================================================= */
         #home-screen {
             position: fixed;
             inset: 0;
+            height: 100dvh;
             z-index: 35;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: calc(env(safe-area-inset-top, 0px) + 16px) 18px calc(env(safe-area-inset-bottom, 0px) + 20px);
+            padding: calc(env(safe-area-inset-top, 0px) + 14px) 18px calc(env(safe-area-inset-bottom, 0px) + 18px);
             pointer-events: none;
             opacity: 1;
             visibility: visible;
@@ -73,7 +125,7 @@
         }
 
         #home-screen>* {
-            pointer-events: auto
+            pointer-events: auto;
         }
 
         #home-screen.hidden {
@@ -90,33 +142,21 @@
 
         .home-top {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             max-width: 440px;
             width: 100%;
             margin: 0 auto;
         }
 
-        .home-pill {
-            background: rgba(255, 254, 249, 0.94);
-            backdrop-filter: blur(8px);
-            border: 2px solid #fff;
-            border-radius: 99px;
-            padding: 7px 14px;
-            font-size: 13px;
-            font-weight: 700;
-            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
-            cursor: pointer;
-        }
-
         .circle-btn {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background: rgba(255, 254, 249, 0.95);
+            background: rgba(255, 254, 249, 0.96);
             border: 2px solid #fff;
-            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
-            font-size: 17px;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12), 0 8px 18px rgba(0, 0, 0, 0.14);
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -125,13 +165,13 @@
 
         .circle-btn:active {
             transform: translateY(3px);
-            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08)
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
         }
 
         .home-center {
             max-width: 400px;
             width: 100%;
-            margin: auto 0 14px;
+            margin: auto 0 12px;
             align-self: center;
             text-align: center;
             pointer-events: none;
@@ -143,20 +183,23 @@
             line-height: 0.95;
             font-weight: 800;
             color: #fff;
-            text-shadow: 0 5px 0 #3a7519, 0 12px 24px rgba(0, 0, 0, 0.16);
+            text-shadow: 0 5px 0 #2b6e12, 0 12px 26px rgba(0, 0, 0, 0.28);
         }
 
         .brand-sub {
             display: inline-block;
-            margin: 9px 0 0;
-            background: rgba(31, 45, 56, 0.82);
+            margin: 10px 0 0;
+            background: rgba(24, 34, 43, 0.86);
+            backdrop-filter: blur(6px);
             color: #ffe066;
             padding: 5px 14px;
             border-radius: 99px;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
             font-size: 11.5px;
             font-weight: 700;
             letter-spacing: .06em;
             text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .home-bottom {
@@ -169,14 +212,14 @@
             width: 100%;
             border: 0;
             border-radius: 24px;
-            padding: 16px 20px;
+            padding: 15px 20px;
             background: linear-gradient(180deg, #6be012, #51bd00);
             color: #fff;
             font-family: inherit;
-            font-size: 23px;
+            font-size: 24px;
             font-weight: 800;
             letter-spacing: .02em;
-            box-shadow: 0 8px 0 var(--green-shadow), 0 16px 32px rgba(63, 153, 0, 0.36);
+            box-shadow: 0 8px 0 var(--green-shadow), 0 16px 32px rgba(45, 110, 0, 0.36);
             cursor: pointer;
             margin-bottom: 12px;
             display: flex;
@@ -188,8 +231,8 @@
         }
 
         .play-cta small {
-            background: rgba(0, 0, 0, 0.16);
-            padding: 3px 11px;
+            background: rgba(0, 0, 0, 0.18);
+            padding: 3px 12px;
             border-radius: 99px;
             font-size: 12px;
             font-weight: 700;
@@ -197,7 +240,7 @@
 
         .play-cta:active {
             transform: translateY(5px);
-            box-shadow: 0 2px 0 var(--green-shadow)
+            box-shadow: 0 2px 0 var(--green-shadow);
         }
 
         .home-dock {
@@ -209,48 +252,66 @@
         .dock-btn {
             background: rgba(255, 254, 249, 0.96);
             border: 2px solid #fff;
-            border-radius: 19px;
-            padding: 12px 14px;
-            box-shadow: 0 5px 0 #d3ded0, 0 8px 16px rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            padding: 11px 16px;
+            box-shadow: 0 5px 0 #c9d6c5, 0 10px 20px rgba(0, 0, 0, 0.14);
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
+            justify-content: flex-start;
+            gap: 12px;
             text-align: left;
             font-family: inherit;
-            font-size: 14.5px;
+            font-size: 15px;
             font-weight: 800;
             color: var(--text);
             cursor: pointer;
         }
 
         .dock-btn span {
-            font-size: 23px;
+            font-size: 24px;
             line-height: 1;
+            flex: none;
         }
 
         .dock-btn small {
             display: block;
-            font-size: 11px;
-            font-weight: 700;
+            font-size: 11.5px;
+            font-weight: 600;
             color: var(--muted);
+            margin-top: 1px;
         }
 
         .dock-btn:active {
             transform: translateY(3px);
-            box-shadow: 0 2px 0 #d3ded0
+            box-shadow: 0 2px 0 #c9d6c5;
+        }
+
+        @media (max-height: 670px) {
+            .play-cta {
+                padding: 12px 16px;
+                font-size: 21px;
+                margin-bottom: 9px;
+            }
+
+            .dock-btn {
+                padding: 9px 14px;
+            }
+
+            .home-center {
+                margin: auto 0 8px;
+            }
         }
 
         /* =========================================================
-   IN-FLIGHT HUD (ULTRA-CLEAN, HIGH CONTRAST)
-   ========================================================= */
+           IN-FLIGHT HUD
+           ========================================================= */
         #hud {
             position: fixed;
-            top: calc(env(safe-area-inset-top, 0px) + 12px);
+            top: calc(env(safe-area-inset-top, 0px) + 10px);
             left: 12px;
             right: 12px;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
             gap: 8px;
             pointer-events: none;
@@ -261,53 +322,56 @@
         #hud.hidden {
             opacity: 0;
             visibility: hidden;
-            pointer-events: none !important
+            pointer-events: none !important;
         }
 
         #hud.hidden * {
-            pointer-events: none !important
+            pointer-events: none !important;
         }
 
         .hud-pill {
             background: rgba(255, 254, 249, 0.95);
             border-radius: 99px;
-            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
             display: flex;
             align-items: center;
-            gap: 7px;
-            padding: 6px 12px;
+            gap: 6px;
+            padding: 6px 10px;
         }
 
         #goal-pill {
-            flex: 1;
-            max-width: 205px;
-            padding: 6px 11px 6px 8px
+            justify-self: start;
+            width: 100%;
+            max-width: 172px;
+            padding: 6px 10px 6px 7px;
         }
 
         #goal-pill.cleared #track-fill {
-            background: linear-gradient(90deg, #ffc800, #ff9f1a)
+            background: linear-gradient(90deg, #ffc800, #ff9f1a);
         }
 
         #zone-tag {
             background: var(--yellow);
             color: #5c3d00;
             border-radius: 99px;
-            padding: 2px 8px;
-            font-size: 11.5px;
+            padding: 2px 7px;
+            font-size: 11px;
             font-weight: 800;
+            flex: none;
         }
 
         #goal-pill.cleared #zone-tag {
             background: var(--green);
-            color: #fff
+            color: #fff;
         }
 
         #track-bar {
             flex: 1;
-            height: 9px;
+            min-width: 24px;
+            height: 8px;
             background: #e9eef2;
             border-radius: 99px;
-            overflow: hidden
+            overflow: hidden;
         }
 
         #track-fill {
@@ -315,41 +379,74 @@
             width: 0%;
             background: var(--green);
             border-radius: 99px;
-            transition: width .25s cubic-bezier(.34, 1.56, .64, 1)
+            transition: width .25s cubic-bezier(.34, 1.56, .64, 1);
         }
 
         #score-meta {
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 800;
             color: #3b4956;
-            white-space: nowrap
-        }
-
-        #center-pills {
-            display: flex;
-            align-items: center;
-            gap: 6px
+            white-space: nowrap;
         }
 
         #time-chip {
+            justify-self: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 254, 249, 0.98);
+            border: 4px solid var(--green);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.14), 0 8px 18px rgba(0, 0, 0, 0.14);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+            transition: border-color .2s, background .2s;
+        }
+
+        #time-chip #tm {
+            font-size: 24px;
             font-weight: 800;
-            font-size: 15px
+            color: var(--text);
+        }
+
+        #time-chip .tm-lbl {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--muted);
+            margin-top: 1px;
         }
 
         #time-chip.urgent {
             background: var(--danger);
+            border-color: #fff;
+            box-shadow: 0 5px 0 var(--danger-shadow), 0 0 18px rgba(232, 65, 24, 0.55);
+            animation: wobble .5s infinite;
+        }
+
+        #time-chip.urgent #tm,
+        #time-chip.urgent .tm-lbl {
             color: #fff;
-            box-shadow: 0 4px 0 var(--danger-shadow);
-            animation: wobble .55s infinite
+        }
+
+        .hud-right {
+            justify-self: end;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         #danger-chip {
             display: none;
             background: var(--danger);
             color: #fff;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
-            padding: 5px 10px;
+            padding: 5px 9px;
             border-radius: 99px;
             box-shadow: 0 4px 0 var(--danger-shadow);
             white-space: nowrap;
@@ -358,18 +455,18 @@
         #danger-chip.visible {
             display: inline-flex;
             align-items: center;
-            gap: 3px
+            gap: 3px;
         }
 
         @keyframes wobble {
 
             0%,
             100% {
-                transform: scale(1)
+                transform: scale(1);
             }
 
             50% {
-                transform: scale(1.07)
+                transform: scale(1.09);
             }
         }
 
@@ -380,7 +477,7 @@
             border-radius: 50%;
             background: rgba(255, 254, 249, 0.95);
             border: 0;
-            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -392,12 +489,97 @@
         }
 
         #btn-pause:active {
-            transform: translateY(3px)
+            transform: translateY(3px);
+        }
+
+        /* CONSTANT IN-GAME TARGET LEGEND WITH CLEAR PIXEL SPRITES */
+        #target-legend {
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 80px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 21;
+            pointer-events: none;
+            background: rgba(18, 26, 34, 0.92);
+            backdrop-filter: blur(6px);
+            border: 2px solid rgba(255, 255, 255, 0.45);
+            border-radius: 20px;
+            padding: 7px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: calc(100vw - 16px);
+            color: #fff;
+            white-space: nowrap;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+            transition: opacity .2s;
+        }
+
+        #target-legend.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .leg-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .leg-sprite-box {
+            width: 42px;
+            height: 44px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2.5px solid rgba(255, 255, 255, 0.8);
+            flex: none;
+        }
+
+        .leg-sprite-box.hit {
+            background: rgba(88, 204, 2, 0.38);
+            border-color: #8cf242;
+        }
+
+        .leg-sprite-box.avoid {
+            background: rgba(232, 65, 24, 0.44);
+            border-color: #ff7a6b;
+        }
+
+        .leg-sprite-box canvas {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .leg-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.15;
+        }
+
+        .leg-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .leg-pos {
+            color: #8cf242;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .leg-neg {
+            color: #ff7675;
+            font-size: 14px;
+            font-weight: 800;
         }
 
         #combo-chip {
             position: fixed;
-            top: calc(env(safe-area-inset-top, 0px) + 60px);
+            top: calc(env(safe-area-inset-top, 0px) + 148px);
             left: 50%;
             transform: translateX(-50%) scale(0);
             background: var(--yellow);
@@ -413,20 +595,20 @@
         }
 
         #combo-chip.pop {
-            transform: translateX(-50%) scale(1)
+            transform: translateX(-50%) scale(1);
         }
 
         #banner {
             position: fixed;
             left: 50%;
-            top: 31%;
+            top: 34%;
             transform: translate(-50%, -50%) scale(0);
             text-align: center;
             pointer-events: none;
             font-weight: 800;
             font-size: clamp(24px, 6vw, 38px);
             color: #fff;
-            text-shadow: 0 4px 0 rgba(0, 0, 0, 0.28);
+            text-shadow: 0 4px 0 rgba(0, 0, 0, 0.32);
             z-index: 28;
             width: 90%;
         }
@@ -444,46 +626,110 @@
         }
 
         #banner.show {
-            animation: bannerPop 2s ease both
+            animation: bannerPop 2s ease both;
         }
 
         @keyframes bannerPop {
             0% {
-                transform: translate(-50%, -50%) scale(0)
+                transform: translate(-50%, -50%) scale(0);
             }
 
             14% {
-                transform: translate(-50%, -50%) scale(1.07)
+                transform: translate(-50%, -50%) scale(1.07);
             }
 
             24%,
             78% {
-                transform: translate(-50%, -50%) scale(1)
+                transform: translate(-50%, -50%) scale(1);
             }
 
             100% {
                 transform: translate(-50%, -66%) scale(.88);
-                opacity: 0
+                opacity: 0;
             }
         }
 
-        #danger-flash {
+        /* =========================================================
+           2-THUMB START VISUAL INDICATOR
+           ========================================================= */
+        #two-thumb-guide {
             position: fixed;
             inset: 0;
-            background: rgba(232, 65, 24, 0.36);
             pointer-events: none;
+            z-index: 23;
             opacity: 0;
-            transition: opacity .12s ease-out;
-            z-index: 25;
+            visibility: hidden;
+            transition: opacity .3s ease, visibility .3s ease;
+        }
+
+        #two-thumb-guide.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .thumb-badge {
+            position: fixed;
+            background: rgba(24, 34, 43, 0.9);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.75);
+            border-radius: 18px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .thumb-badge.left {
+            left: 16px;
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 146px);
+            animation: thumbSlide 1.3s ease-in-out infinite;
+        }
+
+        .thumb-badge.right {
+            right: 14px;
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 154px);
+            animation: thumbTap 1.1s ease-in-out infinite;
+        }
+
+        .thumb-icon {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        @keyframes thumbSlide {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(10px);
+            }
+        }
+
+        @keyframes thumbTap {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(5px) scale(0.95);
+            }
         }
 
         /* =========================================================
-   DYNAMIC LEFT-SIDE JOYSTICK & RIGHT-SIDE DROP CONTROLS
-   ========================================================= */
+           DYNAMIC LEFT-SIDE JOYSTICK & RIGHT-SIDE DROP CONTROLS
+           ========================================================= */
         #left-touch-zone {
             position: fixed;
             left: 0;
-            top: 68px;
+            top: 84px;
             bottom: 0;
             width: 56vw;
             z-index: 15;
@@ -491,7 +737,7 @@
         }
 
         #left-touch-zone.hidden {
-            display: none
+            display: none;
         }
 
         #joystick-container {
@@ -503,25 +749,25 @@
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(6px);
             border-radius: 50%;
-            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.14), 0 10px 20px rgba(0, 0, 0, 0.1);
             pointer-events: none;
             z-index: 16;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0.55;
+            opacity: 0.58;
             transition: opacity .12s ease, transform .12s ease;
         }
 
         #joystick-container.active {
             opacity: 1;
-            transform: scale(1.04)
+            transform: scale(1.04);
         }
 
         #joystick-container.hidden {
             opacity: 0;
             visibility: hidden;
-            pointer-events: none
+            pointer-events: none;
         }
 
         #joystick-container::after {
@@ -544,7 +790,7 @@
 
         #bottom-ui {
             position: fixed;
-            bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
             right: 18px;
             display: flex;
             flex-direction: column;
@@ -558,21 +804,21 @@
         #bottom-ui.hidden {
             opacity: 0;
             visibility: hidden;
-            pointer-events: none !important
+            pointer-events: none !important;
         }
 
         #bottom-ui.hidden * {
-            pointer-events: none !important
+            pointer-events: none !important;
         }
 
         #ammo-tray {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(6px);
             border-radius: 99px;
             padding: 5px 11px;
             display: flex;
             gap: 5px;
-            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
         }
 
         .ammo-pip {
@@ -581,21 +827,21 @@
             border-radius: 4px;
             background: #8c5738;
             border: 2px solid #fff;
-            transition: transform .15s, opacity .15s
+            transition: transform .15s, opacity .15s;
         }
 
         .ammo-pip.empty {
             background: transparent;
             border-color: #b9c2cc;
             opacity: .4;
-            transform: scale(.75)
+            transform: scale(.75);
         }
 
         #drop-btn {
             width: 90px;
             height: 90px;
             border-radius: 30px;
-            border: 3px solid rgba(255, 255, 255, 0.55);
+            border: 3px solid rgba(255, 255, 255, 0.6);
             background: linear-gradient(180deg, #6be012, #51bd00);
             box-shadow: 0 7px 0 var(--green-shadow), 0 12px 22px rgba(88, 204, 2, 0.36);
             cursor: pointer;
@@ -613,73 +859,43 @@
 
         #drop-btn.active {
             transform: translateY(5px);
-            box-shadow: 0 2px 0 var(--green-shadow)
+            box-shadow: 0 2px 0 var(--green-shadow);
         }
 
         #drop-btn.empty-ammo {
             background: linear-gradient(180deg, #aab7c4, #8795a3);
-            box-shadow: 0 6px 0 #64717d
+            box-shadow: 0 6px 0 #64717d;
         }
 
         #drop-btn span {
             font-size: 25px;
             line-height: 1;
-            margin-bottom: 2px
-        }
-
-        .micro-hint {
-            position: fixed;
-            background: rgba(31, 45, 56, 0.86);
-            color: #fff;
-            padding: 5px 12px;
-            border-radius: 99px;
-            font-size: 12px;
-            font-weight: 700;
-            pointer-events: none;
-            z-index: 19;
-            opacity: 0;
-            transform: translateY(4px);
-            transition: opacity .25s ease, transform .25s ease;
-            white-space: nowrap;
-        }
-
-        .micro-hint.show {
-            opacity: 1;
-            transform: translateY(0)
-        }
-
-        #hint-steer {
-            left: 22px;
-            bottom: calc(env(safe-area-inset-bottom, 0px) + 144px)
-        }
-
-        #hint-drop {
-            right: 18px;
-            bottom: calc(env(safe-area-inset-bottom, 0px) + 152px)
+            margin-bottom: 2px;
         }
 
         /* =========================================================
-   SHEETS & CARDS
-   ========================================================= */
+           SHEETS & CARDS (SAFE-AREA & 100dvh VIEWPORT FIX)
+           ========================================================= */
         #ov {
             position: fixed;
             inset: 0;
-            background: rgba(19, 30, 22, 0.5);
+            height: 100dvh;
+            background: rgba(19, 30, 22, 0.54);
             backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 50;
-            padding: 12px;
+            padding: calc(env(safe-area-inset-top, 0px) + 10px) 12px calc(env(safe-area-inset-bottom, 0px) + 10px);
         }
 
         #ov.map-ov {
-            padding: 6px;
+            padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px calc(env(safe-area-inset-bottom, 0px) + 8px);
         }
 
         #ov.hide {
             display: none !important;
-            pointer-events: none !important
+            pointer-events: none !important;
         }
 
         .sheet {
@@ -687,7 +903,7 @@
             border: 2.5px solid #fff;
             border-radius: 30px;
             width: min(96vw, 450px);
-            max-height: 90vh;
+            max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 22px);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -696,26 +912,26 @@
         }
 
         .sheet.map-sheet {
-            width: min(98vw, 500px);
-            height: 95vh;
-            max-height: 95vh;
+            width: min(98vw, 490px);
+            height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 18px);
+            max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 18px);
             border-radius: 26px;
         }
 
         @keyframes sheetIn {
             from {
                 transform: translateY(18px) scale(.96);
-                opacity: 0
+                opacity: 0;
             }
 
             to {
                 transform: translateY(0) scale(1);
-                opacity: 1
+                opacity: 1;
             }
         }
 
         .sheet-head {
-            padding: 14px 16px 12px;
+            padding: 13px 16px 11px;
             background: #fff;
             border-bottom: 2px solid var(--line);
             display: flex;
@@ -729,21 +945,21 @@
             margin: 0;
             font-size: 19px;
             font-weight: 800;
-            line-height: 1.15
+            line-height: 1.15;
         }
 
         .sheet-sub {
             font-size: 12px;
             color: var(--muted);
             font-weight: 600;
-            margin-top: 2px
+            margin-top: 2px;
         }
 
         .head-actions {
             display: flex;
             align-items: center;
             gap: 6px;
-            flex: none
+            flex: none;
         }
 
         .close-btn {
@@ -763,7 +979,7 @@
         }
 
         .close-btn:active {
-            transform: translateY(2px)
+            transform: translateY(2px);
         }
 
         .pill-action-btn {
@@ -778,10 +994,13 @@
             cursor: pointer;
             text-decoration: none;
             box-shadow: 0 3px 0 #dce3d7;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .pill-action-btn:active {
-            transform: translateY(2px)
+            transform: translateY(2px);
         }
 
         .sheet-body {
@@ -793,7 +1012,10 @@
         }
 
         .duo-btn {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             width: 100%;
             border: 0;
             border-radius: 17px;
@@ -802,7 +1024,7 @@
             font-size: 15px;
             padding: 13px 16px;
             cursor: pointer;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-decoration: none;
             text-align: center;
             transition: transform .08s, box-shadow .08s;
@@ -816,7 +1038,18 @@
 
         .duo-btn.primary:active {
             transform: translateY(4px);
-            box-shadow: 0 1px 0 var(--green-shadow)
+            box-shadow: 0 1px 0 var(--green-shadow);
+        }
+
+        .duo-btn.blue-cta {
+            background: linear-gradient(180deg, #32befc, #1799db);
+            color: #fff;
+            box-shadow: 0 5px 0 var(--blue-shadow);
+        }
+
+        .duo-btn.blue-cta:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 var(--blue-shadow);
         }
 
         .duo-btn.secondary {
@@ -828,21 +1061,25 @@
 
         .duo-btn.secondary:active {
             transform: translateY(3px);
-            box-shadow: 0 1px 0 #dce3d7
+            box-shadow: 0 1px 0 #dce3d7;
         }
 
         .duo-btn.alt {
             background: var(--sage);
             color: #4d5c69;
-            font-size: 13.5px;
-            padding: 11px 14px;
-            box-shadow: 0 3px 0 #dce3d7;
+            font-size: 14px;
+            padding: 12px 14px;
+            box-shadow: 0 4px 0 #dce3d7;
         }
 
         .btn-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px
+            gap: 8px;
+        }
+
+        .btn-row .duo-btn {
+            margin-bottom: 0;
         }
 
         .pill-tag {
@@ -859,98 +1096,236 @@
 
         .pill-tag.green {
             background: #e7fad9;
-            color: #2f7300
+            color: #2f7300;
         }
 
         .pill-tag.blue {
             background: #e3f5ff;
-            color: #0b6b9c
+            color: #0b6b9c;
         }
 
         .pill-tag.amber {
             background: #fff4cc;
-            color: #825a00
+            color: #825a00;
         }
 
         .pill-tag.red {
             background: #ffe7e2;
-            color: #b82909
+            color: #b82909;
         }
 
-        .section-label {
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .07em;
-            color: var(--muted);
-            margin: 12px 0 6px;
-        }
-
-        /* MAP */
+        /* =========================================================
+           IIT DELHI PIXEL-ART MAP & BIRD-CARD PINS (LIKE MOCKUP)
+           ========================================================= */
         .map-scroll {
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
             touch-action: pan-y;
-            background: #9cd885;
+            background: #e2f3e2;
             position: relative;
         }
 
-        .map-svg {
-            display: block;
+        .map-canvas-wrap {
+            position: relative;
             width: 100%;
-            height: auto
+            max-width: 480px;
+            margin: 0 auto;
+            background: #e2f3e2;
         }
 
-        .map-pin,
-        .map-bird-pin {
-            cursor: pointer
+        canvas#map-bg-cv {
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            opacity: 0.55;
+            filter: saturate(0.45) contrast(0.88) brightness(1.06);
+        }
+
+        .map-overlay-pins {
+            position: absolute;
+            inset: 0;
+        }
+
+        .map-pin-btn {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            background: none;
+            border: 0;
+            padding: 0;
+            font-family: inherit;
+        }
+
+        .map-pin-card {
+            width: 92px;
+            height: 84px;
+            border-radius: 20px;
+            background: #8cc4ea;
+            border: 3.5px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 0 rgba(31, 45, 56, 0.36), 0 12px 22px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transition: transform .12s ease;
+        }
+
+        .map-pin-card canvas {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .map-pin-btn.selected .map-pin-card {
+            outline: 4px solid #1f2d38;
+            background: #a8dbff;
+            transform: scale(1.07);
+            box-shadow: 0 7px 0 rgba(31, 45, 56, 0.44), 0 0 22px rgba(255, 255, 255, 0.9);
+        }
+
+        .map-pin-btn.locked .map-pin-card {
+            background: #b8c4cf;
+            filter: grayscale(0.55);
+        }
+
+        .map-lv-badge {
+            position: absolute;
+            top: -11px;
+            left: -8px;
+            background: #1f2d38;
+            color: #fff;
+            border: 2.5px solid #fff;
+            border-radius: 99px;
+            padding: 2px 9px;
+            font-size: 12px;
+            font-weight: 800;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.24);
+        }
+
+        .map-pin-check {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--yellow);
+            border: 2.5px solid #fff;
+            color: #5c3d00;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.22);
+        }
+
+        .map-pin-lock {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #647686;
+            border: 2.5px solid #fff;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-pin-label {
+            margin-top: 6px;
+            background: rgba(255, 254, 249, 0.98);
+            border: 2.5px solid #cfdcd0;
+            border-radius: 99px;
+            padding: 4px 13px;
+            font-size: 13.5px;
+            font-weight: 800;
+            color: var(--text);
+            white-space: nowrap;
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.14);
+        }
+
+        .map-pin-btn.selected .map-pin-label {
+            background: var(--yellow);
+            border-color: #fff;
+            color: #5c3d00;
+        }
+
+        .map-here-tag {
+            position: absolute;
+            top: -34px;
+            background: var(--accent);
+            color: #fff;
+            border: 2.5px solid #fff;
+            border-radius: 99px;
+            padding: 3px 11px;
+            font-size: 11.5px;
+            font-weight: 800;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.26);
+            animation: floatHere 1.2s ease-in-out infinite;
+            z-index: 5;
+        }
+
+        @keyframes floatHere {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-4px);
+            }
         }
 
         .map-dock-card {
             flex: none;
             background: #fff;
             border-top: 2px solid var(--line);
-            padding: 11px 14px calc(env(safe-area-inset-bottom, 0px) + 11px);
+            padding: 12px 14px 14px;
             box-shadow: 0 -8px 22px rgba(0, 0, 0, 0.08);
         }
 
-        .bg-chip-row {
+        .map-dock-info {
             display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            padding-bottom: 2px
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
         }
 
-        .bg-chip {
-            flex: none;
+        .map-dock-bird-box {
+            width: 64px;
+            height: 60px;
+            border-radius: 14px;
+            background: linear-gradient(160deg, #b8e3ff, #d9f5c7);
             border: 2px solid var(--line);
-            background: #fff;
-            border-radius: 12px;
-            padding: 7px 11px;
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text);
-            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: none;
         }
 
-        .bg-chip.active {
-            border-color: var(--green);
-            background: #eefbe5;
-            color: #2f7300
+        .map-dock-bird-box canvas {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
 
-        .bg-chip.locked {
-            opacity: .48;
-            cursor: not-allowed
-        }
-
-        /* BIRD GALLERY & PROFILE */
+        /* =========================================================
+           BIRD GALLERY & INDIVIDUAL BIRD PROFILE (REAL PHOTOS ONLY)
+           ========================================================= */
         .bird-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px
+            gap: 10px;
         }
 
         .bird-tile {
@@ -965,32 +1340,40 @@
         }
 
         .bird-tile:active {
-            transform: scale(0.97)
+            transform: scale(0.97);
         }
 
         .bird-tile.active {
             border-color: var(--green);
             background: #f6fdf1;
-            box-shadow: 0 4px 0 #cbe9b7
+            box-shadow: 0 4px 0 #cbe9b7;
         }
 
         .bird-tile.locked {
-            opacity: 0.74
+            opacity: 0.76;
         }
 
         .bird-tile-sky {
-            height: 74px;
+            height: 92px;
             border-radius: 14px;
             background: linear-gradient(155deg, #dcf4ff, #e8fad9);
+            margin-bottom: 7px;
+            position: relative;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 7px;
-            position: relative;
         }
 
         .bird-tile.locked .bird-tile-sky {
-            background: linear-gradient(155deg, #eceff2, #dfe4ea)
+            background: linear-gradient(155deg, #eceff2, #dfe4ea);
+        }
+
+        .bird-real-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         .tile-sound-btn {
@@ -1001,46 +1384,45 @@
             height: 28px;
             border-radius: 50%;
             border: 0;
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.94);
             font-size: 12px;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .profile-hero {
+        .profile-hero-big {
+            width: 100%;
+            height: 205px;
+            border-radius: 22px;
             background: linear-gradient(145deg, #dff5ff, #e8fad9);
             border: 2px solid #fff;
-            border-radius: 22px;
-            padding: 13px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
             margin-bottom: 12px;
-        }
-
-        .profile-cv {
-            width: 84px;
-            height: 84px;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.85);
-            border: 2px solid #fff;
-            flex: none;
-        }
-
-        .comment-box {
-            background: #fff;
-            border-radius: 14px;
-            padding: 9px 11px;
-            margin-bottom: 6px;
-            border: 1.5px solid var(--line)
-        }
-
-        .comment-meta {
             display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            font-weight: 700;
-            margin-bottom: 2px
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-sound-pill {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(28, 176, 246, 0.95);
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 99px;
+            padding: 6px 13px;
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
         }
 
         .duo-input {
@@ -1049,7 +1431,7 @@
             border-radius: 12px;
             padding: 8px 10px;
             font-family: inherit;
-            font-size: 12.5px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--text);
             outline: none;
@@ -1057,17 +1439,25 @@
         }
 
         .duo-input:focus {
-            border-color: var(--blue)
+            border-color: var(--blue);
         }
 
         /* PODIUM & RANKS */
+        .identity-hero-card {
+            background: linear-gradient(145deg, #e8f6ff, #f2fbff);
+            border: 2px solid #cbe7fa;
+            border-radius: 18px;
+            padding: 11px 12px;
+            margin-bottom: 12px;
+        }
+
         .seg-bar {
             display: flex;
             background: var(--sage);
             padding: 4px;
             border-radius: 14px;
             gap: 4px;
-            margin-bottom: 12px
+            margin-bottom: 12px;
         }
 
         .seg-btn {
@@ -1086,7 +1476,7 @@
         .seg-btn.active {
             background: #fff;
             color: var(--text);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08)
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
         }
 
         .podium-grid {
@@ -1110,23 +1500,23 @@
             background: linear-gradient(180deg, #fffbe6, #fff3bf);
             border-color: #ffd43b;
             box-shadow: 0 5px 0 #e6b800;
-            padding: 13px 6px
+            padding: 13px 6px;
         }
 
         .podium-card.second {
             background: linear-gradient(180deg, #fff, #f1f4f8);
-            border-color: #cfd8e3
+            border-color: #cfd8e3;
         }
 
         .podium-card.third {
             background: linear-gradient(180deg, #fff9f3, #ffe8d6);
-            border-color: #f0b88d
+            border-color: #f0b88d;
         }
 
         .podium-medal {
             font-size: 20px;
             line-height: 1;
-            margin-bottom: 4px
+            margin-bottom: 4px;
         }
 
         .podium-name {
@@ -1134,14 +1524,14 @@
             font-weight: 800;
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis
+            text-overflow: ellipsis;
         }
 
         .podium-pts {
             font-size: 14px;
             font-weight: 800;
             color: var(--green-shadow);
-            margin-top: 2px
+            margin-top: 2px;
         }
 
         .lb-row {
@@ -1157,7 +1547,7 @@
 
         .lb-row.me {
             background: #eefbe5;
-            border-color: var(--green)
+            border-color: var(--green);
         }
 
         .lb-rank {
@@ -1172,17 +1562,63 @@
             font-weight: 800;
             flex: none;
         }
+
+        /* GAME OVER SUMMARY CARD */
+        .go-summary-card {
+            background: #fff;
+            border: 2px solid var(--line);
+            border-radius: 22px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 0 #e5ece0;
+        }
+
+        .go-score-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 11px;
+            margin-bottom: 11px;
+            border-bottom: 2px dashed var(--line);
+        }
+
+        .go-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .go-stat-box {
+            background: var(--sage);
+            border-radius: 12px;
+            padding: 7px 6px;
+        }
+
+        .go-stat-val {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .go-stat-lbl {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
     </style>
 </head>
 
 <body>
     <canvas id="c"></canvas>
+    <div id="ambient-vignette"></div>
     <div id="danger-flash"></div>
+    <div id="low-time-vignette"></div>
 
-    <!-- HOME SCREEN (4 BUTTONS ONLY) -->
+    <!-- HOME SCREEN -->
     <div id="home-screen">
         <div class="home-top">
-            <div class="home-pill" id="home-rank-chip">🕊️ Nilgiri · Best 0 · Ranks ›</div>
             <button class="circle-btn" id="home-mute-btn" aria-label="Toggle Sound">🔊</button>
         </div>
 
@@ -1194,12 +1630,16 @@
         <div class="home-bottom">
             <button class="play-cta" id="home-play-btn">
                 <span>▶ PLAY</span>
-                <small id="home-play-meta">Select Level &amp; Bird</small>
+                <small id="home-play-meta">Zone 1/5 · Main Quad</small>
             </button>
             <div class="home-dock">
                 <button class="dock-btn" id="dock-birds">
                     <span>🦜</span>
                     <div>Bird Collection<small id="dock-birds-sub">1/7 Unlocked</small></div>
+                </button>
+                <button class="dock-btn" id="dock-leaderboard">
+                    <span>🏆</span>
+                    <div>Leaderboard<small id="dock-lb-sub">Best 0 · Campus &amp; Hostel Ranks</small></div>
                 </button>
             </div>
         </div>
@@ -1215,16 +1655,50 @@
             <span id="score-meta"><span id="sc">0</span>/<span id="tg">150</span></span>
         </div>
 
-        <div id="center-pills">
-            <div class="hud-pill" id="time-chip">⏱ <span id="tm">40</span></div>
-            <div id="danger-chip">⚠️ -6s</div>
+        <div id="time-chip">
+            <span id="tm">40</span>
+            <span class="tm-lbl">SEC</span>
         </div>
 
-        <button id="btn-pause" aria-label="Pause">❚❚</button>
+        <div class="hud-right">
+            <div id="danger-chip">⚠️ -6s</div>
+            <button id="btn-pause" aria-label="Pause">❚❚</button>
+        </div>
+    </div>
+
+    <!-- CONSTANT IN-GAME TARGET LEGEND WITH CLEAR PIXEL SPRITES -->
+    <div id="target-legend" class="hidden">
+        <span class="leg-item">
+            <span class="leg-sprite-box hit"><canvas id="leg-civ-cv" width="36" height="38"></canvas></span>
+            <span class="leg-text">
+                <span class="leg-title">Hit Walkers</span>
+                <span class="leg-pos">+1.5s</span>
+            </span>
+        </span>
+        <span style="opacity:0.35;font-size:20px;line-height:1">|</span>
+        <span class="leg-item">
+            <span class="leg-sprite-box avoid"><canvas id="leg-guard-cv" width="36" height="38"></canvas></span>
+            <span class="leg-text">
+                <span class="leg-title">Avoid Guards</span>
+                <span class="leg-neg" id="leg-pen">-6s</span>
+            </span>
+        </span>
     </div>
 
     <div id="combo-chip">COMBO ×2</div>
     <div id="banner"></div>
+
+    <!-- 2-THUMB GAMEPLAY START GUIDE -->
+    <div id="two-thumb-guide">
+        <div class="thumb-badge left">
+            <span class="thumb-icon">👈</span>
+            <span>Left Thumb<br><small style="font-weight:600;opacity:.85">Drag to Steer</small></span>
+        </div>
+        <div class="thumb-badge right">
+            <span>Right Thumb<br><small style="font-weight:600;opacity:.85">Tap to Drop</small></span>
+            <span class="thumb-icon">👉</span>
+        </div>
+    </div>
 
     <div id="left-touch-zone" class="hidden"></div>
     <div id="joystick-container" class="hidden">
@@ -1238,9 +1712,6 @@
             DROP
         </button>
     </div>
-
-    <div id="hint-steer" class="micro-hint">👆 Drag here to steer</div>
-    <div id="hint-drop" class="micro-hint">👇 Tap to drop</div>
 
     <div id="ov" class="hide">
         <div class="sheet" id="sheet"></div>
@@ -1270,9 +1741,10 @@
         const cv = $("c"), ctx = cv.getContext("2d");
 
         let W, H, DPR, UI_SCALE = 1;
-        let poops = [], people = [], decals = [], parts = [], texts = [], deco = { trees: [], clouds: [], flowers: [] };
+        let poops = [], people = [], decals = [], parts = [], texts = [], motes = [], deco = { trees: [], clouds: [], flowers: [] };
         let T0 = 0;
         let homeBirdSpin = 0;
+        let activeRealAudio = null;
 
         const MAX_HUNTERS = 5;
         const BASE_HUNTER_PENALTY = 6;
@@ -1282,7 +1754,194 @@
         const EBIRD_MAP_URL = "https://ebird.org/hotspots?hs=L2747804&continue";
 
         /* =========================================================
-           IIT DELHI CAMPUS ZONES
+           DETAILED MULTI-TONE PIXEL ART SPRITE ENGINE
+           ========================================================= */
+        function makePixelCanvas(grid, pal) {
+            const h = grid.length, w = grid[0].length;
+            const c = document.createElement("canvas");
+            c.width = w; c.height = h;
+            const g = c.getContext("2d");
+            for (let y = 0; y < h; y++) {
+                const row = grid[y];
+                for (let x = 0; x < w; x++) {
+                    const ch = row[x];
+                    if (ch === "." || !pal[ch]) continue;
+                    g.fillStyle = pal[ch];
+                    g.fillRect(x, y, 1, 1);
+                }
+            }
+            return c;
+        }
+
+        const BIRD_UP_20 = [
+            ".......OOOOO........",
+            "......OWWhhWO.......",
+            ".....OWWwwhhWO..OOO.",
+            "......OWwwhhW..OhheO",
+            ".......OWwwW..OhEehB",
+            ".OOO....OWW..OhnnhBO",
+            "OttOO..OOOOOOhnnBBO.",
+            "OtttOOObbbbbbOhnh...",
+            ".OOObbbbbLLbbbO.....",
+            "...ObbbbLLLLbbO.....",
+            "....OObbLLLLOO......",
+            "......OOOOOO........",
+            "........f..f........"
+        ];
+        const BIRD_DN_20 = [
+            "....................",
+            "..............OOO...",
+            ".............OhheO..",
+            "............OhEehB..",
+            ".OOO...OOOOOOhnnhBO.",
+            "OttOO.ObbbbbbOhnBBO.",
+            "OtttOObbbbWWWWOhn...",
+            ".OOObbbbbWWwwWWO....",
+            "...ObbbbWWwwhWWO....",
+            "....OObbOWWhhWO.....",
+            "......OO.OWWWO......",
+            "..........OOO.......",
+            "........f..f........"
+        ];
+
+        const BIRD_LONG_UP_22 = [
+            ".........OOOOO........",
+            "........OWWhhWO.......",
+            ".......OWWwwhhWO..OOO.",
+            "........OWwwhhW..OhheO",
+            ".........OWwwW..OhEehB",
+            "TTTTT.....OWW..OhnnhBO",
+            ".TTTTT.OOOOOOOOhnnBBO.",
+            "...TTTTbbbbbbbbOhnh...",
+            ".....OObbbbLLbbbO.....",
+            ".......ObbLLLLbbO.....",
+            "........OOLLLLOO......",
+            "..........OOOO........",
+            "..........f..f........"
+        ];
+        const BIRD_LONG_DN_22 = [
+            "......................",
+            "................OOO...",
+            "...............OhheO..",
+            "..............OhEehB..",
+            "TTTTT...OOOOOOOhnnhBO.",
+            ".TTTTT.ObbbbbbbOhnBBO.",
+            "...TTTTbbbbWWWWOhn....",
+            ".....OObbbWWwwWWO.....",
+            ".......ObbWWwwhWWO....",
+            "........OOOWWhhWO.....",
+            "..........OWWWWO......",
+            "...........OOOO.......",
+            "..........f..f........"
+        ];
+
+        const BIRD_SPRITES = {};
+        function buildBirdSprites() {
+            BIRDS.forEach(b => {
+                const pal = {
+                    O: "#18202c",
+                    b: b.col,
+                    L: b.bel,
+                    W: b.wing,
+                    w: b.bel,
+                    h: b.id === "rewlap1" ? "#1e272e" : b.col,
+                    n: b.id === "rocpig" ? "#2eb872" : (b.id === "rorpar" ? "#ff6b81" : (b.id === "rewlap1" ? "#ffffff" : b.bel)),
+                    e: b.id === "asikoe2" ? "#ff2e2e" : "#18202c",
+                    E: "#fff8d6",
+                    B: b.beak,
+                    f: "#e07a5f",
+                    t: b.wing,
+                    T: b.id === "compea" ? "#20bf6b" : (b.id === "rorpar" ? "#27ae60" : b.wing)
+                };
+                const useLong = (b.id === "rorpar" || b.id === "compea" || b.id === "blakit1");
+                const g0 = useLong ? BIRD_LONG_UP_22 : BIRD_UP_20;
+                const g1 = useLong ? BIRD_LONG_DN_22 : BIRD_DN_20;
+                BIRD_SPRITES[b.id] = [makePixelCanvas(g0, pal), makePixelCanvas(g1, pal)];
+            });
+        }
+
+        const BUSH_GRID = [
+            "......OOOO......",
+            "....OOllhhOO....",
+            "..OOllLLLLllOO..",
+            ".OlLLGGGGGGLLlO.",
+            ".OlGGGGGGGGGGdO.",
+            "OOGGGllGGGGdddOO",
+            "OlLLGGGGGGddddOO",
+            "OGGGGGdddGddddO.",
+            ".OOGddddddddOO..",
+            "...OOOddddOO....",
+            "......OttO......",
+            "......OttO......",
+            "......OOOO......"
+        ];
+        let TREE_SPRITES = {};
+        function buildEnvSprites() {
+            TREE_SPRITES.normal = makePixelCanvas(BUSH_GRID, {
+                O: "#1e3a24", h: "#c4f590", l: "#99e265", L: "#78cc4b", G: "#4fa83b", d: "#2e7328", t: "#6b3e1f"
+            });
+            TREE_SPRITES.ridge = makePixelCanvas(BUSH_GRID, {
+                O: "#18301e", h: "#a7e87b", l: "#7cd156", L: "#5db542", G: "#3b8a32", d: "#225c22", t: "#543018"
+            });
+        }
+
+        function makePersonSprite(shirt, hair, skin, isHunter, step) {
+            const legA = step === 0 ? "p" : ".";
+            const legB = step === 1 ? "p" : ".";
+            const grid = isHunter ? [
+                "....OOOO....",
+                "...OccccO...",
+                "..OccrrccO..",
+                "..OOOOOOOO..",
+                "...OssssO...",
+                "..kOssssO...",
+                "..kObbbbO...",
+                "..kObbBbO...",
+                "..kObbbbO...",
+                "...ObbbbO...",
+                "...OO..OO...",
+                "...O" + legA + "..O" + legB + "...",
+                "...OO..OO..."
+            ] : [
+                "....OOOO....",
+                "...OhhhhO...",
+                "...OhhhhO...",
+                "...OssssO...",
+                "...OssssO...",
+                "..OObbbbOO..",
+                "..sObbBbOs..",
+                "...ObbbbO...",
+                "...ObbbbO...",
+                "...OO..OO...",
+                "...O" + legA + "..O" + legB + "...",
+                "...OO..OO..."
+            ];
+            return makePixelCanvas(grid, {
+                O: "#18202c", h: hair, s: skin, b: shirt, B: "#ffffff", p: "#2b3a4a",
+                c: "#2f3542", r: "#e8412c", k: "#5c3b1e"
+            });
+        }
+
+        function drawLegendSprites() {
+            const civSp = makePersonSprite("#34ace0", "#2c2c54", "#ffda79", false, 0);
+            const guardSp = makePersonSprite("#535c68", "#2c2c54", "#f8c291", true, 0);
+            const c1 = $("leg-civ-cv"), c2 = $("leg-guard-cv");
+            if (c1) {
+                const g1 = c1.getContext("2d");
+                g1.imageSmoothingEnabled = false;
+                g1.clearRect(0, 0, c1.width, c1.height);
+                g1.drawImage(civSp, 1, 1, 34, 36);
+            }
+            if (c2) {
+                const g2 = c2.getContext("2d");
+                g2.imageSmoothingEnabled = false;
+                g2.clearRect(0, 0, c2.width, c2.height);
+                g2.drawImage(guardSp, 1, 1, 34, 36);
+            }
+        }
+
+        /* =========================================================
+           IIT DELHI CAMPUS ZONES (ALIGNED TO CAMPUS MAP LANDMARKS)
            ========================================================= */
         const ZONES = [
             {
@@ -1291,8 +1950,7 @@
                 target: 150, timeStart: 40,
                 bgId: "bg_inst", bgName: "Main Lawn",
                 unlockBird: "rorpar",
-                mapX: 246, mapY: 74, color: "#1cb0f6",
-                desc: "Academic blocks & shaded Ashoka lawns near Main Gate G1."
+                icon: "🏛️", color: "#1cb0f6", mapX: 28, mapY: 75
             },
             {
                 id: "z_hostel", num: 2, short: "Hostel Lanes",
@@ -1300,8 +1958,7 @@
                 target: 250, timeStart: 42,
                 bgId: "bg_hostel", bgName: "Hostel Quad",
                 unlockBird: "asikoe2",
-                mapX: 78, mapY: 92, color: "#ff793f",
-                desc: "Hostel courtyards & fruiting avenues near Hostel Gate G2."
+                icon: "🏠", color: "#ff793f", mapX: 72, mapY: 61
             },
             {
                 id: "z_maidan", num: 3, short: "Cricket Oval",
@@ -1309,8 +1966,7 @@
                 target: 350, timeStart: 45,
                 bgId: "bg_maidan", bgName: "Cricket Pitch",
                 unlockBird: "rewlap1",
-                mapX: 198, mapY: 158, color: "#58cc02",
-                desc: "Central cricket oval & track patrolled by Lapwings."
+                icon: "🏏", color: "#58cc02", mapX: 72, mapY: 36
             },
             {
                 id: "z_nullah", num: 4, short: "Campus Nullah",
@@ -1318,8 +1974,7 @@
                 target: 450, timeStart: 45,
                 bgId: "bg_nullah", bgName: "Nullah Marsh",
                 unlockBird: "isbduc1",
-                mapX: 112, mapY: 186, color: "#00b894",
-                desc: "Waterway toward JNU Gate G3 — home to Spot-billed Ducks."
+                icon: "🌊", color: "#00b894", mapX: 28, mapY: 42
             },
             {
                 id: "z_ridge", num: 5, short: "Ridge Woods",
@@ -1327,8 +1982,7 @@
                 target: 600, timeStart: 48,
                 bgId: "bg_ridge", bgName: "Ridge Woods",
                 unlockBird: "compea",
-                mapX: 338, mapY: 136, color: "#9b59b6",
-                desc: "East faculty woods bordering Mehrauli Gate G4 & Peafowls."
+                icon: "🌲", color: "#9b59b6", mapX: 28, mapY: 17
             }
         ];
 
@@ -1339,102 +1993,92 @@
             {
                 id: "rocpig", n: "Rock Pigeon", sci: "Columba livia",
                 ebirdUrl: "https://ebird.org/species/rocpig/L2747804",
+                imgUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Rock_Dove_(Columba_livia)_or_Rock_Pigeon.JPG?width=480",
+                audioUrl: "",
                 icon: "🕊️", col: "#8a99a8", bel: "#b5c2ce", wing: "#657382", beak: "#3d4852",
                 rad: 1.05, rg: 0.82, maxReticleSpeed: 175, maxAmmo: 5, ptMult: 1.0,
                 perk: "Balanced Flyer", callLabel: "Coo-roo-coo!",
                 hotspots: ["Main Building", "Wind T", "All Hostels"],
                 facts: "Slate-grey plumage with two dark wingbars and iridescent green-purple neck sheen.",
-                comments: [
-                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 2 observed near the academic blocks." },
-                    { user: "Meera (BioTech)", spot: "SAC Roof", text: "Metallic green neck shimmer shows clearly in morning sun." }
-                ],
-                unlocked: true, unlockHint: "Starter"
+                unlocked: true, unlockHint: "Starter", homeZone: "All Campus"
             },
             {
                 id: "rorpar", n: "Rose-ringed Parakeet", sci: "Psittacula krameri",
                 ebirdUrl: "https://ebird.org/species/rorpar/L2747804",
+                imgUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/The_rose-ringed_parakeet_(Psittacula_krameri)_021.jpg?width=480",
+                audioUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Perruche.ogg",
                 icon: "🦜", col: "#4cd137", bel: "#7bed9f", wing: "#2ecc71", beak: "#e84118",
                 rad: 1.0, rg: 0.68, maxReticleSpeed: 198, maxAmmo: 5, ptMult: 1.0,
                 perk: "+15% Speed · Fast Reload", callLabel: "Kee-ak!",
                 hotspots: ["Main Quad Trees", "Hostel Lanes", "LHC"],
                 facts: "Vibrant emerald-green parakeet with a bright red hooked bill, long tail, and rose-black neck collar.",
-                comments: [
-                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 15 noisy parakeets flying across campus treetops!" },
-                    { user: "Rohan (Nilgiri)", spot: "LHC", text: "A flock shoots past LHC every morning around 7 AM." }
-                ],
-                unlocked: false, unlockHint: "Zone 1 (150)"
+                unlocked: false, unlockHint: "Zone 1 (150)", homeZone: "Zone 1 · Main Quad"
             },
             {
                 id: "asikoe2", n: "Asian Koel", sci: "Eudynamys scolopaceus",
                 ebirdUrl: "https://ebird.org/species/asikoe2/L2747804",
-                icon: "🐦‍⬛", col: "#252d38", bel: "#344050", wing: "#171d24", beak: "#95a56c",
+                imgUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Asian_koel_(Eudynamys_scolopaceus).jpg?width=480",
+                audioUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/KoelMale.ogg",
+                icon: "🐦‍⬛", col: "#252d38", bel: "#4b5a6e", wing: "#171d24", beak: "#95a56c",
                 rad: 1.08, rg: 0.62, maxReticleSpeed: 186, maxAmmo: 6, ptMult: 1.05,
                 perk: "6 Ammo · Rapid Reload", callLabel: "Ku-oo!",
                 hotspots: ["Hostel Trees", "Faculty Housing", "Nalanda"],
                 facts: "Glossy blue-black male with ruby-red eye; speckled brown female. Famous for its rising summer duet.",
-                comments: [
-                    { user: "Rajesh Prasad (eBird)", spot: "29 Jul 2026", text: "Observed calling loudly from tall hostel-side trees." },
-                    { user: "Kabir (Aravali)", spot: "Mess Lawn", text: "Their rising 'ku-oo' call is the soundtrack of summer semester." }
-                ],
-                unlocked: false, unlockHint: "Zone 2 (250)"
+                unlocked: false, unlockHint: "Zone 2 (250)", homeZone: "Zone 2 · Hostel Lanes"
             },
             {
                 id: "rewlap1", n: "Red-wattled Lapwing", sci: "Vanellus indicus",
                 ebirdUrl: "https://ebird.org/species/rewlap1/L2747804",
+                imgUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Red_wattled_Lapwing_(Vanellus_indicus).jpg?width=480",
+                audioUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Red-wattled_Lapwing_(Vanellus_indicus)_from_Thrissur.oga",
                 icon: "🦤", col: "#8d6e63", bel: "#ffffff", wing: "#5d4037", beak: "#e84118",
                 rad: 1.18, rg: 0.75, maxReticleSpeed: 192, maxAmmo: 6, ptMult: 1.1,
                 perk: "+18% Splat · Sharp Aim", callLabel: "Did-he-do-it!",
                 hotspots: ["Cricket Oval", "Athletics Track", "Football Field"],
                 facts: "Black-and-white head, brown back, yellow legs, and bright red fleshy wattle in front of each eye.",
-                comments: [
-                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 3 patrolling the open campus greens." },
-                    { user: "Vikram (Vindhyachal)", spot: "Cricket Field", text: "Always calls 'did-he-do-it' near the boundary rope." }
-                ],
-                unlocked: false, unlockHint: "Zone 3 (350)"
+                unlocked: false, unlockHint: "Zone 3 (350)", homeZone: "Zone 3 · Cricket Oval"
             },
             {
                 id: "isbduc1", n: "Indian Spot-billed Duck", sci: "Anas poecilorhyncha",
                 ebirdUrl: "https://ebird.org/species/isbduc1/L2747804",
-                icon: "🦆", col: "#8a735c", bel: "#b39b82", wing: "#5c4a38", beak: "#1e272e",
+                imgUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Spot-billed_Duck_(Anas_poecilorhyncha)_-_male_-_Flickr_-_Lip_Kee.jpg?width=480",
+                audioUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Anas_poecilorhyncha_-_Indian_Spot-billed_Duck_XC114233.mp3",
+                icon: "🦆", col: "#8a735c", bel: "#b39b82", wing: "#00b894", beak: "#ffc400",
                 rad: 1.36, rg: 0.8, maxReticleSpeed: 166, maxAmmo: 7, ptMult: 1.15,
                 perk: "7 Ammo · +36% Splash", callLabel: "Quack-quack!",
                 hotspots: ["Campus Nullah", "G3 Marsh Edge", "Monsoon Ponds"],
                 facts: "Large dabbling duck ID'd by its black bill with bright yellow tip, twin orange-red base spots, and green speculum.",
-                comments: [
-                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 2 spotted on IIT Delhi's L2747804 checklist!" },
-                    { user: "Tanvi (Design)", spot: "Nullah Bridge", text: "Look for the twin red spots at the base of its yellow-tipped bill." }
-                ],
-                unlocked: false, unlockHint: "Zone 4 (450)"
+                unlocked: false, unlockHint: "Zone 4 (450)", homeZone: "Zone 4 · Campus Nullah"
             },
             {
                 id: "compea", n: "Indian Peafowl", sci: "Pavo cristatus",
                 ebirdUrl: "https://ebird.org/species/compea/L2747804",
+                imgUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Pavo_cristatus_(male).jpg?width=480",
+                audioUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Pavo_cristatus_(call).ogg",
                 icon: "🦚", col: "#0984e3", bel: "#00cec9", wing: "#20bf6b", beak: "#f39c12",
                 rad: 1.42, rg: 0.78, maxReticleSpeed: 170, maxAmmo: 7, ptMult: 1.25,
                 perk: "+42% Splat · +25% Score", callLabel: "May-awe!",
                 hotspots: ["G4 Mehrauli Edge", "Faculty Housing", "Ridge Trees"],
                 facts: "Iconic resident of IITD's quieter wooded East & South campus. Males carry sapphire necks and eyespot trains.",
-                comments: [
-                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 5 peafowls observed on campus!" },
-                    { user: "Ananya (Himadri)", spot: "East Campus", text: "Best heard calling at sunrise near faculty gardens." }
-                ],
-                unlocked: false, unlockHint: "Zone 5 (600)"
+                unlocked: false, unlockHint: "Zone 5 (600)", homeZone: "Zone 5 · Ridge Woods"
             },
             {
                 id: "blakit1", n: "Black Kite", sci: "Milvus migrans",
                 ebirdUrl: "https://ebird.org/species/blakit1/L2747804",
+                imgUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Black_Kite_(Milvus_migrans)_Goes_Fish-Hunting.jpg?width=480",
+                audioUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Black_kite_song_recorded_in_March_2022_at_Pune.wav",
                 icon: "🦅", col: "#5d4037", bel: "#8d6e63", wing: "#3e2723", beak: "#f1c40f",
                 rad: 1.15, rg: 0.6, maxReticleSpeed: 220, maxAmmo: 6, ptMult: 1.2,
                 perk: "Apex Speed · +20% Score", callLabel: "Kwee-eee!",
                 hotspots: ["Dogra Hall Sky", "Wind T", "Cricket Thermals"],
                 facts: "Dark brown raptor instantly identified in flight by its shallowly forked tail and angled soaring wings.",
-                comments: [
-                    { user: "Harsh Singhal (eBird)", spot: "14 Nov 2026", text: "Count: 3 soaring smoothly above institutional lawns." },
-                    { user: "Dev (Mech)", spot: "SAC Lawn", text: "Watch them steer with their forked tails—and guard your samosa!" }
-                ],
-                unlocked: false, unlockHint: "500+ Score / All Zones"
+                unlocked: false, unlockHint: "500+ Score / All Zones", homeZone: "Campus Skies"
             }
         ];
+
+        buildBirdSprites();
+        buildEnvSprites();
+        drawLegendSprites();
 
         /* =========================================================
            PERSISTENCE
@@ -1451,11 +2095,10 @@
             selectedBird: "rocpig",
             selectedBg: "auto",
             playerName: "IITD Flier",
-            playerHostel: "Nilgiri",
-            userComments: {}
+            playerHostel: "Nilgiri"
         };
 
-        const GAME_VERSION = "v1.0";
+        const GAME_VERSION = "v1.6-mix";
         function getPlatform() {
             const ua = navigator.userAgent || "";
             if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return "iOS";
@@ -1760,6 +2403,7 @@
             zoneClearedThisRun: false, dangerTier: 0,
             endingT: 0, bustReason: false,
             hasSteered: false, hasDropped: false,
+            thumbGuideT: 0,
             playSec: 0
         };
 
@@ -1772,7 +2416,7 @@
         const joyState = { active: false, pid: null, cx: 0, cy: 0, dx: 0, dy: 0, maxRadius: 36 };
 
         /* =========================================================
-           WEB AUDIO & HAPTICS
+           NATURAL & PLEASANT BIRD SONG AUDIO + REAL RECORDINGS
            ========================================================= */
         let AC, muted = false;
         function ensureAC() {
@@ -1785,65 +2429,125 @@
         function haptic(ms = 10) {
             try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { }
         }
-        function snd(freq, dur, type = "sine", vol = 0.12, slide = 0) {
+        function snd(freq, dur, type = "triangle", vol = 0.08, slide = 0) {
             if (muted) return;
             const ac = ensureAC(); if (!ac) return;
             try {
                 const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
-                o.type = type; o.frequency.setValueAtTime(freq, t);
+                o.type = type;
+                o.frequency.setValueAtTime(freq, t);
                 if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(20, freq + slide), t + dur);
-                g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-                o.connect(g); g.connect(ac.destination); o.start(); o.stop(t + dur);
+                g.gain.setValueAtTime(0.001, t);
+                g.gain.linearRampToValueAtTime(vol, t + 0.015);
+                g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+                o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + dur + 0.01);
             } catch (e) { }
         }
 
-        function playBirdCall(birdId, floatOnBird = false) {
-            if (floatOnBird && S.state === "play") {
-                const b = BIRDS.find(x => x.id === birdId) || activeBird;
-                addText(B.x, B.y - 76 * UI_SCALE, `🎵 ${b.callLabel}`, "#fff7b2", 14);
-            }
-            if (muted) return;
-            const ac = ensureAC(); if (!ac) return;
-            const t = ac.currentTime;
-            const tone = (f1, f2, start, dur, type = "sine", vol = 0.14) => {
-                const o = ac.createOscillator(), g = ac.createGain();
-                o.type = type; o.frequency.setValueAtTime(f1, t + start);
-                o.frequency.exponentialRampToValueAtTime(Math.max(40, f2), t + start + dur);
-                g.gain.setValueAtTime(0.001, t + start);
-                g.gain.linearRampToValueAtTime(vol, t + start + dur * 0.18);
-                g.gain.exponentialRampToValueAtTime(0.001, t + start + dur);
-                o.connect(g); g.connect(ac.destination); o.start(t + start); o.stop(t + start + dur + 0.02);
-            };
-
-            if (birdId === "rocpig") {
-                tone(290, 340, 0, 0.13, "sine", 0.14); tone(330, 310, 0.14, 0.1, "sine", 0.11); tone(310, 250, 0.25, 0.18, "sine", 0.13);
-            } else if (birdId === "rorpar") {
-                tone(1950, 2800, 0, 0.10, "sawtooth", 0.08); tone(2500, 1450, 0.10, 0.09, "triangle", 0.10); tone(2050, 2900, 0.23, 0.11, "sawtooth", 0.08);
-            } else if (birdId === "asikoe2") {
-                tone(660, 620, 0, 0.12, "sine", 0.15); tone(740, 990, 0.14, 0.22, "sine", 0.16);
-                tone(700, 660, 0.40, 0.11, "sine", 0.13); tone(800, 1120, 0.53, 0.23, "sine", 0.16);
-            } else if (birdId === "rewlap1") {
-                tone(1350, 1550, 0, 0.07, "triangle", 0.13); tone(1400, 1300, 0.09, 0.07, "triangle", 0.11);
-                tone(1600, 1900, 0.18, 0.09, "triangle", 0.14); tone(1450, 1200, 0.29, 0.12, "triangle", 0.12);
-            } else if (birdId === "isbduc1") {
-                const quack = (st, dur, base) => {
-                    const o = ac.createOscillator(), f = ac.createBiquadFilter(), g = ac.createGain();
-                    o.type = "sawtooth"; o.frequency.setValueAtTime(base, t + st);
-                    o.frequency.exponentialRampToValueAtTime(base * 0.72, t + st + dur);
-                    f.type = "bandpass"; f.frequency.setValueAtTime(920, t + st); f.Q.value = 3.2;
-                    g.gain.setValueAtTime(0.001, t + st); g.gain.linearRampToValueAtTime(0.24, t + st + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + st + dur);
-                    o.connect(f); f.connect(g); g.connect(ac.destination); o.start(t + st); o.stop(t + st + dur + 0.02);
-                };
-                quack(0, 0.14, 360); quack(0.17, 0.13, 340); quack(0.33, 0.17, 310);
-            } else if (birdId === "compea") {
-                tone(520, 880, 0, 0.2, "sawtooth", 0.09); tone(880, 560, 0.2, 0.32, "triangle", 0.15);
-            } else if (birdId === "blakit1") {
-                tone(2200, 1950, 0, 0.14, "sine", 0.12); tone(1950, 1450, 0.14, 0.3, "sine", 0.11);
+        function stopRealBirdAudio() {
+            if (activeRealAudio) {
+                try { activeRealAudio.pause(); activeRealAudio.currentTime = 0; } catch (e) { }
+                activeRealAudio = null;
             }
         }
 
+        function playBirdCallSynth(birdId, isProfilePreview = false) {
+            if (muted) return;
+            const ac = ensureAC(); if (!ac) return;
+            const t = ac.currentTime;
+            const masterVol = isProfilePreview ? 0.16 : 0.095;
+
+            const flute = (f1, f2, start, dur, vol = masterVol, vibHz = 0, vibDepth = 0) => {
+                const o = ac.createOscillator(), g = ac.createGain(), filt = ac.createBiquadFilter();
+                o.type = "sine";
+                o.frequency.setValueAtTime(f1, t + start);
+                o.frequency.exponentialRampToValueAtTime(Math.max(40, f2), t + start + dur);
+                filt.type = "lowpass";
+                filt.frequency.setValueAtTime(Math.max(f1, f2) * 2.2, t + start);
+
+                if (vibHz > 0 && vibDepth > 0) {
+                    const lfo = ac.createOscillator(), lg = ac.createGain();
+                    lfo.frequency.setValueAtTime(vibHz, t + start);
+                    lg.gain.setValueAtTime(vibDepth, t + start);
+                    lfo.connect(lg); lg.connect(o.frequency);
+                    lfo.start(t + start); lfo.stop(t + start + dur + 0.02);
+                }
+
+                g.gain.setValueAtTime(0.001, t + start);
+                g.gain.linearRampToValueAtTime(vol, t + start + Math.min(0.035, dur * 0.25));
+                g.gain.exponentialRampToValueAtTime(0.001, t + start + dur);
+                o.connect(filt); filt.connect(g); g.connect(ac.destination);
+                o.start(t + start); o.stop(t + start + dur + 0.02);
+            };
+
+            if (birdId === "rocpig") {
+                flute(215, 245, 0.00, 0.16, masterVol * 1.15, 16, 10);
+                flute(248, 225, 0.19, 0.12, masterVol * 0.95, 14, 8);
+                flute(235, 255, 0.34, 0.10, masterVol * 0.9);
+                flute(242, 195, 0.46, 0.22, masterVol * 1.1, 12, 7);
+            } else if (birdId === "rorpar") {
+                flute(1480, 2120, 0.00, 0.09, masterVol * 0.75);
+                flute(2080, 1520, 0.09, 0.08, masterVol * 0.70);
+                flute(1540, 2200, 0.23, 0.09, masterVol * 0.75);
+                flute(2100, 1480, 0.32, 0.10, masterVol * 0.68);
+            } else if (birdId === "asikoe2") {
+                flute(560, 820, 0.00, 0.22, masterVol * 1.05);
+                flute(640, 960, 0.32, 0.25, masterVol * 1.15);
+            } else if (birdId === "rewlap1") {
+                flute(1120, 1240, 0.00, 0.06, masterVol * 0.85);
+                flute(1260, 1180, 0.08, 0.06, masterVol * 0.78);
+                flute(1080, 1460, 0.17, 0.09, masterVol * 0.90);
+                flute(1320, 1060, 0.28, 0.10, masterVol * 0.75);
+            } else if (birdId === "isbduc1") {
+                const quack = (st, dur, base) => {
+                    const o = ac.createOscillator(), f = ac.createBiquadFilter(), g = ac.createGain();
+                    o.type = "triangle"; o.frequency.setValueAtTime(base, t + st);
+                    o.frequency.exponentialRampToValueAtTime(base * 0.72, t + st + dur);
+                    f.type = "bandpass"; f.frequency.setValueAtTime(720, t + st); f.Q.value = 2.6;
+                    g.gain.setValueAtTime(0.001, t + st);
+                    g.gain.linearRampToValueAtTime(masterVol * 1.35, t + st + 0.02);
+                    g.gain.exponentialRampToValueAtTime(0.001, t + st + dur);
+                    o.connect(f); f.connect(g); g.connect(ac.destination);
+                    o.start(t + st); o.stop(t + st + dur + 0.02);
+                };
+                quack(0.00, 0.12, 310);
+                quack(0.16, 0.13, 285);
+            } else if (birdId === "compea") {
+                flute(490, 740, 0.00, 0.16, masterVol * 0.95);
+                flute(740, 460, 0.16, 0.28, masterVol * 0.95, 10, 12);
+            } else if (birdId === "blakit1") {
+                flute(1980, 1780, 0.00, 0.14, masterVol * 0.75, 14, 24);
+                flute(1780, 1480, 0.14, 0.26, masterVol * 0.70, 14, 28);
+            }
+        }
+
+        function playBirdCall(birdId, floatOnBird = false, useRealAudio = false) {
+            const b = BIRDS.find(x => x.id === birdId) || activeBird;
+            if (floatOnBird && S.state === "play") {
+                addText(B.x, B.y - 76 * UI_SCALE, `🎵 ${b.callLabel}`, "#fff7b2", 15);
+            }
+            if (muted) return;
+            if (useRealAudio && b.audioUrl) {
+                stopRealBirdAudio();
+                try {
+                    const aud = new Audio(b.audioUrl);
+                    aud.volume = 0.85;
+                    activeRealAudio = aud;
+                    aud.onerror = () => {
+                        if (activeRealAudio === aud) playBirdCallSynth(birdId, true);
+                    };
+                    const p = aud.play();
+                    if (p && typeof p.catch === "function") {
+                        p.catch(() => playBirdCallSynth(birdId, true));
+                    }
+                    return;
+                } catch (e) { }
+            }
+            playBirdCallSynth(birdId, useRealAudio);
+        }
+
         /* =========================================================
-           RESIZE & SCENERY
+           RESIZE, HOME BACKDROP & 5 DISTINCT LEVEL BACKGROUNDS
            ========================================================= */
         function resetJoystickAnchor() {
             const size = 108;
@@ -1853,26 +2557,29 @@
         }
 
         function getPlayBounds() {
-            const margin = 30 * UI_SCALE;
-            const minY = Math.max(108, H * 0.15);
-            const maxY = Math.max(minY + 80, H - 154);
+            const margin = 32 * UI_SCALE;
+            const minY = Math.max(148, H * 0.20);
+            const maxY = Math.max(minY + 80, H - 150);
             return { minX: margin, maxX: W - margin, minY, maxY };
         }
 
         function resize() {
-            DPR = Math.min(window.devicePixelRatio || 1, 2.5);
+            DPR = Math.min(window.devicePixelRatio || 1, 2);
             W = window.innerWidth; H = window.innerHeight;
             cv.width = W * DPR; cv.height = H * DPR;
             ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            ctx.imageSmoothingEnabled = false;
             UI_SCALE = Math.max(0.85, Math.min(1.2, W / 400));
 
             const pb = getPlayBounds();
             deco.trees = [];
-            for (let i = 0; i < 7; i++) deco.trees.push({ x: R(32, W - 32), y: R(pb.minY, pb.maxY), r: R(17, 25) * UI_SCALE });
+            for (let i = 0; i < 7; i++) deco.trees.push({ x: Math.round(R(32, W - 32) / 4) * 4, y: Math.round(R(pb.minY, pb.maxY) / 4) * 4, s: pick([3, 3.5, 4]) });
             deco.flowers = [];
-            for (let i = 0; i < 18; i++) deco.flowers.push({ x: R(20, W - 20), y: R(90, H - 80), c: pick(["#fff7b2", "#ffd6e0", "#ffffff", "#d0f0ff"]) });
+            for (let i = 0; i < 24; i++) deco.flowers.push({ x: Math.round(R(16, W - 16) / 4) * 4, y: Math.round(R(90, H - 80) / 4) * 4, c: pick(["#fff7b2", "#ffd6e0", "#ffffff", "#d0f0ff"]) });
             deco.clouds = [];
-            for (let i = 0; i < 5; i++) deco.clouds.push({ x: R(0, W), y: R(40, H * 0.42), s: R(0.7, 1.2), sp: R(8, 16) });
+            for (let i = 0; i < 6; i++) deco.clouds.push({ x: R(-60, W), y: R(28, H * 0.36), s: pick([3, 4, 5]), sp: R(7, 15) });
+            motes = [];
+            for (let i = 0; i < 18; i++) motes.push({ x: R(0, W), y: R(0, H), vx: R(-6, 6), vy: R(-10, -3), r: pick([2, 3]), a: R(0.3, 0.9), ph: R(0, 6) });
             if (!joyState.active) resetJoystickAnchor();
         }
         window.addEventListener("resize", resize);
@@ -1883,157 +2590,259 @@
         }
 
         function renderZoneBackground(targetCtx, bgId, w, h, trees) {
+            targetCtx.imageSmoothingEnabled = false;
+            const px = 4;
+            const tSec = T0 / 1000;
+
             if (bgId === "bg_inst") {
-                targetCtx.fillStyle = "#b8e79f"; targetCtx.fillRect(0, 0, w, h);
-                targetCtx.strokeStyle = "#f0f4e6"; targetCtx.lineWidth = 22; targetCtx.lineCap = "round";
-                targetCtx.beginPath(); targetCtx.moveTo(0, h * 0.48); targetCtx.lineTo(w, h * 0.48); targetCtx.moveTo(w * 0.5, 0); targetCtx.lineTo(w * 0.5, h); targetCtx.stroke();
-                targetCtx.fillStyle = "#dbe8f4"; targetCtx.fillRect(w * 0.18, 52, w * 0.64, 32);
-                targetCtx.fillStyle = "#4589e6"; targetCtx.fillRect(w * 0.2, 58, w * 0.26, 20); targetCtx.fillRect(w * 0.52, 58, w * 0.28, 20);
+                targetCtx.fillStyle = "#88cf6b"; targetCtx.fillRect(0, 0, w, h);
+                targetCtx.fillStyle = "#79bf5d";
+                for (let gx = 0; gx < w; gx += 32) for (let gy = 0; gy < h; gy += 32) {
+                    if (((gx + gy) / 32) % 2 === 0) targetCtx.fillRect(gx, gy, 16, 16);
+                }
+                const py = Math.round(h * 0.46 / px) * px, pxx = Math.round(w * 0.48 / px) * px;
+                targetCtx.fillStyle = "#d9c8a3";
+                targetCtx.fillRect(0, py - 4, w, 36);
+                targetCtx.fillRect(pxx - 4, 0, 36, h);
+                targetCtx.fillStyle = "#efe6cf";
+                targetCtx.fillRect(0, py, w, 28);
+                targetCtx.fillRect(pxx, 0, 28, h);
+                targetCtx.fillStyle = "#18202c"; targetCtx.fillRect(pxx - 16, py - 16, 60, 60);
+                targetCtx.fillStyle = "#e3dccb"; targetCtx.fillRect(pxx - 12, py - 12, 52, 52);
+                targetCtx.fillStyle = "#42b0e6"; targetCtx.fillRect(pxx - 6, py - 6, 40, 40);
+                targetCtx.fillStyle = "#a3e8ff"; targetCtx.fillRect(pxx + 4, py + 4, 18, 12);
+                targetCtx.fillStyle = "#18202c"; targetCtx.fillRect(w * 0.16 - 4, 46, w * 0.68 + 8, 38);
+                targetCtx.fillStyle = "#e8d5b7"; targetCtx.fillRect(w * 0.16, 50, w * 0.68, 30);
+                targetCtx.fillStyle = "#c75b39"; targetCtx.fillRect(w * 0.2, 54, w * 0.24, 20); targetCtx.fillRect(w * 0.54, 54, w * 0.26, 20);
             } else if (bgId === "bg_hostel") {
-                targetCtx.fillStyle = "#c5e299"; targetCtx.fillRect(0, 0, w, h);
-                targetCtx.fillStyle = "#f4ecde"; targetCtx.fillRect(w * 0.12, h * 0.24, w * 0.76, h * 0.54);
-                targetCtx.fillStyle = "#eb8a38"; targetCtx.fillRect(14, h * 0.26, 24, h * 0.48); targetCtx.fillRect(w - 38, h * 0.26, 24, h * 0.48);
+                targetCtx.fillStyle = "#9ec46a"; targetCtx.fillRect(0, 0, w, h);
+                targetCtx.fillStyle = "#8eb35c";
+                for (let gx = 0; gx < w; gx += 28) targetCtx.fillRect(gx, 0, 8, h);
+                targetCtx.fillStyle = "#d4c3a3"; targetCtx.fillRect(w * 0.14 - 4, h * 0.22 - 4, w * 0.72 + 8, h * 0.56 + 8);
+                targetCtx.fillStyle = "#efe4ce"; targetCtx.fillRect(w * 0.14, h * 0.22, w * 0.72, h * 0.56);
+                targetCtx.fillStyle = "#5cb382"; targetCtx.fillRect(w * 0.28, h * 0.34, w * 0.44, h * 0.32);
+                targetCtx.strokeStyle = "#ffffff"; targetCtx.lineWidth = 2;
+                targetCtx.strokeRect(w * 0.28 + 4, h * 0.34 + 4, w * 0.44 - 8, h * 0.32 - 8);
+                targetCtx.fillStyle = "#fff"; targetCtx.fillRect(w * 0.28, h * 0.5 - 1, w * 0.44, 2);
+                targetCtx.fillStyle = "#18202c"; targetCtx.fillRect(10, h * 0.24, 32, h * 0.52); targetCtx.fillRect(w - 42, h * 0.24, 32, h * 0.52);
+                targetCtx.fillStyle = "#c96228"; targetCtx.fillRect(13, h * 0.25, 26, h * 0.50); targetCtx.fillRect(w - 39, h * 0.25, 26, h * 0.50);
+                targetCtx.fillStyle = "#ffe082";
+                for (let wy = h * 0.28; wy < h * 0.72; wy += 24) {
+                    targetCtx.fillRect(18, wy, 10, 10); targetCtx.fillRect(w - 28, wy, 10, 10);
+                }
             } else if (bgId === "bg_maidan") {
-                targetCtx.fillStyle = "#9adb7b"; targetCtx.fillRect(0, 0, w, h);
-                targetCtx.fillStyle = "#aae78e"; for (let i = 0; i < w; i += 46) targetCtx.fillRect(i, 0, 23, h);
-                const r = Math.min(w, h) * 0.34;
-                targetCtx.strokeStyle = "rgba(255,255,255,0.68)"; targetCtx.lineWidth = 4;
-                targetCtx.beginPath(); targetCtx.arc(w / 2, h / 2, r, 0, Math.PI * 2); targetCtx.stroke();
-                targetCtx.fillStyle = "#e6cf9f"; targetCtx.fillRect(w / 2 - 12, h / 2 - 40, 24, 80);
+                targetCtx.fillStyle = "#67bd4d"; targetCtx.fillRect(0, 0, w, h);
+                targetCtx.fillStyle = "#7ad15e"; for (let i = 0; i < w; i += 36) targetCtx.fillRect(i, 0, 18, h);
+                const cx = Math.round(w / 2 / px) * px, cy = Math.round(h / 2 / px) * px, r = Math.min(w, h) * 0.36;
+                targetCtx.fillStyle = "rgba(255,255,255,0.85)";
+                for (let a = 0; a < Math.PI * 2; a += 0.06) {
+                    const bx = Math.round((cx + Math.cos(a) * r) / px) * px;
+                    const by = Math.round((cy + Math.sin(a) * r) / px) * px;
+                    targetCtx.fillRect(bx, by, px, px);
+                }
+                targetCtx.fillStyle = "#cfb47c"; targetCtx.fillRect(cx - 16, cy - 46, 32, 92);
+                targetCtx.fillStyle = "#e3c994"; targetCtx.fillRect(cx - 12, cy - 42, 24, 84);
+                targetCtx.fillStyle = "#fff";
+                targetCtx.fillRect(cx - 12, cy - 32, 24, 3); targetCtx.fillRect(cx - 12, cy + 29, 24, 3);
+                targetCtx.fillStyle = "#18202c"; targetCtx.fillRect(cx - 32, 60, 64, 16);
+                targetCtx.fillStyle = "#ffffff"; targetCtx.fillRect(cx - 29, 63, 58, 10);
             } else if (bgId === "bg_nullah") {
-                targetCtx.fillStyle = "#a3dc8d"; targetCtx.fillRect(0, 0, w, h);
-                targetCtx.strokeStyle = "#6cc7e6"; targetCtx.lineWidth = 52; targetCtx.lineCap = "round";
-                targetCtx.beginPath(); targetCtx.moveTo(-20, h * 0.82); targetCtx.bezierCurveTo(w * 0.35, h * 0.7, w * 0.55, h * 0.32, w + 20, h * 0.2); targetCtx.stroke();
-                targetCtx.strokeStyle = "#94dcf4"; targetCtx.lineWidth = 24; targetCtx.stroke();
-                targetCtx.fillStyle = "#ad8156"; targetCtx.fillRect(w * 0.44, h * 0.44, 44, 22);
+                targetCtx.fillStyle = "#76ba68"; targetCtx.fillRect(0, 0, w, h);
+                targetCtx.fillStyle = "#66a858";
+                for (let gx = 0; gx < w; gx += 40) for (let gy = 0; gy < h; gy += 40) {
+                    if (((gx + gy) / 40) % 2 === 0) targetCtx.fillRect(gx, gy, 20, 20);
+                }
+                for (let t = 0; t <= 1; t += 0.015) {
+                    const sx = Math.round((-20 + (w + 40) * t) / px) * px;
+                    const sy = Math.round((h * 0.78 - h * 0.58 * t + Math.sin(t * 5) * 26) / px) * px;
+                    targetCtx.fillStyle = "#2b7e9c"; targetCtx.fillRect(sx - 28, sy - 28, 56, 56);
+                    targetCtx.fillStyle = "#42a8cc"; targetCtx.fillRect(sx - 20, sy - 20, 40, 40);
+                    targetCtx.fillStyle = "#8ee3fc";
+                    const rip = Math.sin(t * 20 + tSec * 3) > 0.5 ? 12 : 6;
+                    targetCtx.fillRect(sx - 6, sy - 6, rip, 4);
+                }
+                targetCtx.fillStyle = "#18202c"; targetCtx.fillRect(w * 0.42 - 3, h * 0.43 - 3, 54, 30);
+                targetCtx.fillStyle = "#9c6d41"; targetCtx.fillRect(w * 0.42, h * 0.43, 48, 24);
+                targetCtx.fillStyle = "#6e4826";
+                for (let bx = w * 0.42 + 6; bx < w * 0.42 + 44; bx += 8) targetCtx.fillRect(bx, h * 0.43, 2, 24);
             } else {
-                targetCtx.fillStyle = "#8ccf77"; targetCtx.fillRect(0, 0, w, h);
-                targetCtx.fillStyle = "rgba(46,125,50,0.12)";
-                targetCtx.beginPath(); targetCtx.arc(w * 0.2, h * 0.3, 95, 0, Math.PI * 2); targetCtx.fill();
-                targetCtx.beginPath(); targetCtx.arc(w * 0.8, h * 0.72, 110, 0, Math.PI * 2); targetCtx.fill();
-                targetCtx.fillStyle = "#f6d55c"; targetCtx.fillRect(w - 56, 92, 32, 22); targetCtx.fillRect(24, h - 175, 32, 22);
+                targetCtx.fillStyle = "#4d9141"; targetCtx.fillRect(0, 0, w, h);
+                targetCtx.fillStyle = "#3f7d35";
+                for (let gx = 0; gx < w; gx += 32) for (let gy = 0; gy < h; gy += 32) {
+                    if (((gx + gy) / 32) % 2 === 0) targetCtx.fillRect(gx, gy, 16, 16);
+                }
+                const rocks = [[w * 0.22, h * 0.3], [w * 0.78, h * 0.65], [w * 0.3, h * 0.72]];
+                rocks.forEach(([rx, ry]) => {
+                    targetCtx.fillStyle = "#18202c"; targetCtx.fillRect(rx - 14, ry - 10, 28, 20);
+                    targetCtx.fillStyle = "#7f8c8d"; targetCtx.fillRect(rx - 11, ry - 7, 22, 14);
+                    targetCtx.fillStyle = "#a3b1b2"; targetCtx.fillRect(rx - 9, ry - 6, 12, 6);
+                });
+                targetCtx.fillStyle = "#18202c"; targetCtx.fillRect(w - 58, 90, 36, 24); targetCtx.fillRect(22, h - 177, 36, 24);
+                targetCtx.fillStyle = "#f2ca4b"; targetCtx.fillRect(w - 55, 93, 30, 18); targetCtx.fillRect(25, h - 174, 30, 18);
             }
 
             deco.flowers.forEach(fl => {
                 targetCtx.fillStyle = fl.c;
-                targetCtx.beginPath(); targetCtx.arc(fl.x, fl.y, 2.2, 0, Math.PI * 2); targetCtx.fill();
+                targetCtx.fillRect(fl.x, fl.y, 4, 4);
+                targetCtx.fillStyle = "#ffe566";
+                targetCtx.fillRect(fl.x + 2, fl.y + 2, 2, 2);
             });
 
-            const treeCol = bgId === "bg_ridge" ? "#4da84d" : "#78c66d", crownCol = bgId === "bg_ridge" ? "#6ec46e" : "#97df8d";
+            const sp = bgId === "bg_ridge" ? TREE_SPRITES.ridge : TREE_SPRITES.normal;
             trees.forEach(t => {
-                targetCtx.fillStyle = "rgba(0,0,0,0.07)";
-                targetCtx.beginPath(); targetCtx.ellipse(t.x, t.y + t.r * 0.48, t.r, t.r * 0.4, 0, 0, Math.PI * 2); targetCtx.fill();
-                targetCtx.fillStyle = treeCol; targetCtx.beginPath(); targetCtx.arc(t.x, t.y, t.r, 0, Math.PI * 2); targetCtx.fill();
-                targetCtx.fillStyle = crownCol; targetCtx.beginPath(); targetCtx.arc(t.x - t.r * 0.2, t.y - t.r * 0.2, t.r * 0.64, 0, Math.PI * 2); targetCtx.fill();
+                const sz = t.s * UI_SCALE;
+                const tw = sp.width * sz, th = sp.height * sz;
+                targetCtx.save();
+                targetCtx.globalCompositeOperation = "multiply";
+                targetCtx.fillStyle = "rgba(40,65,45,0.28)";
+                targetCtx.fillRect(Math.round(t.x - tw * 0.36), Math.round(t.y + th * 0.34), Math.round(tw * 0.72), Math.round(sz * 2.8));
+                targetCtx.restore();
+                targetCtx.drawImage(sp, Math.round(t.x - tw / 2), Math.round(t.y - th / 2), Math.round(tw), Math.round(th));
             });
+
+            targetCtx.save();
+            targetCtx.globalCompositeOperation = "color-dodge";
+            const beamCol = bgId === "bg_hostel" ? "rgba(255, 195, 110, 0.20)" :
+                bgId === "bg_ridge" ? "rgba(255, 240, 150, 0.24)" : "rgba(255, 246, 185, 0.16)";
+            const sunG = targetCtx.createRadialGradient(w * 0.16, h * 0.08, 12, w * 0.16, h * 0.08, Math.max(w, h) * 0.8);
+            sunG.addColorStop(0, beamCol);
+            sunG.addColorStop(0.5, "rgba(255, 235, 160, 0.06)");
+            sunG.addColorStop(1, "rgba(255, 235, 160, 0)");
+            targetCtx.fillStyle = sunG;
+            targetCtx.fillRect(0, 0, w, h);
+            targetCtx.restore();
+        }
+
+        function drawPixelCloud(x, y, s) {
+            ctx.fillStyle = "#87daf5";
+            ctx.fillRect(x + s, y + 4 * s, 16 * s, 2 * s);
+            ctx.fillStyle = "#c2f2ff";
+            ctx.fillRect(x, y + s, 18 * s, 3 * s);
+            ctx.fillRect(x + 2 * s, y - 2 * s, 13 * s, 3 * s);
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(x + 4 * s, y - 4 * s, 7 * s, 2 * s);
+            ctx.fillRect(x + 2 * s, y - s, 11 * s, 3 * s);
         }
 
         function renderHomeBackdrop(dt) {
-            const g = ctx.createLinearGradient(0, 0, 0, H);
-            g.addColorStop(0, "#72c7f1");
-            g.addColorStop(0.55, "#c5ecfc");
-            g.addColorStop(0.56, "#9edc80");
-            g.addColorStop(1, "#7ac35b");
-            ctx.fillStyle = g;
-            ctx.fillRect(0, 0, W, H);
+            ctx.imageSmoothingEnabled = false;
+            const t = T0 / 1000;
+            const hy = Math.round(H * 0.55);
 
-            const hy = H * 0.56;
-            ctx.fillStyle = "rgba(91,158,72,0.45)";
-            ctx.fillRect(W * 0.5 - 72, hy - 34, 144, 34);
-            ctx.fillRect(W * 0.5 - 14, hy - 62, 28, 30);
-            ctx.beginPath(); ctx.arc(W * 0.5, hy - 62, 14, Math.PI, 0); ctx.fill();
-
-            ctx.fillStyle = "#66b44f";
-            for (let x = -20; x < W + 40; x += 48) {
-                ctx.beginPath(); ctx.arc(x, hy, 28, 0, Math.PI * 2); ctx.fill();
-            }
+            // Clean, bright stepped pixel sky
+            ctx.fillStyle = "#268bc7"; ctx.fillRect(0, 0, W, hy * 0.26);
+            ctx.fillStyle = "#42aee3"; ctx.fillRect(0, hy * 0.26, W, hy * 0.26);
+            ctx.fillStyle = "#72d0f5"; ctx.fillRect(0, hy * 0.52, W, hy * 0.26);
+            ctx.fillStyle = "#b5eefa"; ctx.fillRect(0, hy * 0.78, W, hy * 0.24);
 
             deco.clouds.forEach(cl => {
                 cl.x += cl.sp * dt;
-                if (cl.x > W + 90) cl.x = -90;
-                ctx.save(); ctx.translate(cl.x, cl.y); ctx.scale(cl.s, cl.s);
-                ctx.fillStyle = "rgba(255,255,255,0.88)";
-                ctx.beginPath();
-                ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.arc(18, -6, 22, 0, Math.PI * 2); ctx.arc(38, 0, 16, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
+                if (cl.x > W + 110) cl.x = -110;
+                drawPixelCloud(Math.round(cl.x / 2) * 2, Math.round(cl.y / 2) * 2, cl.s);
             });
 
-            const t = T0 / 1000;
+            ctx.fillStyle = "#82bf9e";
+            for (let x = 0; x < W + 16; x += 16) {
+                const hillH = Math.round((Math.sin(x * 0.015) * 16 + 34) / 4) * 4;
+                ctx.fillRect(x, hy - hillH, 16, hillH);
+            }
+
+            ctx.fillStyle = "#b5bd42";
+            for (let x = 0; x < W + 12; x += 12) {
+                const hh = Math.round((Math.cos(x * 0.02 + 1.2) * 12 + 22) / 4) * 4;
+                ctx.fillRect(x, hy - hh, 12, hh);
+            }
+
+            const cx = Math.round(W * 0.5);
+            ctx.fillStyle = "#2d5c2b";
+            ctx.fillRect(cx - 72, hy - 34, 144, 34);
+            ctx.fillRect(cx - 18, hy - 66, 36, 34);
+            ctx.fillRect(cx - 12, hy - 78, 24, 12);
+            ctx.fillRect(cx - 4, hy - 88, 8, 10);
+            ctx.fillStyle = "#48853d";
+            ctx.fillRect(cx - 66, hy - 28, 132, 28);
+            ctx.fillStyle = "#ffe57f";
+            for (let wx = cx - 54; wx <= cx + 46; wx += 20) ctx.fillRect(wx, hy - 20, 8, 10);
+
+            const sp = TREE_SPRITES.normal;
+            for (let x = 12; x < W + 44; x += 44) {
+                const sway = Math.round(Math.sin(t * 1.4 + x) * 1.5);
+                ctx.drawImage(sp, x - 26 + sway, hy - 30, 56, 44);
+            }
+
+            ctx.fillStyle = "#62b548"; ctx.fillRect(0, hy, W, H - hy);
+            ctx.fillStyle = "#76c952"; ctx.fillRect(0, hy + 8, W, 24);
+            ctx.fillStyle = "#4fa138"; ctx.fillRect(0, hy + 32, W, H - hy - 32);
+            ctx.fillStyle = "#367824"; ctx.fillRect(0, hy, W, 4);
+
+            for (let i = 0; i < 12; i++) {
+                const fx = Math.round(((i * 97) % W) / 4) * 4;
+                const fy = Math.round((hy + 18 + ((i * 53) % Math.max(40, H - hy - 40))) / 4) * 4;
+                ctx.fillStyle = i % 2 === 0 ? "#fff7b2" : "#ffffff";
+                ctx.fillRect(fx, fy, 4, 4);
+            }
+
+            ctx.save();
+            ctx.globalCompositeOperation = "multiply";
+            const botG = ctx.createLinearGradient(0, hy, 0, H);
+            botG.addColorStop(0, "rgba(255,255,255,1)");
+            botG.addColorStop(1, "rgba(180,205,175,0.82)");
+            ctx.fillStyle = botG;
+            ctx.fillRect(0, hy, W, H - hy);
+            ctx.restore();
+
+            ctx.save();
+            ctx.globalCompositeOperation = "color-dodge";
+            const beam = ctx.createLinearGradient(0, 0, W * 0.75, H * 0.65);
+            beam.addColorStop(0, "rgba(255, 242, 170, 0.30)");
+            beam.addColorStop(0.5, "rgba(255, 230, 140, 0.10)");
+            beam.addColorStop(1, "rgba(255, 230, 140, 0)");
+            ctx.fillStyle = beam;
+            ctx.beginPath();
+            ctx.moveTo(0, 0); ctx.lineTo(W * 0.55, 0); ctx.lineTo(W * 0.95, H * 0.72); ctx.lineTo(0, H * 0.48);
+            ctx.closePath(); ctx.fill();
+            ctx.restore();
+
+            motes.forEach(m => {
+                m.x += m.vx * dt; m.y += m.vy * dt; m.ph += dt * 3;
+                if (m.y < -10) { m.y = H + 10; m.x = R(0, W); }
+                if (m.x < -10) m.x = W + 10; if (m.x > W + 10) m.x = -10;
+                const alpha = (0.4 + Math.sin(m.ph) * 0.4) * m.a;
+                ctx.fillStyle = `rgba(255, 248, 175, ${alpha.toFixed(2)})`;
+                ctx.fillRect(Math.round(m.x), Math.round(m.y), m.r, m.r);
+            });
+
             homeBirdSpin = Math.max(0, homeBirdSpin - dt * 2.4);
-            const bx = W * 0.5 + Math.sin(t * 0.8) * Math.min(115, W * 0.26);
-            const by = H * 0.22 + Math.sin(t * 1.9) * 10;
-            const face = Math.cos(t * 0.8) >= 0 ? 1 : -1;
-            const tilt = Math.sin(t * 1.9) * 0.12 + homeBirdSpin * Math.PI * 2;
-            drawBirdSprite(ctx, activeBird, bx, by, 1.45 * UI_SCALE, face, tilt, Math.sin(t * 11) * 0.45, 0);
+            const bx = W * 0.5 + Math.sin(t * 0.85) * Math.min(115, W * 0.26);
+            const by = H * 0.21 + Math.sin(t * 2.0) * 10;
+            ctx.save();
+            ctx.globalCompositeOperation = "screen";
+            const g = ctx.createRadialGradient(bx, by, 4, bx, by, 84 * UI_SCALE);
+            g.addColorStop(0, "rgba(255, 246, 185, 0.42)");
+            g.addColorStop(1, "rgba(255, 246, 185, 0)");
+            ctx.fillStyle = g;
+            ctx.beginPath(); ctx.arc(bx, by, 84 * UI_SCALE, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+
+            const face = Math.cos(t * 0.85) >= 0 ? 1 : -1;
+            const tilt = Math.sin(t * 2.0) * 0.1 + homeBirdSpin * Math.PI * 2;
+            const flapFrame = Math.floor(t * 7) % 2;
+            drawBirdSprite(ctx, activeBird, bx, by, 1.48 * UI_SCALE, face, tilt, flapFrame, 0);
         }
 
-        function drawBirdSprite(targetCtx, bird, x, y, scale, face, tilt, flap, sq) {
+        function drawBirdSprite(targetCtx, bird, x, y, scale, face, tilt, flapFrame, sq) {
+            const frames = BIRD_SPRITES[bird.id] || BIRD_SPRITES.rocpig;
+            const sp = frames[flapFrame ? 1 : 0];
+            const pxScale = 3.0 * scale;
+            const dw = Math.round(sp.width * pxScale);
+            const dh = Math.round(sp.height * pxScale);
+
             targetCtx.save();
-            targetCtx.translate(x, y);
+            targetCtx.imageSmoothingEnabled = false;
+            targetCtx.translate(Math.round(x), Math.round(y));
             targetCtx.rotate(tilt);
-            targetCtx.scale(face * (1 + sq * 0.22) * scale, (1 - sq * 0.22) * scale);
-
-            if (bird.id === "rorpar") {
-                targetCtx.fillStyle = "#27ae60";
-                targetCtx.beginPath(); targetCtx.moveTo(-14, 2); targetCtx.lineTo(-42, 6); targetCtx.lineTo(-14, -3); targetCtx.fill();
-            } else if (bird.id === "compea") {
-                targetCtx.fillStyle = "#20bf6b";
-                targetCtx.beginPath(); targetCtx.moveTo(-12, 0); targetCtx.lineTo(-42, -11); targetCtx.lineTo(-44, 11); targetCtx.closePath(); targetCtx.fill();
-                targetCtx.fillStyle = "#0984e3"; targetCtx.beginPath(); targetCtx.arc(-34, -4, 3.2, 0, Math.PI * 2); targetCtx.arc(-35, 4, 3.2, 0, Math.PI * 2); targetCtx.fill();
-                targetCtx.fillStyle = "#f1c40f"; targetCtx.beginPath(); targetCtx.arc(-34, -4, 1.4, 0, Math.PI * 2); targetCtx.arc(-35, 4, 1.4, 0, Math.PI * 2); targetCtx.fill();
-            } else if (bird.id === "blakit1") {
-                targetCtx.fillStyle = "#3e2723";
-                targetCtx.beginPath(); targetCtx.moveTo(-12, 0); targetCtx.lineTo(-34, -9); targetCtx.lineTo(-27, 0); targetCtx.lineTo(-34, 9); targetCtx.closePath(); targetCtx.fill();
-            } else {
-                targetCtx.fillStyle = bird.wing;
-                targetCtx.beginPath(); targetCtx.moveTo(-14, -3); targetCtx.lineTo(-27, -6); targetCtx.lineTo(-27, 5); targetCtx.lineTo(-14, 4); targetCtx.fill();
-            }
-
-            targetCtx.fillStyle = bird.col; targetCtx.beginPath(); targetCtx.ellipse(0, 0, 18, 13.5, 0, 0, Math.PI * 2); targetCtx.fill();
-            targetCtx.fillStyle = bird.bel; targetCtx.beginPath(); targetCtx.ellipse(2, 4, 12, 8, 0, 0, Math.PI * 2); targetCtx.fill();
-
-            if (bird.id === "isbduc1") {
-                targetCtx.fillStyle = "#00b894"; targetCtx.beginPath(); targetCtx.ellipse(-5, 2, 6, 3.2, -0.2, 0, Math.PI * 2); targetCtx.fill();
-            }
-            if (bird.id === "rocpig") {
-                targetCtx.strokeStyle = "#2d3436"; targetCtx.lineWidth = 2;
-                targetCtx.beginPath(); targetCtx.moveTo(-8, -3); targetCtx.lineTo(-4, 5); targetCtx.stroke();
-            }
-
-            targetCtx.save();
-            targetCtx.translate(-4, -2); targetCtx.rotate(flap);
-            targetCtx.fillStyle = bird.wing; targetCtx.beginPath(); targetCtx.ellipse(-5, 0, 13, 6.5, 0, 0, Math.PI * 2); targetCtx.fill();
-            targetCtx.restore();
-
-            targetCtx.fillStyle = bird.id === "rewlap1" ? "#2c3e50" : bird.col;
-            targetCtx.beginPath(); targetCtx.arc(14, -8, 9.5, 0, Math.PI * 2); targetCtx.fill();
-
-            if (bird.id === "rorpar") {
-                targetCtx.strokeStyle = "#ff6b81"; targetCtx.lineWidth = 2.5;
-                targetCtx.beginPath(); targetCtx.arc(10, -3, 7, 0.2, 1.7); targetCtx.stroke();
-            } else if (bird.id === "compea") {
-                targetCtx.strokeStyle = "#0984e3"; targetCtx.lineWidth = 1.5;
-                targetCtx.beginPath(); targetCtx.moveTo(13, -17); targetCtx.lineTo(10, -24); targetCtx.moveTo(15, -17); targetCtx.lineTo(15, -25); targetCtx.stroke();
-                targetCtx.fillStyle = "#00cec9"; targetCtx.beginPath(); targetCtx.arc(10, -24, 1.7, 0, Math.PI * 2); targetCtx.arc(15, -25, 1.7, 0, Math.PI * 2); targetCtx.fill();
-            } else if (bird.id === "rewlap1") {
-                targetCtx.fillStyle = "#fff"; targetCtx.beginPath(); targetCtx.ellipse(11, -4, 4, 2.5, 0, 0, Math.PI * 2); targetCtx.fill();
-                targetCtx.fillStyle = "#e84118"; targetCtx.beginPath(); targetCtx.arc(20, -10, 3.2, 0, Math.PI * 2); targetCtx.fill();
-            }
-
-            if (bird.id === "isbduc1") {
-                targetCtx.fillStyle = "#1e272e"; targetCtx.beginPath(); targetCtx.roundRect(20, -10, 14, 5.5, 2.5); targetCtx.fill();
-                targetCtx.fillStyle = "#ffc400"; targetCtx.beginPath(); targetCtx.roundRect(30, -10, 4.5, 5.5, 2); targetCtx.fill();
-                targetCtx.fillStyle = "#ff4757"; targetCtx.beginPath(); targetCtx.arc(21.5, -9, 2, 0, Math.PI * 2); targetCtx.fill();
-            } else if (bird.id === "blakit1" || bird.id === "rorpar") {
-                targetCtx.fillStyle = bird.beak; targetCtx.beginPath(); targetCtx.moveTo(21, -11); targetCtx.quadraticCurveTo(31, -9, 29, -2); targetCtx.lineTo(21, -5); targetCtx.fill();
-            } else {
-                targetCtx.fillStyle = bird.beak; targetCtx.beginPath(); targetCtx.moveTo(21, -10); targetCtx.lineTo(30, -7); targetCtx.lineTo(21, -4); targetCtx.fill();
-            }
-
-            targetCtx.fillStyle = bird.id === "asikoe2" ? "#ff2e2e" : "#2f3542";
-            targetCtx.beginPath(); targetCtx.arc(17, -10, 2.6, 0, Math.PI * 2); targetCtx.fill();
-            targetCtx.fillStyle = "#fff"; targetCtx.beginPath(); targetCtx.arc(17.8, -10.8, 0.9, 0, Math.PI * 2); targetCtx.fill();
+            targetCtx.scale(face * (1 + sq * 0.18), 1 - sq * 0.18);
+            targetCtx.drawImage(sp, Math.round(-dw / 2), Math.round(-dh / 2), dw, dh);
             targetCtx.restore();
         }
 
@@ -2041,13 +2850,27 @@
             if (!canvasEl) return;
             const c = canvasEl.getContext("2d"), w = canvasEl.width, h = canvasEl.height;
             c.clearRect(0, 0, w, h);
-            drawBirdSprite(c, bird, w * 0.48, h * 0.58, w / 78, 1, -0.06, 0.15, 0);
+            c.imageSmoothingEnabled = false;
+            drawBirdSprite(c, bird, w * 0.5, h * 0.54, w / 78, 1, -0.04, 0, 0);
         }
+
+        function birdPhotoHtml(b, canvasId, w = 110, h = 82) {
+            return `
+                <img class="bird-real-img" src="${b.imgUrl}" alt="${escHtml(b.n)}" loading="lazy"
+                    onerror="this.style.display='none';const cv=this.nextElementSibling;cv.style.display='block';window._drawFallbackBird(cv,'${b.id}')">
+                <canvas id="${canvasId}" width="${w}" height="${h}" style="display:none"></canvas>
+            `;
+        }
+        window._drawFallbackBird = (cvEl, birdId) => {
+            const b = BIRDS.find(x => x.id === birdId);
+            if (b) drawBirdIconCanvas(cvEl, b);
+        };
+
         /* =========================================================
-                   PEDESTRIANS & CAMPUS GUARDS
-                   ========================================================= */
+           PEDESTRIANS & CAMPUS GUARDS (LARGER & HIGHLY VISIBLE)
+           ========================================================= */
         const SHIRTS = ["#ff5252", "#ff793f", "#34ace0", "#33d9b2", "#ffb142", "#706fd3"];
-        const HAIRS = ["#2c2c54", "#474787", "#84817a", "#d1ccc0"];
+        const HAIRS = ["#2c2c54", "#474787", "#6f4e37", "#b8b3a6"];
         const SKINS = ["#ffda79", "#f8c291", "#e77f67", "#fad390"];
 
         function countCurrentHunters() {
@@ -2063,13 +2886,16 @@
                 isHunter = Math.random() < hunterChance;
             }
             const speedBoost = S.dangerTier * 3;
+            const shirt = isHunter ? "#535c68" : pick(SHIRTS);
+            const hair = pick(HAIRS);
+            const skin = pick(SKINS);
             people.push({
                 isHunter,
                 x: Math.random() < 0.5 ? -30 : W + 30, y: R(pb.minY, pb.maxY),
                 tx: R(pb.minX + 10, pb.maxX - 10), ty: R(pb.minY, pb.maxY),
                 sp: isHunter ? R(18, 28) + speedBoost : R(22, 34) + S.dangerTier * 2,
-                col: isHunter ? "#535c68" : pick(SHIRTS),
-                hair: pick(HAIRS), skin: pick(SKINS),
+                col: shirt, hair, skin,
+                sprites: [makePersonSprite(shirt, hair, skin, isHunter, 0), makePersonSprite(shirt, hair, skin, isHunter, 1)],
                 ph: R(0, 6), hit: 0, dead: false, bub: "", bubT: 0
             });
         }
@@ -2081,7 +2907,7 @@
             if (living < targetCount && Math.random() < dt * 2.8) spawnPerson();
 
             for (const p of people) {
-                p.ph += dt * p.sp * 0.1;
+                p.ph += dt * p.sp * 0.18;
                 if (p.bubT > 0) p.bubT -= dt;
                 if (p.hit > 0) { p.hit -= dt; p.x += p.vx * dt; p.y += p.vy * dt; if (p.hit <= 0) p.dead = true; continue; }
                 const dx = p.tx - p.x, dy = p.ty - p.y, d = Math.hypot(dx, dy);
@@ -2092,12 +2918,12 @@
         }
 
         function findReticleTarget(rx, ry) {
-            const radius = 26 * activeBird.rad * UI_SCALE;
+            const radius = 28 * activeBird.rad * UI_SCALE;
             let bestWalker = null, bestWalkerD = Infinity;
             let bestHunter = null, bestHunterD = Infinity;
             for (const p of people) {
                 if (p.hit > 0) continue;
-                const d = Math.hypot(p.x - rx, (p.y - 12) - ry);
+                const d = Math.hypot(p.x - rx, (p.y - 16 * UI_SCALE) - ry);
                 if (d < radius) {
                     if (p.isHunter) { if (d < bestHunterD) { bestHunter = p; bestHunterD = d; } }
                     else { if (d < bestWalkerD) { bestWalker = p; bestWalkerD = d; } }
@@ -2132,17 +2958,17 @@
             if (S.state !== "play" || S.endingT > 0 || S.cd > 0) return;
             if (!S.hasDropped) {
                 S.hasDropped = true;
-                $("hint-drop").classList.remove("show");
+                if (S.hasSteered) $("two-thumb-guide").classList.remove("show");
             }
             if (S.ammo < 1) {
-                S.cd = 0.2; snd(220, 0.08, "sawtooth", 0.1);
+                S.cd = 0.2; snd(220, 0.08, "triangle", 0.08);
                 addText(B.rx, B.ry - 38, "Reloading!", "#fff", 15);
                 return;
             }
             S.ammo--; S.cd = 0.14; B.sq = 1; S.shots++;
             haptic(10);
             poops.push({ sx: B.x, sy: B.y, tx: B.rx, ty: B.ry, x: B.x, y: B.y, t: 0, dur: 0.32 });
-            snd(720, 0.26, "sine", 0.09, -400);
+            snd(580, 0.2, "triangle", 0.075, -340);
             burst(B.x, B.y - 20, 4, ["#8c5738", "#a26945"], 60);
             renderAmmo();
         }
@@ -2173,7 +2999,7 @@
                 saveAll();
                 const sub = newBird ? `Unlocked ${newBird.icon} ${newBird.n}! (+12s)` : `Next Zone Ready! (+12s)`;
                 banner(`${activeZone.short.toUpperCase()} CLEARED!`, sub);
-                setTimeout(() => playBirdCall(activeBird.id, false), 220);
+                setTimeout(() => playBirdCall(activeBird.id, false, false), 220);
             }
         }
 
@@ -2183,7 +3009,7 @@
                 S.dangerTier = newTier;
                 const mult = getPenaltyMult(newTier).toFixed(1);
                 const pen = getHunterPenaltySec(newTier);
-                snd(330, 0.12, "sawtooth", 0.15, 220);
+                snd(330, 0.12, "triangle", 0.1, 220);
                 banner(`⚠️ DANGER ×${mult}!`, `Guards now steal -${pen}s!`);
             }
         }
@@ -2202,9 +3028,9 @@
                     const flash = $("danger-flash");
                     flash.style.opacity = "1"; setTimeout(() => flash.style.opacity = "0", 260);
                     p.bub = "BUSTED!"; p.bubT = 1.4;
-                    snd(120, 0.45, "sawtooth", 0.35, -70);
-                    burst(po.tx, po.ty - 20, 24, ["#e84118", "#ffc400", "#2f3542"], 260);
-                    addText(po.tx, po.ty - 44, `-${pen}s${mult > 1 ? ` (×${mult})` : ""}`, "#ff4757", 24);
+                    snd(140, 0.4, "sawtooth", 0.18, -70);
+                    burst(po.tx, po.ty - 20, 20, ["#e84118", "#ffc800", "#1f2d38"], 260);
+                    addText(po.tx, po.ty - 44, `-${pen}s${mult > 1 ? ` (×${mult})` : ""}`, "#ff4757", 23);
                     p.hit = 1.0; p.vx = 0; p.vy = 0;
                     if (S.time <= 0) {
                         S.bustReason = true;
@@ -2235,12 +3061,12 @@
                 p.bub = pick(["WHO?!", "MY NOTES!", "SPLATTED!", "DIRECT HIT!"]);
                 p.bubT = 1.2;
 
-                decals.push({ x: po.tx, y: po.ty, r: R(16, 24) * activeBird.rad * UI_SCALE, a: 1 });
-                burst(po.tx, po.ty, 16, ["#784421", "#8c5738", "#ffc400"], 200);
+                decals.push({ x: po.tx, y: po.ty, r: R(14, 20) * activeBird.rad * UI_SCALE, a: 1 });
+                burst(po.tx, po.ty, 14, ["#784421", "#8c5738", "#ffc800"], 200);
                 addText(po.tx, po.ty - 40, `+${pts}`, "#fff", 22);
                 addText(po.tx, po.ty - 64, "+1.5s", "#7bed9f", 18);
 
-                playBirdCall(activeBird.id, true);
+                playBirdCall(activeBird.id, true, false);
                 popCombo(S.combo);
                 checkZoneClear();
                 checkDangerEscalation();
@@ -2255,7 +3081,7 @@
             S.combo = 0; hideCombo();
             decals.push({ x: po.tx, y: po.ty, r: R(8, 12) * UI_SCALE, a: 0.9 });
             burst(po.tx, po.ty, 6, ["#8c5738", "#63391d"], 80);
-            snd(120, 0.1, "triangle", 0.1);
+            snd(130, 0.1, "triangle", 0.08);
         }
 
         function popCombo(c) {
@@ -2267,7 +3093,7 @@
         function burst(x, y, n, cols, sp) {
             for (let i = 0; i < n; i++) {
                 const a = R(0, Math.PI * 2), s = R(0.4, 1) * sp;
-                parts.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - sp * 0.3, l: R(0.3, 0.7), c: pick(cols), r: R(2.5, 4.5) * UI_SCALE });
+                parts.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - sp * 0.3, l: R(0.3, 0.7), c: pick(cols), r: Math.round(R(3, 6) * UI_SCALE) });
             }
         }
         function addText(x, y, s, c, size = 20) { texts.push({ x, y, s, c, size: size * UI_SCALE, l: 0.95 }); }
@@ -2294,17 +3120,22 @@
             const dc = $("danger-chip");
             dc.textContent = `⚠️ -${pen}s`;
             dc.classList.toggle("visible", S.dangerTier >= 1);
-            $("time-chip").classList.toggle("urgent", S.time <= 7 && S.state === "play");
+            $("leg-pen").textContent = `-${pen}s`;
+
+            const lowTime = S.time <= 8 && S.state === "play";
+            $("time-chip").classList.toggle("urgent", lowTime);
+            $("low-time-vignette").classList.toggle("active", lowTime);
         }
 
         function setFlightUI(visible) {
             $("hud").classList.toggle("hidden", !visible);
+            $("target-legend").classList.toggle("hidden", !visible);
             $("left-touch-zone").classList.toggle("hidden", !visible);
             joyEl.classList.toggle("hidden", !visible);
             $("bottom-ui").classList.toggle("hidden", !visible);
             if (!visible) {
-                $("hint-steer").classList.remove("show");
-                $("hint-drop").classList.remove("show");
+                $("two-thumb-guide").classList.remove("show");
+                $("low-time-vignette").classList.remove("active");
             }
         }
 
@@ -2312,6 +3143,11 @@
            PHYSICS & RENDER
            ========================================================= */
         function update(dt) {
+            if (S.thumbGuideT > 0) {
+                S.thumbGuideT -= dt;
+                if (S.thumbGuideT <= 0) $("two-thumb-guide").classList.remove("show");
+            }
+
             if (S.endingT > 0) {
                 S.endingT -= dt;
                 parts.forEach(p => { p.l -= dt; p.vy += 450 * dt; p.x += p.vx * dt; p.y += p.vy * dt; });
@@ -2332,7 +3168,10 @@
             if (keys.s || keys.arrowdown) iy++;
             if (ix !== 0 || iy !== 0) {
                 const l = Math.hypot(ix, iy); joyState.dx = ix / l; joyState.dy = iy / l;
-                if (!S.hasSteered) { S.hasSteered = true; $("hint-steer").classList.remove("show"); }
+                if (!S.hasSteered) {
+                    S.hasSteered = true;
+                    if (S.hasDropped) $("two-thumb-guide").classList.remove("show");
+                }
             } else if (!joyState.active) { joyState.dx = 0; joyState.dy = 0; }
 
             const pb = getPlayBounds();
@@ -2347,7 +3186,7 @@
             B.y += ((B.ry - 16 * UI_SCALE) - B.y) * dt * 9;
             const vx = B.x - prevBx;
             if (Math.abs(vx) > 0.3) B.face = vx > 0 ? 1 : -1;
-            B.tilt += ((joyState.dx * 0.25) - B.tilt) * dt * 6;
+            B.tilt += ((joyState.dx * 0.22) - B.tilt) * dt * 6;
             B.t += dt; B.sq = Math.max(0, B.sq - dt * 4); S.cd -= dt;
 
             for (const po of poops) {
@@ -2385,13 +3224,19 @@
                 return;
             }
             ctx.save();
-            if (S.shake > 0) ctx.translate(R(-S.shake, S.shake), R(-S.shake, S.shake));
+            ctx.imageSmoothingEnabled = false;
+            if (S.shake > 0) ctx.translate(Math.round(R(-S.shake, S.shake)), Math.round(R(-S.shake, S.shake)));
 
             renderZoneBackground(ctx, getCurrentBgId(), W, H, deco.trees);
 
             decals.forEach(d => {
-                ctx.save(); ctx.globalAlpha = d.a * 0.7; ctx.fillStyle = "#744423";
-                ctx.beginPath(); ctx.ellipse(d.x, d.y, d.r, d.r * 0.6, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+                const s = Math.round(d.r);
+                ctx.save(); ctx.globalAlpha = d.a * 0.78;
+                ctx.fillStyle = "#693b1c";
+                ctx.fillRect(Math.round(d.x - s * 0.6), Math.round(d.y - s * 0.35), Math.round(s * 1.2), Math.round(s * 0.7));
+                ctx.fillStyle = "#8a5027";
+                ctx.fillRect(Math.round(d.x - s * 0.3), Math.round(d.y - s * 0.5), Math.round(s * 0.6), Math.round(s * 0.9));
+                ctx.restore();
             });
 
             if (S.state === "play" && S.endingT <= 0) drawSplatReticle();
@@ -2399,19 +3244,23 @@
             people.slice().sort((a, b) => a.y - b.y).forEach(drawPedestrian);
             poops.forEach(drawPoop);
 
-            ctx.fillStyle = "rgba(0,0,0,0.14)";
-            ctx.beginPath(); ctx.ellipse(B.x, B.y, 16 * UI_SCALE, 6 * UI_SCALE, 0, 0, Math.PI * 2); ctx.fill();
-            drawBirdSprite(ctx, activeBird, B.x, B.y - 48 * UI_SCALE, UI_SCALE, B.face, B.tilt, Math.sin(B.t * 12) * 0.4, B.sq);
+            ctx.fillStyle = "rgba(16,28,18,0.26)";
+            ctx.fillRect(Math.round(B.x - 16 * UI_SCALE), Math.round(B.y - 3 * UI_SCALE), Math.round(32 * UI_SCALE), Math.round(8 * UI_SCALE));
+
+            const flapFrame = Math.floor(B.t * 8) % 2;
+            drawBirdSprite(ctx, activeBird, B.x, B.y - 48 * UI_SCALE, UI_SCALE, B.face, B.tilt, flapFrame, B.sq);
 
             parts.forEach(p => {
                 ctx.save(); ctx.globalAlpha = p.l / 0.7; ctx.fillStyle = p.c;
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+                const sz = Math.max(3, Math.round(p.r));
+                ctx.fillRect(Math.round(p.x - sz / 2), Math.round(p.y - sz / 2), sz, sz);
+                ctx.restore();
             });
             texts.forEach(t => {
                 ctx.save(); ctx.globalAlpha = Math.min(1, t.l * 2);
-                ctx.font = `800 ${t.size}px 'Fredoka',sans-serif`; ctx.textAlign = "center";
-                ctx.fillStyle = "#22303c"; ctx.fillText(t.s, t.x + 1.5, t.y + 1.5);
-                ctx.fillStyle = t.c; ctx.fillText(t.s, t.x, t.y); ctx.restore();
+                ctx.font = `800 ${Math.round(t.size)}px 'Fredoka',sans-serif`; ctx.textAlign = "center";
+                ctx.fillStyle = "#18202c"; ctx.fillText(t.s, Math.round(t.x + 1.5), Math.round(t.y + 1.5));
+                ctx.fillStyle = t.c; ctx.fillText(t.s, Math.round(t.x), Math.round(t.y)); ctx.restore();
             });
 
             ctx.restore();
@@ -2419,84 +3268,104 @@
 
         function drawPedestrian(p) {
             const scale = UI_SCALE;
-            ctx.save(); ctx.translate(p.x, p.y);
-            const bob = p.hit <= 0 ? Math.abs(Math.sin(p.ph * 2)) * 1.8 * scale : 0;
+            const pxScale = 3.6 * scale;
+            const sp = p.sprites[Math.floor(p.ph) % 2];
+            const dw = Math.round(sp.width * pxScale);
+            const dh = Math.round(sp.height * pxScale);
+            const x = Math.round(p.x);
+            const y = Math.round(p.y);
+
+            ctx.save();
+            ctx.imageSmoothingEnabled = false;
 
             if (p.isHunter) {
-                const pulse = 1 + Math.sin(p.ph * 2.4) * 0.1;
-                ctx.strokeStyle = "rgba(232,65,24,0.9)";
-                ctx.lineWidth = 2.5 * scale;
-                ctx.beginPath(); ctx.ellipse(0, 0, 18 * scale * pulse, 8.5 * scale * pulse, 0, 0, Math.PI * 2); ctx.stroke();
-                ctx.fillStyle = "rgba(232,65,24,0.18)"; ctx.fill();
-
-                ctx.translate(0, -bob);
-                ctx.fillStyle = "#57606f"; ctx.beginPath(); ctx.roundRect(-9 * scale, -22 * scale, 18 * scale, 18 * scale, 5 * scale); ctx.fill();
-                ctx.strokeStyle = "#2c3e50"; ctx.lineWidth = 3 * scale;
-                ctx.beginPath(); ctx.moveTo(-6 * scale, -15 * scale); ctx.lineTo(-14 * scale, -34 * scale); ctx.stroke();
-                ctx.fillStyle = p.skin; ctx.beginPath(); ctx.arc(0, -26 * scale, 7 * scale, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = "#2f3542"; ctx.beginPath(); ctx.ellipse(0, -29 * scale, 12 * scale, 3.8 * scale, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.beginPath(); ctx.arc(0, -31.5 * scale, 6.5 * scale, Math.PI, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = "#e84118"; ctx.beginPath(); ctx.arc(0, -33 * scale, 2 * scale, 0, Math.PI * 2); ctx.fill();
+                const pulse = Math.floor(p.ph * 2) % 2 === 0 ? 1 : 1.1;
+                const rw = Math.round(44 * scale * pulse), rh = Math.round(18 * scale * pulse);
+                ctx.strokeStyle = "#ff2e1a";
+                ctx.lineWidth = 3.5;
+                ctx.strokeRect(Math.round(x - rw / 2), Math.round(y - rh / 2), rw, rh);
+                ctx.fillStyle = "rgba(232,65,24,0.28)";
+                ctx.fillRect(Math.round(x - rw / 2), Math.round(y - rh / 2), rw, rh);
             } else {
-                ctx.fillStyle = "rgba(0,0,0,0.12)"; ctx.beginPath(); ctx.ellipse(0, 0, 12 * scale, 5 * scale, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.translate(0, -bob);
-                ctx.fillStyle = p.col; ctx.beginPath(); ctx.roundRect(-8 * scale, -22 * scale, 16 * scale, 18 * scale, 6 * scale); ctx.fill();
-                ctx.fillStyle = p.skin; ctx.beginPath(); ctx.arc(0, -26 * scale, 7 * scale, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = p.hair; ctx.beginPath(); ctx.arc(0, -28 * scale, 7.5 * scale, Math.PI, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = "rgba(16,28,18,0.28)";
+                ctx.fillRect(Math.round(x - 14 * scale), Math.round(y - 4 * scale), Math.round(28 * scale), Math.round(8 * scale));
             }
 
-            if (p.hit > 0) { ctx.fillStyle = "#784421"; ctx.beginPath(); ctx.arc(0, -32 * scale, 6 * scale, 0, Math.PI * 2); ctx.fill(); }
+            ctx.drawImage(sp, Math.round(x - dw / 2), Math.round(y - dh), dw, dh);
+
+            if (p.hit > 0) {
+                ctx.fillStyle = "#784421";
+                ctx.fillRect(Math.round(x - 7 * scale), Math.round(y - dh - 5 * scale), Math.round(14 * scale), Math.round(7 * scale));
+            }
             if (p.bubT > 0) {
-                ctx.font = `800 ${11 * scale}px 'Fredoka',sans-serif`;
-                const w = ctx.measureText(p.bub).width + 14;
-                ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(-w / 2, -53 * scale, w, 19 * scale, 8 * scale); ctx.fill();
-                ctx.fillStyle = p.isHunter ? "#e84118" : "#22303c"; ctx.textAlign = "center"; ctx.fillText(p.bub, 0, -39.5 * scale);
+                ctx.font = `800 ${Math.round(11.5 * scale)}px 'Fredoka',sans-serif`;
+                const w = Math.round(ctx.measureText(p.bub).width + 14);
+                const bx = Math.round(x - w / 2), by = Math.round(y - dh - 26 * scale);
+                ctx.fillStyle = "#fff";
+                ctx.beginPath(); ctx.roundRect(bx, by, w, Math.round(20 * scale), 8 * scale); ctx.fill();
+                ctx.fillStyle = p.isHunter ? "#e84118" : "#1f2d38";
+                ctx.textAlign = "center";
+                ctx.fillText(p.bub, x, by + Math.round(14 * scale));
             }
             ctx.restore();
         }
 
         function drawSplatReticle() {
-            const rad = 26 * activeBird.rad * UI_SCALE;
+            const rad = Math.round(26 * activeBird.rad * UI_SCALE);
             const target = findReticleTarget(B.rx, B.ry);
-            ctx.save(); ctx.translate(B.rx, B.ry);
+            const rx = Math.round(B.rx), ry = Math.round(B.ry);
+            ctx.save();
 
             if (target && target.isHunter) {
-                ctx.strokeStyle = "rgba(232,65,24,0.95)";
-                ctx.fillStyle = "rgba(232,65,24,0.18)";
+                ctx.strokeStyle = "#e84118";
+                ctx.fillStyle = "rgba(232,65,24,0.24)";
                 ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.arc(0, 0, rad, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-                ctx.font = `800 ${13 * UI_SCALE}px 'Fredoka',sans-serif`;
+                ctx.fillRect(rx - rad, ry - rad, rad * 2, rad * 2);
+                ctx.strokeRect(rx - rad, ry - rad, rad * 2, rad * 2);
+                ctx.font = `800 ${Math.round(14 * UI_SCALE)}px 'Fredoka',sans-serif`;
                 ctx.fillStyle = "#e84118"; ctx.textAlign = "center";
-                ctx.fillText("⚠️", 0, 4 * UI_SCALE);
+                ctx.fillText("⚠️", rx, ry + 5 * UI_SCALE);
             } else if (target && S.ammo >= 1) {
-                const pulse = 1 + Math.sin(B.t * 14) * 0.06;
+                ctx.save();
+                ctx.globalCompositeOperation = "lighter";
+                ctx.fillStyle = "rgba(120, 235, 50, 0.24)";
+                ctx.fillRect(rx - rad - 6, ry - rad - 6, (rad + 6) * 2, (rad + 6) * 2);
+                ctx.restore();
+
+                const pulse = Math.floor(B.t * 8) % 2 === 0 ? 1 : 1.07;
+                const r2 = Math.round(rad * pulse);
                 ctx.strokeStyle = "#58cc02";
-                ctx.fillStyle = "rgba(88,204,2,0.2)";
+                ctx.fillStyle = "rgba(88,204,2,0.22)";
                 ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.arc(0, 0, rad * pulse, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-                ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(-7, 0); ctx.lineTo(7, 0); ctx.moveTo(0, -7); ctx.lineTo(0, 7); ctx.stroke();
+                ctx.fillRect(rx - r2, ry - r2, r2 * 2, r2 * 2);
+                ctx.strokeRect(rx - r2, ry - r2, r2 * 2, r2 * 2);
+                ctx.fillStyle = "#fff";
+                ctx.fillRect(rx - 7, ry - 1, 14, 3);
+                ctx.fillRect(rx - 1, ry - 7, 3, 14);
             } else {
-                ctx.strokeStyle = S.ammo >= 1 ? "rgba(255,255,255,0.88)" : "rgba(140,150,165,0.5)";
-                ctx.lineWidth = 2.5; ctx.setLineDash([5, 5]);
-                ctx.beginPath(); ctx.arc(0, 0, rad, 0, Math.PI * 2); ctx.stroke();
+                ctx.strokeStyle = S.ammo >= 1 ? "rgba(255,255,255,0.9)" : "rgba(140,150,165,0.5)";
+                ctx.lineWidth = 3;
+                ctx.setLineDash([6, 6]);
+                ctx.strokeRect(rx - rad, ry - rad, rad * 2, rad * 2);
                 ctx.setLineDash([]);
-                ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(6, 0); ctx.moveTo(0, -6); ctx.lineTo(0, 6); ctx.stroke();
+                ctx.fillStyle = S.ammo >= 1 ? "#fff" : "#9aa7b4";
+                ctx.fillRect(rx - 5, ry - 1, 10, 2);
+                ctx.fillRect(rx - 1, ry - 5, 2, 10);
             }
             ctx.restore();
         }
 
         function drawPoop(po) {
             const p = po.t / po.dur, arc = Math.sin(p * Math.PI) * 28 * UI_SCALE, cy = po.y - (48 * UI_SCALE * (1 - p)) - arc;
-            ctx.save();
-            ctx.fillStyle = "rgba(0,0,0,0.16)";
-            ctx.beginPath(); ctx.ellipse(po.tx, po.ty, (10 - p * 4) * UI_SCALE, (4.5 - p * 1.8) * UI_SCALE, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
+            const sz = Math.round(10 * UI_SCALE);
+            ctx.fillStyle = "rgba(0,0,0,0.22)";
+            const sh = Math.max(4, Math.round((14 - p * 6) * UI_SCALE));
+            ctx.fillRect(Math.round(po.tx - sh / 2), Math.round(po.ty - 3), sh, Math.round(sh * 0.45));
 
-            ctx.save(); ctx.translate(po.x, cy); ctx.rotate(po.t * 12);
-            ctx.fillStyle = "#784421"; ctx.beginPath(); ctx.arc(0, 0, 6 * UI_SCALE, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "#915228"; ctx.beginPath(); ctx.arc(-1.5 * UI_SCALE, -1.5 * UI_SCALE, 2 * UI_SCALE, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
+            const px = Math.round(po.x - sz / 2), py = Math.round(cy - sz / 2);
+            ctx.fillStyle = "#18202c"; ctx.fillRect(px - 2, py - 2, sz + 4, sz + 4);
+            ctx.fillStyle = "#784421"; ctx.fillRect(px, py, sz, sz);
+            ctx.fillStyle = "#a26945"; ctx.fillRect(px + 2, py + 2, Math.round(sz * 0.4), Math.round(sz * 0.4));
         }
 
         /* =========================================================
@@ -2510,13 +3379,13 @@
 
             if (!S.hasSteered) {
                 S.hasSteered = true;
-                $("hint-steer").classList.remove("show");
+                if (S.hasDropped) $("two-thumb-guide").classList.remove("show");
             }
 
             const halfSize = 54;
             const minX = halfSize + 8;
             const maxX = Math.max(minX + 10, W * 0.56 - halfSize);
-            const minY = 72 + halfSize;
+            const minY = 82 + halfSize;
             const maxY = H - halfSize - 10;
 
             const cx = Math.max(minX, Math.min(maxX, e.clientX));
@@ -2577,7 +3446,7 @@
         cv.addEventListener("pointerdown", () => {
             if (S.state === "home") {
                 homeBirdSpin = 1;
-                playBirdCall(activeBird.id, false);
+                playBirdCall(activeBird.id, false, true);
             }
         });
 
@@ -2608,6 +3477,7 @@
 
         function showHome() {
             S.state = "home";
+            stopRealBirdAudio();
             clearBanners();
             $("ov").classList.add("hide");
             setFlightUI(false);
@@ -2615,10 +3485,10 @@
 
             const unlockedCount = BIRDS.filter(b => b.unlocked).length;
 
-            $("home-rank-chip").textContent = `${getBirderRank(STATS.highScore)} · Best ${STATS.highScore} · Ranks ›`;
             $("home-mute-btn").textContent = muted ? "🔇" : "🔊";
             $("home-play-meta").textContent = `Zone ${activeZone.num}/5 · ${activeZone.short}`;
             $("dock-birds-sub").textContent = `${unlockedCount}/${BIRDS.length} Unlocked · ${activeBird.n}`;
+            $("dock-lb-sub").textContent = `${getBirderRank(STATS.highScore)} · Best ${STATS.highScore} · Ranks ›`;
         }
 
         function openSheet(html, sheetClass = "") {
@@ -2631,89 +3501,180 @@
         }
 
         function closeToHome() {
+            stopRealBirdAudio();
             $("ov").classList.add("hide");
             showHome();
         }
 
         $("home-play-btn").onclick = () => openMapSheet(activeZone.id);
-        $("home-rank-chip").onclick = () => openLeaderboardSheet();
-        $("home-mute-btn").onclick = () => { muted = !muted; showHome(); };
+        $("dock-leaderboard").onclick = () => openLeaderboardSheet();
+        $("home-mute-btn").onclick = () => {
+            muted = !muted;
+            if (muted) stopRealBirdAudio();
+            showHome();
+        };
         $("dock-birds").onclick = () => openBirdAtlas(false);
 
         /* =========================================================
-           SHEET 1: VERTICAL IIT DELHI TRAIL (CHOOSE LEVEL)
+           SHEET 1: IIT DELHI PIXEL-ART CAMPUS MAP (MOCKUP STYLE)
            ========================================================= */
+        function renderMapBackgroundCanvas() {
+            const mc = $("map-bg-cv");
+            if (!mc) return;
+            const w = 360, h = 640;
+            mc.width = w; mc.height = h;
+            const g = mc.getContext("2d");
+            g.imageSmoothingEnabled = false;
+
+            const pxRoad = (x, y, rw, rh) => {
+                g.fillStyle = "#d9d7b8";
+                g.fillRect(x - 2, y - 2, rw + 4, rh + 4);
+                g.fillStyle = "#f5f3d7";
+                g.fillRect(x, y, rw, rh);
+            };
+            const pxBuilding = (x, y, bw, bh) => {
+                g.fillStyle = "rgba(0,0,0,0.16)";
+                g.fillRect(x + 4, y + 4, bw, bh);
+                g.fillStyle = "#e6eef5";
+                g.fillRect(x, y, bw, bh);
+                g.fillStyle = "#4d92d9";
+                g.fillRect(x + 3, y + 3, bw - 6, Math.max(8, bh - 12));
+                g.fillStyle = "#2c6ab0";
+                g.fillRect(x + 3, y + 3, bw - 6, 4);
+                g.fillStyle = "#8ab4d6";
+                for (let wx = x + 6; wx < x + bw - 8; wx += 10) {
+                    g.fillRect(wx, y + bh - 7, 5, 4);
+                }
+            };
+            const pxRoundabout = (cx, cy) => {
+                g.fillStyle = "#d9d7b8";
+                g.fillRect(cx - 20, cy - 20, 40, 40);
+                g.fillStyle = "#f5f3d7";
+                g.fillRect(cx - 18, cy - 18, 36, 36);
+                g.fillStyle = "#58b84c";
+                g.fillRect(cx - 9, cy - 9, 18, 18);
+            };
+
+            // 1. Outer Soft Mint Border + Pixel Grass Tufts
+            g.fillStyle = "#a9eba9";
+            g.fillRect(0, 0, w, h);
+            g.fillStyle = "#92db92";
+            for (let i = 0; i < 24; i++) {
+                g.fillRect((i * 73) % w, (i * 119) % h, 8, 4);
+            }
+
+            // 2. Stepped Pixel Campus Island
+            g.fillStyle = "#58b84c";
+            g.fillRect(20, 20, 320, 596);
+            g.fillStyle = "#73d465";
+            g.fillRect(24, 16, 312, 592);
+
+            // 3. Top-Right Cricket Oval Turf & Track
+            g.fillStyle = "#42a349";
+            g.fillRect(190, 26, 140, 240);
+            g.fillStyle = "#c8f2cc";
+            g.beginPath();
+            g.ellipse(260, 178, 48, 52, 0, 0, Math.PI * 2);
+            g.fill();
+            g.beginPath();
+            g.roundRect(222, 74, 72, 28, 14);
+            g.fill();
+
+            // 4. Campus Cream Roads & 3 Roundabouts
+            // Top-left diagonal entry road
+            for (let t = 0; t <= 1; t += 0.02) {
+                const rx = Math.round(76 + (180 - 76) * t);
+                const ry = Math.round(0 + 104 * t);
+                pxRoad(rx - 8, ry - 8, 16, 16);
+            }
+            // Main central avenue
+            pxRoad(172, 104, 16, 396);
+            // Middle-right cross road & outer right lane
+            pxRoad(180, 272, 152, 14);
+            pxRoad(322, 48, 10, 444);
+            // Diagonal road from middle roundabout down-right
+            for (let t = 0; t <= 1; t += 0.025) {
+                const rx = Math.round(180 + (286 - 180) * t);
+                const ry = Math.round(316 + (398 - 316) * t);
+                pxRoad(rx - 6, ry - 6, 12, 12);
+            }
+            pxRoad(280, 398, 12, 94);
+            // Bottom horizontal avenue & left loop
+            pxRoad(24, 486, 308, 16);
+            pxRoad(80, 340, 12, 146);
+            pxRoad(24, 340, 68, 12);
+            // 4 Hostel driveways
+            [56, 134, 212, 290].forEach(hx => pxRoad(hx - 6, 502, 12, 34));
+
+            pxRoundabout(180, 104);
+            pxRoundabout(180, 316);
+            pxRoundabout(86, 494);
+
+            // 5. Iconic Campus Buildings
+            // Top-left L-shaped academic block
+            pxBuilding(64, 120, 42, 62);
+            pxBuilding(64, 154, 74, 28);
+            // Mid-upper small square block
+            pxBuilding(138, 224, 28, 26);
+            // Mid-left long block
+            pxBuilding(28, 356, 36, 78);
+            // Mid-center-left L-shaped block
+            pxBuilding(116, 404, 44, 56);
+            // Mid-right block + Blue Pond
+            pxBuilding(218, 366, 36, 26);
+            g.fillStyle = "#3ba4c9";
+            g.fillRect(228, 412, 48, 42);
+            g.fillStyle = "#5fc7eb";
+            g.fillRect(234, 418, 34, 30);
+            g.fillStyle = "#a3e8ff";
+            g.fillRect(242, 426, 14, 10);
+
+            // 4 Hostel Blocks at Bottom
+            [38, 116, 194, 272].forEach(hx => pxBuilding(hx, 532, 36, 52));
+
+            // 6. Pixel Trees, Bushes & Clouds
+            [[42, 60], [120, 56], [308, 52], [312, 240], [44, 224], [142, 326], [304, 336], [42, 586], [170, 594], [318, 588]].forEach(([tx, ty]) => {
+                g.drawImage(TREE_SPRITES.normal, tx - 18, ty - 16, 36, 28);
+            });
+            // Clouds on outer edges
+            g.fillStyle = "#ffffff";
+            g.fillRect(298, 28, 48, 12); g.fillRect(308, 20, 28, 8);
+            g.fillRect(4, 144, 42, 12); g.fillRect(10, 136, 26, 8);
+        }
+
         function openMapSheet(previewZoneId = mapPreviewZoneId) {
             mapPreviewZoneId = previewZoneId;
             const selZone = ZONES.find(z => z.id === previewZoneId) || activeZone;
             const isUnlocked = PROGRESSION.unlockedZones.includes(selZone.id);
-            const isCleared = PROGRESSION.zonesCleared.includes(selZone.id);
-            const rewardBird = BIRDS.find(b => b.id === selZone.unlockBird);
+            const rewardBird = BIRDS.find(b => b.id === selZone.unlockBird) || BIRDS[0];
+            const areasLeft = ZONES.length - PROGRESSION.zonesCleared.length;
 
-            const vLayout = {
-                z_inst: { x: 236, y: 610, bx: 116, by: 612, areaIcon: "🏛️", goalTxt: "150 pts" },
-                z_hostel: { x: 114, y: 494, bx: 240, by: 496, areaIcon: "🏠", goalTxt: "250 pts" },
-                z_maidan: { x: 236, y: 378, bx: 116, by: 380, areaIcon: "🏏", goalTxt: "350 pts" },
-                z_nullah: { x: 114, y: 260, bx: 240, by: 262, areaIcon: "🌊", goalTxt: "450 pts" },
-                z_ridge: { x: 236, y: 148, bx: 116, by: 150, areaIcon: "🌲", goalTxt: "600 pts" }
-            };
-
-            const areaPinsSvg = ZONES.map(z => {
-                const pos = vLayout[z.id];
+            const pinsHtml = ZONES.map(z => {
                 const u = PROGRESSION.unlockedZones.includes(z.id);
                 const c = PROGRESSION.zonesCleared.includes(z.id);
-                const cur = z.id === selZone.id;
-                const isActiveRun = z.id === activeZone.id;
-                const fill = c ? "#58cc02" : (u ? z.color : "#7f8c8d");
-                const rim = c ? "#3f9900" : (u ? "#22303c" : "#5d686e");
-                const b = BIRDS.find(x => x.id === z.unlockBird);
+                const isSel = z.id === selZone.id;
+                const zBird = BIRDS.find(b => b.id === z.unlockBird) || BIRDS[0];
 
                 return `
-      <line x1="${pos.x}" y1="${pos.y}" x2="${pos.bx}" y2="${pos.by}" stroke="rgba(255,255,255,0.78)" stroke-width="4" stroke-dasharray="5 4" stroke-linecap="round"/>
-
-      <g class="map-pin" id="${cur ? 'map-focus-pin' : ''}" data-zid="${z.id}" transform="translate(${pos.x},${pos.y})">
-        ${cur ? `<circle r="31" fill="rgba(255,255,255,0.38)" stroke="#fff" stroke-width="3"/>` : ""}
-        <ellipse cy="7" rx="23" ry="15" fill="${rim}"/>
-        <circle r="22" fill="${fill}" stroke="#fff" stroke-width="3.5"/>
-        <text y="6" text-anchor="middle" font-size="18">${u ? pos.areaIcon : "🔒"}</text>
-        ${c ? `<circle cx="17" cy="-16" r="9" fill="#ffc800" stroke="#fff" stroke-width="2"/><text x="17" y="-12.5" text-anchor="middle" fill="#5c3d00" font-size="10" font-weight="800">✓</text>` : ""}
-        ${isActiveRun ? `
-          <g transform="translate(${pos.x > 180 ? 29 : -29},-20)">
-            <circle r="13" fill="#fff" stroke="#58cc02" stroke-width="2.5"/>
-            <text y="5" text-anchor="middle" font-size="14">${activeBird.icon}</text>
-          </g>
-        `: ""}
-        <rect x="-48" y="25" width="96" height="18" rx="9" fill="#ffffff" stroke="${cur ? fill : '#d6e2d0'}" stroke-width="2"/>
-        <text y="37" text-anchor="middle" fill="#1f2d38" font-size="9.5" font-weight="800" font-family="Fredoka,sans-serif">${z.short}</text>
-      </g>
-
-      <g class="map-bird-pin" data-bid="${b.id}" transform="translate(${pos.bx},${pos.by})">
-        <ellipse cy="5" rx="19" ry="13" fill="${b.unlocked ? '#cf9c00' : '#636e72'}"/>
-        <circle r="18" fill="${b.unlocked ? '#fff9db' : '#edf2f4'}" stroke="${b.unlocked ? '#ffc800' : '#b2bec3'}" stroke-width="2.5" ${b.unlocked ? '' : 'stroke-dasharray="4 3"'}/>
-        <text y="5.5" text-anchor="middle" font-size="17" opacity="${b.unlocked ? 1 : 0.65}">${b.icon}</text>
-        <circle cx="14" cy="-13" r="8" fill="${b.unlocked ? '#58cc02' : '#ff5b36'}" stroke="#fff" stroke-width="1.8"/>
-        <text x="14" y="-10" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="800">${b.unlocked ? '✓' : '🔒'}</text>
-        <rect x="-45" y="20" width="90" height="15" rx="7.5" fill="rgba(31,45,56,0.86)"/>
-        <text y="30" text-anchor="middle" fill="#fff" font-size="8" font-weight="700" font-family="Fredoka,sans-serif">${b.unlocked ? b.n.split(" ").slice(-1)[0] : `Unlock · ${pos.goalTxt}`}</text>
-      </g>
-    `;
+                  <button class="map-pin-btn ${isSel ? 'selected' : ''} ${u ? '' : 'locked'}"
+                    id="${isSel ? 'map-focus-pin' : ''}" data-zid="${z.id}"
+                    style="left:${z.mapX}%;top:${z.mapY}%">
+                    ${isSel ? `<div class="map-here-tag">YOU ARE HERE</div>` : ""}
+                    <div class="map-pin-card">
+                      <span class="map-lv-badge">LV-${z.num}</span>
+                      <canvas width="82" height="72" data-map-bird="${zBird.id}"></canvas>
+                      ${c ? `<span class="map-pin-check">✓</span>` : (!u ? `<span class="map-pin-lock">🔒</span>` : "")}
+                    </div>
+                    <div class="map-pin-label">${escHtml(z.short)}</div>
+                  </button>
+                `;
             }).join("");
-
-            const starterBird = BIRDS[0];
-            const apexBird = BIRDS.find(b => b.id === "blakit1");
-            const areasLeft = ZONES.length - PROGRESSION.zonesCleared.length;
-            const birdsLeft = BIRDS.length - PROGRESSION.unlockedBirds.length;
-
-            const bgs = [
-                { id: "auto", label: "Auto" },
-                ...ZONES.map(z => ({ id: z.bgId, label: z.bgName }))
-            ];
 
             openSheet(`
     <div class="sheet-head" style="padding:11px 14px">
       <div>
-        <h1 style="font-size:17.5px">Choose a Level</h1>
-        <div class="sheet-sub">${areasLeft} Areas left · ${birdsLeft} Birds left to unlock</div>
+        <h1 style="font-size:18px">IIT Delhi Campus Map</h1>
+        <div class="sheet-sub">${areasLeft === 0 ? "All 5 Zones Cleared!" : `${areasLeft} Zones left · Tap a zone to fly`}</div>
       </div>
       <div class="head-actions">
         <a class="pill-action-btn" href="${EBIRD_MAP_URL}" target="_blank" rel="noopener">eBird ↗</a>
@@ -2722,100 +3683,39 @@
     </div>
 
     <div class="map-scroll" id="map-scroll">
-      <svg class="map-svg" viewBox="0 0 360 760" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="vertMapGrad" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stop-color="#b9e694"/>
-            <stop offset="22%" stop-color="#cce39b"/>
-            <stop offset="48%" stop-color="#8cd673"/>
-            <stop offset="72%" stop-color="#7fd4c9"/>
-            <stop offset="90%" stop-color="#6fc278"/>
-            <stop offset="100%" stop-color="#9ad8f5"/>
-          </linearGradient>
-        </defs>
-        <rect width="360" height="760" fill="url(#vertMapGrad)"/>
-
-        <ellipse cx="180" cy="382" rx="130" ry="52" fill="#9de37f" stroke="rgba(255,255,255,0.55)" stroke-width="3"/>
-        <rect x="174" y="362" width="12" height="40" rx="4" fill="#ebd29e"/>
-        <path d="M-10,275 Q180,235 370,295" stroke="#5dc4e6" stroke-width="30" stroke-linecap="round" fill="none" opacity="0.72"/>
-        <path d="M-10,275 Q180,235 370,295" stroke="#9be3f8" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.8"/>
-
-        <g fill="#4f86ed" opacity="0.85" stroke="#fff" stroke-width="1.5">
-          <rect x="275" y="605" width="52" height="32" rx="7"/>
-          <rect x="285" y="575" width="32" height="22" rx="5"/>
-        </g>
-        <g fill="#f59e42" opacity="0.88" stroke="#fff" stroke-width="1.5">
-          <rect x="24" y="485" width="30" height="28" rx="6"/>
-          <rect x="24" y="520" width="30" height="28" rx="6"/>
-        </g>
-        <g fill="#45a153" opacity="0.45">
-          <circle cx="48" cy="140" r="32"/><circle cx="318" cy="142" r="34"/><circle cx="312" cy="212" r="24"/><circle cx="52" cy="650" r="26"/>
-        </g>
-
-        <g font-family="Fredoka,sans-serif" font-weight="800" font-size="8.5">
-          <rect x="14" y="655" width="96" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
-          <text x="62" y="667" text-anchor="middle" fill="#2f7300">G1 · MAIN QUAD</text>
-          <rect x="245" y="534" width="102" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
-          <text x="296" y="546" text-anchor="middle" fill="#c05600">G2 · HOSTEL LANES</text>
-          <rect x="14" y="408" width="96" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
-          <text x="62" y="420" text-anchor="middle" fill="#2f7300">CRICKET OVAL</text>
-          <rect x="244" y="218" width="102" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
-          <text x="295" y="230" text-anchor="middle" fill="#006b76">G3 · NULLAH MARSH</text>
-          <rect x="14" y="102" width="104" height="18" rx="9" fill="rgba(255,255,255,0.85)"/>
-          <text x="66" y="114" text-anchor="middle" fill="#6b2fa0">G4 · RIDGE WOODS</text>
-        </g>
-
-        <path d="M180,702 C220,665 246,645 236,610 C222,555 114,545 114,494 C114,440 236,432 236,378 C236,322 114,314 114,260 C114,208 236,200 236,148 C236,105 198,85 180,58"
-              fill="none" stroke="rgba(0,0,0,0.12)" stroke-width="22" stroke-linecap="round"/>
-        <path d="M180,702 C220,665 246,645 236,610 C222,555 114,545 114,494 C114,440 236,432 236,378 C236,322 114,314 114,260 C114,208 236,200 236,148 C236,105 198,85 180,58"
-              fill="none" stroke="#ffffff" stroke-width="17" stroke-linecap="round"/>
-        <path d="M180,702 C220,665 246,645 236,610 C222,555 114,545 114,494 C114,440 236,432 236,378 C236,322 114,314 114,260 C114,208 236,200 236,148 C236,105 198,85 180,58"
-              fill="none" stroke="#ff7aa2" stroke-width="9" stroke-dasharray="10 10" stroke-linecap="round"/>
-
-        <g class="map-bird-pin" data-bid="${starterBird.id}" transform="translate(180,702)">
-          <ellipse cy="5" rx="20" ry="13" fill="#3f9900"/>
-          <circle r="18" fill="#fff9db" stroke="#58cc02" stroke-width="3"/>
-          <text y="6" text-anchor="middle" font-size="18">${starterBird.icon}</text>
-          <rect x="-50" y="21" width="100" height="16" rx="8" fill="#1f2d38"/>
-          <text y="32" text-anchor="middle" fill="#ffe066" font-size="8.5" font-weight="800" font-family="Fredoka,sans-serif">START · ${starterBird.n}</text>
-        </g>
-
-        ${areaPinsSvg}
-        <g class="map-bird-pin" data-bid="${apexBird.id}" transform="translate(180,56)">
-          <ellipse cy="6" rx="23" ry="15" fill="${apexBird.unlocked ? '#cf9c00' : '#5d686e'}"/>
-          <circle r="21" fill="${apexBird.unlocked ? '#ffe066' : '#dfe6e9'}" stroke="#fff" stroke-width="3"/>
-          <text y="6" text-anchor="middle" font-size="20">${apexBird.icon}</text>
-          <circle cx="16" cy="-15" r="8.5" fill="${apexBird.unlocked ? '#58cc02' : '#ff5b36'}" stroke="#fff" stroke-width="2"/>
-          <text x="16" y="-11.5" text-anchor="middle" fill="#fff" font-size="9" font-weight="800">${apexBird.unlocked ? '✓' : '🔒'}</text>
-          <rect x="-64" y="-41" width="128" height="17" rx="8.5" fill="#1f2d38"/>
-          <text y="-29.5" text-anchor="middle" fill="#ffe066" font-size="8.5" font-weight="800" font-family="Fredoka,sans-serif">${apexBird.unlocked ? `APEX · ${apexBird.n}` : `500+ PTS · ${apexBird.n}`}</text>
-        </g>
-      </svg>
+      <div class="map-canvas-wrap">
+        <canvas id="map-bg-cv" width="360" height="640"></canvas>
+        <div class="map-overlay-pins">
+          ${pinsHtml}
+        </div>
+      </div>
     </div>
 
     <div class="map-dock-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-        <b style="font-size:15px">${selZone.name}</b>
-        <span class="pill-tag ${isCleared ? 'green' : isUnlocked ? 'blue' : 'red'}">${isCleared ? '✓ Cleared' : isUnlocked ? 'Ready' : '🔒 Locked'}</span>
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
-        <span class="pill-tag amber">🎯 Goal ${selZone.target}</span>
-        <span class="pill-tag green">${rewardBird.unlocked ? '✓' : '🔓'} ${rewardBird.icon} ${rewardBird.n}</span>
-        <span class="pill-tag blue">Best ${PROGRESSION.zoneBest[selZone.id] || 0}</span>
+      <div class="map-dock-info">
+        <div class="map-dock-bird-box">
+          <canvas id="dock-bird-cv" width="58" height="52"></canvas>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:17px;font-weight:800;line-height:1.15;color:var(--text)">${escHtml(selZone.short)} · ${escHtml(rewardBird.n)}</div>
+          <div style="font-size:14px;font-weight:800;color:var(--green-shadow);margin-top:3px">Goal: ${selZone.target} pts</div>
+        </div>
       </div>
       ${isUnlocked
-                    ? `<button class="duo-btn primary" id="btn-map-fly" style="margin-bottom:8px">NEXT: CHOOSE BIRD ›</button>`
-                    : `<button class="duo-btn alt" style="margin-bottom:8px" disabled>🔒 Clear Zone ${selZone.num - 1} (${ZONES[selZone.num - 2].target} pts) first</button>`
+                    ? `<button class="duo-btn primary" id="btn-map-fly" style="margin-bottom:0">NEXT: CHOOSE BIRD ›</button>`
+                    : `<button class="duo-btn alt" style="margin-bottom:0" disabled>🔒 Clear Zone ${selZone.num - 1} (${ZONES[selZone.num - 2].target} pts) first</button>`
                 }
-      <div class="bg-chip-row">
-        ${bgs.map(bg => {
-                    const ok = bg.id === "auto" || PROGRESSION.unlockedBgs.includes(bg.id);
-                    const act = (PROGRESSION.selectedBg || "auto") === bg.id;
-                    return `<button class="bg-chip ${act ? 'active' : ''} ${ok ? '' : 'locked'}" data-bg="${bg.id}">${ok ? "" : "🔒 "}${bg.label}</button>`;
-                }).join("")}
-      </div>
     </div>
   `, "map-sheet");
+
+            renderMapBackgroundCanvas();
+
+            // Draw crisp pixel-art birds inside each map card and the bottom dock card
+            document.querySelectorAll("[data-map-bird]").forEach(c => {
+                const b = BIRDS.find(x => x.id === c.dataset.mapBird);
+                if (b) drawBirdIconCanvas(c, b);
+            });
+            drawBirdIconCanvas($("dock-bird-cv"), rewardBird);
 
             requestAnimationFrame(() => {
                 const sc = $("map-scroll"), pin = $("map-focus-pin");
@@ -2826,11 +3726,8 @@
             });
 
             $("btn-x").onclick = closeToHome;
-            document.querySelectorAll(".map-pin").forEach(el => {
-                el.onclick = () => { snd(500, 0.05, "sine", 0.07); openMapSheet(el.dataset.zid); };
-            });
-            document.querySelectorAll(".map-bird-pin").forEach(el => {
-                el.onclick = () => { snd(580, 0.06, "triangle", 0.08); openBirdProfile(el.dataset.bid); };
+            document.querySelectorAll(".map-pin-btn").forEach(el => {
+                el.onclick = () => { snd(500, 0.05, "triangle", 0.06); openMapSheet(el.dataset.zid); };
             });
             const mf = $("btn-map-fly");
             if (mf) mf.onclick = () => {
@@ -2839,19 +3736,10 @@
                 saveAll();
                 openBirdAtlas(true);
             };
-            document.querySelectorAll("[data-bg]").forEach(el => {
-                el.onclick = () => {
-                    const id = el.dataset.bg;
-                    if (id === "auto" || PROGRESSION.unlockedBgs.includes(id)) {
-                        PROGRESSION.selectedBg = id; saveAll(); snd(560, 0.08, "triangle", 0.1);
-                        openMapSheet(selZone.id);
-                    }
-                };
-            });
         }
 
         /* =========================================================
-           SHEET 2: BIRD COLLECTION & CHOOSE BIRD FOR LEVEL
+           SHEET 2: BIRD COLLECTION & INDIVIDUAL PROFILE (REAL PHOTOS)
            ========================================================= */
         function openBirdAtlas(fromLevelSelect = false) {
             openSheet(`
@@ -2859,7 +3747,7 @@
       ${fromLevelSelect ? `<button class="pill-action-btn" id="btn-atlas-back" style="color:var(--text)">‹ Map</button>` : ""}
       <div style="flex:1;min-width:0">
         <h1>${fromLevelSelect ? "Choose Your Bird" : "Bird Collection"}</h1>
-        <div class="sheet-sub">${fromLevelSelect ? `Level: ${activeZone.short} (Goal ${activeZone.target})` : `${PROGRESSION.unlockedBirds.length}/${BIRDS.length} Unlocked · Tap to inspect & equip`}</div>
+        <div class="sheet-sub">${fromLevelSelect ? `Level: ${activeZone.short} · Goal ${activeZone.target}` : `${PROGRESSION.unlockedBirds.length}/${BIRDS.length} Unlocked · Tap to inspect & equip`}</div>
       </div>
       <div class="head-actions">
         <a class="pill-action-btn" href="${EBIRD_HOTSPOT_URL}" target="_blank" rel="noopener">All 94 ↗</a>
@@ -2868,12 +3756,6 @@
     </div>
     <div class="sheet-body">
       ${fromLevelSelect ? `
-        <div class="lb-row" style="justify-content:space-between;background:#eefbe5;border-color:var(--green);margin-bottom:10px">
-          <div>
-            <div style="font-size:11px;font-weight:800;color:#2f7300">SELECTED BIRD</div>
-            <div style="font-size:14.5px;font-weight:800">${activeBird.icon} ${escHtml(activeBird.n)} · <span style="color:var(--muted);font-size:12px">${escHtml(activeBird.perk)}</span></div>
-          </div>
-        </div>
         <button class="duo-btn primary" id="btn-atlas-play" style="margin-bottom:12px">▶ PLAY ${escHtml(activeZone.short.toUpperCase())}</button>
       ` : ""}
       <div class="bird-grid">
@@ -2882,11 +3764,12 @@
                 return `
             <div class="bird-tile ${isCur ? 'active' : ''} ${b.unlocked ? '' : 'locked'}" data-open-bird="${b.id}">
               <div class="bird-tile-sky">
-                <canvas id="tile-cv-${b.id}" width="110" height="82"></canvas>
-                <button class="tile-sound-btn" data-hear="${b.id}" aria-label="Play Call">🔊</button>
+                ${birdPhotoHtml(b, "tile-cv-" + b.id, 110, 82)}
+                <button class="tile-sound-btn" data-hear="${b.id}" aria-label="Play Real Bird Call">🔊</button>
               </div>
               <div style="font-size:13.5px;font-weight:800;line-height:1.2">${b.n}</div>
-              <div style="font-size:10.5px;color:var(--muted);margin:2px 0 6px">${b.perk}</div>
+              <div style="font-size:10.5px;font-weight:700;color:var(--blue);margin-top:3px">📍 ${b.homeZone}</div>
+              <div style="font-size:11px;color:var(--muted);margin:2px 0 7px">${b.perk}</div>
               ${isCur
                         ? `<span class="pill-tag green">✓ Equipped</span>`
                         : b.unlocked
@@ -2903,9 +3786,8 @@
             $("btn-x").onclick = closeToHome;
             if ($("btn-atlas-back")) $("btn-atlas-back").onclick = () => openMapSheet(activeZone.id);
             if ($("btn-atlas-play")) $("btn-atlas-play").onclick = () => startGame(activeZone.id);
-            BIRDS.forEach(b => drawBirdIconCanvas($("tile-cv-" + b.id), b));
             document.querySelectorAll("[data-hear]").forEach(btn => {
-                btn.onclick = e => { e.stopPropagation(); playBirdCall(btn.dataset.hear, false); };
+                btn.onclick = e => { e.stopPropagation(); playBirdCall(btn.dataset.hear, false, true); };
             });
             document.querySelectorAll("[data-open-bird]").forEach(el => {
                 el.onclick = () => openBirdProfile(el.dataset.openBird, fromLevelSelect);
@@ -2914,8 +3796,6 @@
 
         function openBirdProfile(birdId, fromLevelSelect = false) {
             const b = BIRDS.find(x => x.id === birdId) || BIRDS[0];
-            const userList = PROGRESSION.userComments[b.id] || [];
-            const allComments = [...userList, ...b.comments];
 
             openSheet(`
     <div class="sheet-head">
@@ -2926,65 +3806,43 @@
       </div>
     </div>
     <div class="sheet-body">
-      <div class="profile-hero">
-        <canvas class="profile-cv" id="prof-cv" width="130" height="130"></canvas>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:19px;font-weight:800">${b.n}</div>
-          <div style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:5px">${b.sci}</div>
-          <div style="display:flex;flex-wrap:wrap;gap:5px">
-            <button class="pill-action-btn" id="btn-prof-sound" style="background:var(--blue);color:#fff;border-color:var(--blue)">🔊 "${b.callLabel}"</button>
-            <span class="pill-tag green">${b.perk}</span>
-          </div>
+      <div class="profile-hero-big">
+        ${birdPhotoHtml(b, "prof-cv", 320, 200)}
+        <button class="profile-sound-pill" id="btn-prof-sound">🔊 Real Call</button>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div style="font-size:22px;font-weight:800;line-height:1.15">${b.n}</div>
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:4px">
+          <span style="font-size:13px;font-style:italic;color:var(--muted)">${b.sci}</span>
+          <span class="pill-tag green">${b.perk}</span>
         </div>
       </div>
 
       ${b.unlocked
                     ? (activeBird.id === b.id
                         ? `<button class="duo-btn primary" id="btn-fly-bird" style="margin-bottom:12px">✓ EQUIPPED · FLY NOW</button>`
-                        : `<div class="btn-row" style="margin-bottom:8px">
+                        : `<div class="btn-row" style="margin-bottom:12px">
                  <button class="duo-btn secondary" id="btn-equip-bird">EQUIP</button>
                  <button class="duo-btn primary" id="btn-fly-bird">EQUIP &amp; FLY</button>
                </div>`)
                     : `<button class="duo-btn alt" style="margin-bottom:12px" disabled>🔒 Unlock: ${b.unlockHint}</button>`
                 }
 
-      <div style="font-size:13px;color:var(--text);line-height:1.45;margin-bottom:8px">${b.facts}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+      <div style="font-size:13.5px;color:var(--text);line-height:1.5;margin-bottom:11px">${b.facts}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
         ${b.hotspots.map(h => `<span class="pill-tag blue">📍 ${h}</span>`).join("")}
-      </div>
-
-      <div class="section-label">IIT Delhi eBird Sightings (${allComments.length})</div>
-      ${allComments.map(c => `
-        <div class="comment-box">
-          <div class="comment-meta"><span>${escHtml(c.user)}</span><span style="color:var(--blue)">${escHtml(c.spot)}</span></div>
-          <div style="font-size:12px;color:#4a5568">${escHtml(c.text)}</div>
-        </div>
-      `).join("")}
-
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <input class="duo-input" id="inp-cmt-spot" placeholder="Spot" style="max-width:95px">
-        <input class="duo-input" id="inp-cmt-text" placeholder="Add your sighting note...">
-        <button class="pill-action-btn" id="btn-post-cmt" style="background:var(--green);color:#fff;border-color:var(--green)">Post</button>
       </div>
     </div>
   `);
 
             $("btn-x").onclick = closeToHome;
             $("btn-prof-back").onclick = () => openBirdAtlas(fromLevelSelect);
-            drawBirdIconCanvas($("prof-cv"), b);
-            $("btn-prof-sound").onclick = () => playBirdCall(b.id, false);
-            $("btn-post-cmt").onclick = () => {
-                const text = $("inp-cmt-text").value.trim(), spot = $("inp-cmt-spot").value.trim() || activeZone.short;
-                if (!text) return;
-                PROGRESSION.userComments[b.id] = PROGRESSION.userComments[b.id] || [];
-                PROGRESSION.userComments[b.id].unshift({ user: `${PROGRESSION.playerName} (${PROGRESSION.playerHostel})`, spot, text });
-                saveAll(); snd(600, 0.1, "triangle", 0.12);
-                openBirdProfile(b.id, fromLevelSelect);
-            };
+            $("btn-prof-sound").onclick = () => playBirdCall(b.id, false, true);
             const eq = $("btn-equip-bird");
             if (eq) eq.onclick = () => {
                 activeBird = b; PROGRESSION.selectedBird = b.id; saveAll();
-                playBirdCall(b.id, false);
+                playBirdCall(b.id, false, true);
                 openBirdProfile(b.id, fromLevelSelect);
             };
             const fly = $("btn-fly-bird");
@@ -2995,9 +3853,9 @@
         }
 
         /* =========================================================
-           SHEET 3: PODIUM LEADERBOARD & HOSTEL CUP
+           SHEET 3: PODIUM LEADERBOARD & PROMINENT CHANGE NAME
            ========================================================= */
-        function openLeaderboardSheet(skipFetch = false) {
+        function openLeaderboardSheet(skipFetch = false, focusNameInput = false) {
             if (!skipFetch) fetchLiveLeaderboard();
             const lb = getCombinedLeaderboard();
             const hostels = getHostelStandings();
@@ -3021,21 +3879,28 @@
       </div>
     </div>
     <div class="sheet-body">
-      <div class="lb-row" style="justify-content:space-between;background:var(--sage);margin-bottom:10px">
-        <div style="font-size:13px;font-weight:700">
-          ${escHtml(PROGRESSION.playerName)} · <span style="color:var(--blue)">${escHtml(PROGRESSION.playerHostel)}</span>
+      <div class="identity-hero-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:${editingIdentity ? '10px' : '0'}">
+          <div style="min-width:0">
+            <div style="font-size:10.5px;font-weight:800;color:var(--blue-shadow);text-transform:uppercase;letter-spacing:.04em">Your Leaderboard Profile</div>
+            <div style="font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              ${escHtml(PROGRESSION.playerName)} · <span style="color:var(--blue)">${escHtml(PROGRESSION.playerHostel)}</span>
+            </div>
+          </div>
+          <button class="pill-action-btn" id="btn-toggle-edit" style="background:${editingIdentity ? 'var(--green)' : 'var(--yellow)'};color:${editingIdentity ? '#fff' : '#5c3d00'};border-color:${editingIdentity ? 'var(--green)' : '#f0bc00'};font-size:12px;padding:6px 12px;flex:none">
+            ${editingIdentity ? "✓ Save" : "✏️ Change Name"}
+          </button>
         </div>
-        <button class="pill-action-btn" id="btn-toggle-edit">${editingIdentity ? "Done" : "Edit"}</button>
-      </div>
 
-      ${editingIdentity ? `
-        <div style="display:flex;gap:6px;margin-bottom:12px">
-          <input class="duo-input" id="inp-player-name" value="${escHtml(PROGRESSION.playerName)}" maxlength="16" placeholder="Name">
-          <select class="duo-input" id="inp-player-hostel" style="max-width:132px">
-            ${HOSTELS.map(h => `<option value="${h}" ${PROGRESSION.playerHostel === h ? 'selected' : ''}>${h}</option>`).join("")}
-          </select>
-        </div>
-      ` : ""}
+        ${editingIdentity ? `
+          <div style="display:flex;gap:8px">
+            <input class="duo-input" id="inp-player-name" value="${escHtml(PROGRESSION.playerName)}" maxlength="16" placeholder="Enter your name">
+            <select class="duo-input" id="inp-player-hostel" style="max-width:138px">
+              ${HOSTELS.map(h => `<option value="${h}" ${PROGRESSION.playerHostel === h ? 'selected' : ''}>${h}</option>`).join("")}
+            </select>
+          </div>
+        ` : ""}
+      </div>
 
       <div class="seg-bar">
         <button class="seg-btn ${rankSeg === 'campus' ? 'active' : ''}" id="seg-campus">Campus Top</button>
@@ -3045,7 +3910,7 @@
       ${LIVE_LB.loading
                     ? `<div class="sheet-sub" style="text-align:center;margin-bottom:8px">⏳ Loading live campus rankings…</div>`
                     : LIVE_LB.offline
-                        ? `<div class="sheet-sub" style="text-align:center;margin-bottom:8px;color:var(--danger)">⚠️ Offline${location.protocol === "file:" ? " — tap Share → Open in Safari if using WhatsApp preview" : ""}</div>`
+                        ? `<div class="sheet-sub" style="text-align:center;margin-bottom:8px;color:var(--danger)">⚠️ Offline${location.protocol === "file:" ? " — open in Safari if using preview" : ""}</div>`
                         : ""
                 }
 
@@ -3055,7 +3920,7 @@
             <div class="podium-card ${podiumClasses[idx]}">
               <div class="podium-medal">${medals[idx]}</div>
               <div class="podium-name">${escHtml(r.name)}${r.isMe ? ' ★' : ''}</div>
-              <div style="font-size:10px;color:var(--muted)">${escHtml(r.hostel)}</div>
+              <div style="font-size:10.5px;color:var(--muted)">${escHtml(r.hostel)}</div>
               <div class="podium-pts">${r.score}</div>
             </div>
           ` : `<div></div>`).join("")}
@@ -3067,21 +3932,21 @@
               <div style="font-size:13.5px;font-weight:800">${escHtml(r.name)} ${r.isMe ? '(You)' : ''}</div>
               <div style="font-size:11px;color:var(--muted)">${escHtml(r.hostel)} · ${r.bird}</div>
             </div>
-            <div style="font-weight:800;color:var(--green-shadow);font-size:14px">${r.score}</div>
+            <div style="font-weight:800;color:var(--green-shadow);font-size:14.5px">${r.score}</div>
           </div>
         `).join("")}
       ` : hostels.map((h, i) => `
         <div class="lb-row ${h.isMe ? 'me' : ''}">
           <div class="lb-rank">${i + 1}</div>
           <div style="flex:1;font-size:13.5px;font-weight:800">${escHtml(h.hostel)} ${h.isMe ? '(Yours)' : ''}</div>
-          <div style="font-weight:800;color:var(--blue);font-size:14px">${h.pts} pts</div>
+          <div style="font-weight:800;color:var(--blue);font-size:14.5px">${h.pts} pts</div>
         </div>
       `).join("")}
     </div>
   `);
 
             $("btn-x").onclick = closeToHome;
-            $("btn-refresh-lb").onclick = () => { snd(540, 0.06, "sine", 0.08); fetchLiveLeaderboard(true); };
+            $("btn-refresh-lb").onclick = () => { snd(540, 0.06, "triangle", 0.07); fetchLiveLeaderboard(true); };
             const commitIdentity = (refreshAfter) => {
                 const nameInp = $("inp-player-name");
                 const hostelInp = $("inp-player-hostel");
@@ -3094,14 +3959,18 @@
             $("btn-toggle-edit").onclick = () => {
                 if (editingIdentity) commitIdentity(true);
                 editingIdentity = !editingIdentity;
-                openLeaderboardSheet(true);
+                openLeaderboardSheet(true, editingIdentity);
             };
             if (editingIdentity) {
-                $("inp-player-name").oninput = () => {
-                    PROGRESSION.playerName = $("inp-player-name").value.trim() || "IITD Flier";
+                const inp = $("inp-player-name");
+                if (focusNameInput && inp) {
+                    setTimeout(() => { inp.focus(); inp.select(); }, 40);
+                }
+                inp.oninput = () => {
+                    PROGRESSION.playerName = inp.value.trim() || "IITD Flier";
                     saveAll();
                 };
-                $("inp-player-name").onchange = () => commitIdentity(true);
+                inp.onchange = () => commitIdentity(true);
                 $("inp-player-hostel").onchange = () => { commitIdentity(true); openLeaderboardSheet(true); };
             }
             $("seg-campus").onclick = () => { rankSeg = "campus"; openLeaderboardSheet(true); };
@@ -3115,9 +3984,10 @@
         }
 
         /* =========================================================
-           GAME FLOW: START, PAUSE, GAME OVER
+           GAME FLOW: START, PAUSE, CLEAN ALIGNED GAME OVER
            ========================================================= */
         function startGame(zoneId) {
+            stopRealBirdAudio();
             if (document.activeElement && typeof document.activeElement.blur === "function") {
                 document.activeElement.blur();
             }
@@ -3136,6 +4006,7 @@
             S.endingT = 0; S.bustReason = false;
             S.combo = 0; S.comboT = 0;
             S.hasSteered = false; S.hasDropped = false;
+            S.thumbGuideT = 4.2;
             joyState.active = false; joyState.pid = null; joyState.dx = 0; joyState.dy = 0;
             dropPid = null; dropBtn.classList.remove("active");
 
@@ -3152,13 +4023,10 @@
             resetJoystickAnchor();
             renderAmmo();
             updateHUD();
-            banner(activeZone.short.toUpperCase(), `Hit walkers · Avoid ⚠️ Guards · Goal ${activeZone.target}`);
-            playBirdCall(activeBird.id, true);
+            banner(activeZone.short.toUpperCase(), `Hit Walkers (+1.5s) · Avoid Guards (-6s) · Goal ${activeZone.target}`);
+            playBirdCall(activeBird.id, true, false);
 
-            if (STATS.totalRuns < 2) {
-                $("hint-steer").classList.add("show");
-                $("hint-drop").classList.add("show");
-            }
+            $("two-thumb-guide").classList.add("show");
         }
 
         function showPauseMenu() {
@@ -3184,7 +4052,7 @@
       </div>
       <button class="duo-btn primary" id="btn-resume">RESUME</button>
       <button class="duo-btn secondary" id="btn-p-restart">RESTART ZONE</button>
-      <button class="duo-btn alt" id="btn-p-home">EXIT TO HOME</button>
+      <button class="duo-btn alt" id="btn-p-home" style="margin-bottom:0">EXIT TO HOME</button>
     </div>
   `);
             const resume = () => {
@@ -3207,7 +4075,7 @@
             STATS.totalPlaySec += Math.round(S.playSec);
             saveAll();
             if (S.score > 0 || STATS.highScore > 0) syncScoreToSheet(true);
-            snd(220, 0.35, "sawtooth", 0.18, -80);
+            snd(220, 0.35, "triangle", 0.12, -80);
 
             const accuracy = S.shots > 0 ? Math.round((S.hitsTot / S.shots) * 100) : 0;
             const cleared = S.score >= activeZone.target;
@@ -3217,6 +4085,8 @@
             const nextZone = nextIdx < ZONES.length ? ZONES[nextIdx] : null;
             const rewardBird = BIRDS.find(b => b.id === activeZone.unlockBird);
             const title = cleared ? "Zone Cleared! 🎉" : (S.bustReason ? "Caught by Guard! 🚨" : "Time’s Up!");
+            const isDefaultName = !PROGRESSION.playerName || PROGRESSION.playerName === "IITD Flier";
+            const ptsLeft = Math.max(0, activeZone.target - S.score);
 
             openSheet(`
     <div class="sheet-head">
@@ -3227,34 +4097,46 @@
       <button class="close-btn" id="btn-o-x" aria-label="Home">✕</button>
     </div>
     <div class="sheet-body">
-      <div class="lb-row" style="justify-content:space-between;padding:12px 14px;margin-bottom:10px">
-        <div>
-          <div style="font-size:11px;font-weight:800;color:var(--muted)">RUN SCORE</div>
-          <div style="font-size:26px;font-weight:800;color:var(--green-shadow)">${S.score}</div>
+      <div class="go-summary-card">
+        <div class="go-score-row">
+          <div>
+            <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase">Run Score</div>
+            <div style="font-size:34px;font-weight:800;color:var(--green-shadow);line-height:1">${S.score}</div>
+          </div>
+          <div style="text-align:right">
+            ${cleared
+                    ? `<span class="pill-tag green">🔓 ${escHtml(rewardBird.n)}</span>`
+                    : `<span class="pill-tag amber">${ptsLeft} pts to ${escHtml(rewardBird.n)}</span>`
+                }
+          </div>
         </div>
-        <div style="text-align:right;font-size:12.5px;color:var(--muted);font-weight:700">
-          Best: <b>${STATS.highScore}</b><br>Accuracy: <b>${accuracy}%</b> (${S.hits} hits)
+        <div class="go-stat-grid">
+          <div class="go-stat-box">
+            <div class="go-stat-val">${STATS.highScore}</div>
+            <div class="go-stat-lbl">Best</div>
+          </div>
+          <div class="go-stat-box">
+            <div class="go-stat-val">${accuracy}%</div>
+            <div class="go-stat-lbl">Accuracy</div>
+          </div>
+          <div class="go-stat-box">
+            <div class="go-stat-val">${S.hits}</div>
+            <div class="go-stat-lbl">Hits</div>
+          </div>
         </div>
       </div>
-
-      ${cleared
-                    ? `<div style="background:#e7fad9;border:2px solid #b9e89f;border-radius:16px;padding:10px 12px;font-size:12.5px;font-weight:700;margin-bottom:12px">
-             🔓 Unlocked <b>${rewardBird.icon} ${rewardBird.n}</b> &amp; <b>${activeZone.bgName}</b>!
-           </div>`
-                    : `<div style="background:var(--sage);border-radius:16px;padding:10px 12px;font-size:12.5px;color:var(--muted);margin-bottom:12px">
-             Reach <b>${activeZone.target} pts</b> (${Math.max(0, activeZone.target - S.score)} more) to unlock ${rewardBird.icon} ${rewardBird.n}.
-           </div>`
-                }
 
       ${cleared && nextZone
                     ? `<button class="duo-btn primary" id="btn-next-zone">NEXT: ${nextZone.short.toUpperCase()} ➔</button>`
                     : `<button class="duo-btn primary" id="btn-retry">FLY AGAIN</button>`
                 }
+      <button class="duo-btn blue-cta" id="btn-o-ranks-hero">
+        🏆 ${isDefaultName ? "SET NAME &amp; VIEW LEADERBOARD" : `LEADERBOARD · ${escHtml(PROGRESSION.playerName)}`}
+      </button>
       <div class="btn-row">
         <button class="duo-btn secondary" id="btn-o-map">🗺️ Map</button>
-        <button class="duo-btn secondary" id="btn-o-ranks">🏆 Ranks</button>
+        <button class="duo-btn alt" id="btn-o-home">🏠 Home</button>
       </div>
-      <button class="duo-btn alt" id="btn-o-home">HOME</button>
     </div>
   `);
 
@@ -3262,7 +4144,10 @@
             const nz = $("btn-next-zone"); if (nz) nz.onclick = () => startGame(nextZone.id);
             const rt = $("btn-retry"); if (rt) rt.onclick = () => startGame(activeZone.id);
             $("btn-o-map").onclick = () => openMapSheet();
-            $("btn-o-ranks").onclick = () => openLeaderboardSheet();
+            $("btn-o-ranks-hero").onclick = () => {
+                editingIdentity = isDefaultName;
+                openLeaderboardSheet(false, isDefaultName);
+            };
             $("btn-o-home").onclick = closeToHome;
         }
 
